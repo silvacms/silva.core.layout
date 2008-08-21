@@ -6,7 +6,11 @@
 # Zope 3
 from zope.app.interface import PersistentInterfaceClass
 from zope.interface.interfaces import IInterface
+from zope.component.interface import interfaceToName
 from zope.app.container.interfaces import IObjectAddedEvent
+from zope.interface import providedBy, directlyProvides, directlyProvidedBy
+from zope.component import getUtility, getUtilitiesFor
+
 # Zope 2
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from OFS.interfaces import IObjectWillBeRemovedEvent
@@ -78,8 +82,62 @@ def unregisterMarker(marker, event):
 
 
 
-class ManageCustomizeMarker(CustomizationManagementView):
+class ManageCustomizeMarker(silvaviews.ZMIView):
 
     silvaconf.name('manage_customization')
+    silvaconf.require('zope2.ViewManagementScreens')
     silvaconf.context(ISilvaObject)
 
+
+    def usedInterfaces(self, base=None):
+        """Return used skinable interfaces for this item.
+        """
+        if base is None:
+            base = ISilvaObject
+        interfaces = providedBy(self.context).interfaces()
+        return sorted([iface.__identifier__ for iface in interfaces if iface.extends(base)])
+
+    def usedMarkers(self):
+        """Return used markers interfaces for this item.
+        """
+
+        return self.usedInterfaces(ISilvaCustomizableMarker)
+
+    def availablesMarkers(self):
+        """Return availables markers.
+        """
+
+        interfaces = getUtilitiesFor(ISilvaCustomizableType, context=self.context)
+        return sorted([name for name, interface in interfaces if interface.extends(ISilvaCustomizableMarker)])
+
+
+class ManageEditCustomizeMarker(silvaviews.ZMIView):
+
+    silvaconf.name('manage_editCustomization')
+    silvaconf.require('zope2.ViewManagementScreens')
+    silvaconf.context(ISilvaObject)
+
+    def fetchMarker(self, name):
+        return getUtility(ISilvaCustomizableType, name=name)
+
+    def removeMarker(self, name):
+        marker = self.fetchMarker(name)
+        directlyProvides(self.context, directlyProvidedBy(self.context) - marker)
+
+    def addMarker(self, name):
+        marker = self.fetchMarker(name)
+        directlyProvides(self.context, directlyProvidedBy(self.context), marker)
+    
+    def update(self):
+        assert 'marker' in self.request.form
+        if 'add' in self.request.form:
+            for marker in self.request.form['marker']:
+                self.addMarker(marker)
+        elif 'remove' in self.request.form:
+            for marker in self.request.form['marker']:
+                self.removeMarker(marker)
+
+        self.redirect(self.context.absolute_url() + '/manage_customization')
+
+    def render(self):
+        return 'Edit markers.'

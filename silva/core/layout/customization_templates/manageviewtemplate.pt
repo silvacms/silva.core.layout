@@ -30,7 +30,7 @@
                tal:attributes="value request/form/origin" />
         <table>
           <tr>
-            <td>For interface</td>
+            <td><label for="customize_for" class="form-mono">For interface</label></td>
             <td>
               <select name="customize_for">
                 <option tal:repeat="interface view/availablesInterfacesAndMarkers"
@@ -42,7 +42,7 @@
               </select>
           </tr>
           <tr>
-            <td>For layer</td>
+            <td><label for="customize_layer" class="form-mono">For layer</label></td>
             <td>
               <select name="customize_layer">
                 <option tal:repeat="layer view/availablesLayers"
@@ -57,7 +57,7 @@
             <td>
             </td>
             <td>
-              <input name="customize" value="Customize" type="submit" />
+              <input class="form-element" name="customize" value="Customize" type="submit" />
             </td>
           </tr>
         </table>
