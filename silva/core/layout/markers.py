@@ -10,6 +10,7 @@ from zope.component.interface import interfaceToName
 from zope.app.container.interfaces import IObjectAddedEvent
 from zope.interface import providedBy, directlyProvides, directlyProvidedBy
 from zope.component import getUtility, getUtilitiesFor
+import zope.cachedescriptors.property
 
 # Zope 2
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -97,18 +98,21 @@ class ManageCustomizeMarker(silvaviews.ZMIView):
         interfaces = providedBy(self.context).interfaces()
         return sorted([iface.__identifier__ for iface in interfaces if iface.extends(base)])
 
+    @zope.cachedescriptors.property.CachedProperty
     def usedMarkers(self):
         """Return used markers interfaces for this item.
         """
 
         return self.usedInterfaces(ISilvaCustomizableMarker)
 
+    @zope.cachedescriptors.property.CachedProperty
     def availablesMarkers(self):
         """Return availables markers.
         """
 
         interfaces = getUtilitiesFor(ISilvaCustomizableType, context=self.context)
-        return sorted([name for name, interface in interfaces if interface.extends(ISilvaCustomizableMarker)])
+        availables = [name for name, interface in interfaces if interface.extends(ISilvaCustomizableMarker)]
+        return sorted(list(set(availables).difference(set(self.usedMarkers))))
 
 
 class ManageEditCustomizeMarker(silvaviews.ZMIView):
