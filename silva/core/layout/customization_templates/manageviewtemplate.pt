@@ -33,7 +33,7 @@
             <td>For interface</td>
             <td>
               <select name="customize_for">
-                <option tal:repeat="interface view/availablesInterfaces"
+                <option tal:repeat="interface view/availablesInterfacesAndMarkers"
                         tal:define="wanted request/form/for"
                         tal:attributes="selected python:wanted == interface and 'selected' or None"
                         tal:content="interface">

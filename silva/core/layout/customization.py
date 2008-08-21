@@ -25,7 +25,7 @@ from silva.core.views.interfaces import ISilvaView, ISilvaCustomizedTemplate
 from silva.core.views import views as silvaviews
 
 from interfaces import ISilvaCustomizableType, ISilvaLayerType, ISilvaCustomizable
-
+from interfaces import ISilvaCustomizableMarker
 
 class CustomizationService(Folder, SilvaService):
 
@@ -49,47 +49,67 @@ class CustomizationManagementView(silvaviews.ZMIView):
     interface = None
     layer = None
 
-    def availablesInterfaces(self):
-        """This return available interfaces starting from base.
+    def availablesInterfaces(self, extra=None):
+        """Return available interfaces starting from base.
         """
         base = self.interface
         if base is None:
             base = ISilvaCustomizable
+
+        def predicat(value):
+            return value.isOrExtends(base) or (extra and value.isOrExtends(extra))
+
         interfaces = getUtilitiesFor(ISilvaCustomizableType, context=self.context)
-        return [name for name, interface in interfaces if interface.extends(base)]
+        return sorted([name for name, interface in interfaces if predicat(interface)])
+
+    def availablesInterfacesAndMarkers(self):
+        """Return available interfaces starting from base and markers.
+        """
+        return self.availablesInterfaces(extra=ISilvaCustomizableMarker)
 
     def availablesLayers(self):
-        """This return available layers starting from base.
+        """Return available layers starting from base.
         """
         base = self.layer
         if base is None:
             base = IDefaultBrowserLayer
         layers = getUtilitiesFor(ISilvaLayerType)
-        return [name for name, layer in layers if layer.isOrExtends(base)]
+        return sorted([name for name, layer in layers if layer.isOrExtends(base)])
+
+
+def findSite(container):
+    """Return the nearest site.
+    """
+
+    if ISite.providedBy(container):
+        return container
+    return findNextSite(container)
+
+def findNextSite(container):
+    """Return the next site.
+    """
+    while container:
+        if IContainmentRoot.providedBy(container):
+            return None
+        try:
+            container = get_parent(container)
+            if container is None:
+                return None
+        except TypeError:
+            return None
+        if ISite.providedBy(container):
+            return container
 
 
 def getViews(where, interface, layer):
     """Get all view registrations for a particular interface.
     """
-    def findNextSite(site):
-        container = site
-        while container:
-            if IContainmentRoot.providedBy(container):
-                return None
-            try:
-                container = get_parent(container)
-                if container is None:
-                    return None
-            except TypeError:
-                return None
-            if ISite.providedBy(container):
-                return container
     
     def viewsFor(sm, name):
         for reg in sm.registeredAdapters():
             if (len(reg.required) == 2 and
                 interface.isOrExtends(reg.required[0]) and
-                reg.required[0].isOrExtends(ISilvaObject) and
+                reg.required[0].isOrExtends(ISilvaCustomizable) and
                 reg.required[1].isOrExtends(layer)):
                 yield (reg, name)
 
@@ -222,7 +242,7 @@ class ManageCreateCustomTemplate(ManageViewTemplate):
         
         self.context._setObject(template_id, new_template)
 
-        manager = self.context.get_root().getSiteManager()
+        manager = findSite(self.context).getSiteManager()
         manager.registerAdapter(new_template, required=(customize_for, customize_layer,),
                                 provided=self.reg.provided, name=self.name)
 
