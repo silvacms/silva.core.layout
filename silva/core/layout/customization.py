@@ -21,10 +21,10 @@ from five.localsitemanager.utils import get_parent
 
 from silva.core import conf as silvaconf
 from silva.core.views.ttwtemplates import TTWViewTemplate
+from silva.core.views.interfaces import ISilvaView, ISilvaCustomizedTemplate
 from silva.core.views import views as silvaviews
 
-from interfaces import ISilvaView, ISilvaCustomizableType, ISilvaLayerType 
-from interfaces import ISilvaCustomizedTemplate, ISilvaCustomizable
+from interfaces import ISilvaCustomizableType, ISilvaLayerType, ISilvaCustomizable
 
 
 class CustomizationService(Folder, SilvaService):
