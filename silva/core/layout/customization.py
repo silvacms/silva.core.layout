@@ -22,7 +22,7 @@ from five.localsitemanager.utils import get_parent
 
 from silva.core import conf as silvaconf
 from silva.core.views.ttwtemplates import TTWViewTemplate
-from silva.core.views.interfaces import ISilvaView, ISilvaCustomizedTemplate
+from silva.core.views.interfaces import ITemplate, ICustomizedTemplate
 from silva.core.views import views as silvaviews
 
 from interfaces import ICustomizableType, ILayerType, ICustomizable
@@ -149,14 +149,14 @@ class ManageCustomTemplates(CustomizationManagementView):
             for reg, origin in sorted(templates, key=lambda r: r[0].name):
                 customizable = True
                 link = False
-                if ISilvaView.implementedBy(reg.factory):
+                if ITemplate.implementedBy(reg.factory):
                     if hasattr(reg.factory, 'template'):
                         template = reg.factory.template._template.filename
                     else:
                         template = u'direct rendering'
                         customizable = False
                     config = u'Grok page template'
-                elif ISilvaCustomizedTemplate.providedBy(reg.factory):
+                elif ICustomizedTemplate.providedBy(reg.factory):
                     template = absolute_url + '/' + reg.factory.id + '/manage_workspace'
                     config = u'Customized page template'
                     link = reg.factory.id
@@ -207,7 +207,7 @@ class ManageViewTemplate(CustomizationManagementView):
 
         self.reg = reg
         self.factory = reg.factory
-        if ISilvaView.implementedBy(reg.factory):
+        if ITemplate.implementedBy(reg.factory):
             self.code = open(self.factory.template._template.filename, 'rb').read()
         else:
             self.code = open(self.factory.index.filename, 'rb').read()
