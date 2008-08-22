@@ -12,7 +12,7 @@
   <!-- Register the default layer as a Silva layer -->
   <interface
      interface=" zope.publisher.interfaces.browser.IDefaultBrowserLayer"
-     type=".interfaces.ISilvaLayerType"
+     type=".interfaces.ILayerType"
      />
 
 </configure>

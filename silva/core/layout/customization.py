@@ -25,8 +25,8 @@ from silva.core.views.ttwtemplates import TTWViewTemplate
 from silva.core.views.interfaces import ISilvaView, ISilvaCustomizedTemplate
 from silva.core.views import views as silvaviews
 
-from interfaces import ISilvaCustomizableType, ISilvaLayerType, ISilvaCustomizable
-from interfaces import ISilvaCustomizableMarker
+from interfaces import ICustomizableType, ILayerType, ICustomizable
+from interfaces import ICustomizableMarker
 
 class CustomizationService(Folder, SilvaService):
 
@@ -55,18 +55,18 @@ class CustomizationManagementView(silvaviews.ZMIView):
         """
         base = self.interface
         if base is None:
-            base = ISilvaCustomizable
+            base = ICustomizable
 
         def predicat(value):
             return value.isOrExtends(base) or (extra and value.isOrExtends(extra))
 
-        interfaces = getUtilitiesFor(ISilvaCustomizableType, context=self.context)
+        interfaces = getUtilitiesFor(ICustomizableType, context=self.context)
         return sorted([name for name, interface in interfaces if predicat(interface)])
 
     def availablesInterfacesAndMarkers(self):
         """Return available interfaces starting from base and markers.
         """
-        return self.availablesInterfaces(extra=ISilvaCustomizableMarker)
+        return self.availablesInterfaces(extra=ICustomizableMarker)
 
     def availablesLayers(self):
         """Return available layers starting from base.
@@ -74,7 +74,7 @@ class CustomizationManagementView(silvaviews.ZMIView):
         base = self.layer
         if base is None:
             base = IDefaultBrowserLayer
-        layers = getUtilitiesFor(ISilvaLayerType)
+        layers = getUtilitiesFor(ILayerType)
         return sorted([name for name, layer in layers if layer.isOrExtends(base)])
 
 
@@ -85,6 +85,7 @@ def findSite(container):
     if ISite.providedBy(container):
         return container
     return findNextSite(container)
+
 
 def findNextSite(container):
     """Return the next site.
@@ -110,7 +111,7 @@ def getViews(where, interface, layer):
         for reg in sm.registeredAdapters():
             if (len(reg.required) == 2 and
                 interface.isOrExtends(reg.required[0]) and
-                reg.required[0].isOrExtends(ISilvaCustomizable) and
+                reg.required[0].isOrExtends(ICustomizable) and
                 reg.required[1].isOrExtends(layer)):
                 yield (reg, name)
 
@@ -140,8 +141,8 @@ class ManageCustomTemplates(CustomizationManagementView):
 
         if self.selectedInterface:
 
-            interface = getUtility(ISilvaCustomizableType, name=self.selectedInterface)
-            layer = getUtility(ISilvaLayerType, name=self.selectedLayer)
+            interface = getUtility(ICustomizableType, name=self.selectedInterface)
+            layer = getUtility(ILayerType, name=self.selectedLayer)
             absolute_url = self.context.absolute_url()
             templates = getViews(self.context, interface, layer)
 
@@ -189,8 +190,8 @@ class ManageViewTemplate(CustomizationManagementView):
 
         self.name = self.request.form['name']
         self.origin = self.request.form['origin']
-        self.layer = getUtility(ISilvaLayerType, self.request.form['layer'])
-        self.interface = getUtility(ISilvaCustomizableType, name=self.request.form['for'])
+        self.layer = getUtility(ILayerType, self.request.form['layer'])
+        self.interface = getUtility(ICustomizableType, name=self.request.form['for'])
 
         view = None
         for reg, origin in getViews(self.context, self.interface, self.layer):
@@ -228,8 +229,8 @@ class ManageCreateCustomTemplate(ManageViewTemplate):
 
         for_name = self.request.form['customize_for']
         layer_name = self.request.form['customize_layer']
-        customize_for = getUtility(ISilvaCustomizableType, name=for_name)
-        customize_layer = getUtility(ISilvaLayerType, name=layer_name)
+        customize_for = getUtility(ICustomizableType, name=for_name)
+        customize_layer = getUtility(ILayerType, name=layer_name)
         
         template_id = '%s-%s-%s' % (for_name.split('.')[-1],
                                     layer_name.split('.')[-1],
