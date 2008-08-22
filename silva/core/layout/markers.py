@@ -69,7 +69,7 @@ class CustomizationMarker(PersistentInterfaceClass, ZMIObject):
         return [resolver(oid) for oid in self.marked]
 
     def markerId(self):
-        return 'marker:%s' % '.'.join(self.getPhysicalPath()[1:])
+        return u'marker:%s' % '.'.join(self.getPhysicalPath()[1:])
 
 
 manage_addCustomizationMarkerForm = PageTemplateFile(
