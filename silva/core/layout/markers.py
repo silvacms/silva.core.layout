@@ -31,7 +31,7 @@ from Products.Silva.interfaces import ISilvaObject
 from silva.core import conf as silvaconf
 from silva.core.views import views as silvaviews
 
-from interfaces import ICustomizableType, ICustomizableMarker
+from interfaces import ICustomizableType, ICustomizableTag, ICustomizableMarker
 from interfaces import IObjectHaveBeenMarked, IObjectHaveBeenUnmarked
 from interfaces import IObjectMarkEvent, IMarkManager
 from customization import CustomizationManagementView, findSite
@@ -164,12 +164,12 @@ class MarkManager(component.Adapter):
 
     @zope.cachedescriptors.property.CachedProperty
     def usedMarkers(self):
-        return self._listInterfaces(ICustomizableMarker)
+        return self._listInterfaces(ICustomizableTag)
 
     @zope.cachedescriptors.property.CachedProperty
     def availablesMarkers(self):
         interfaces = getUtilitiesFor(ICustomizableType, context=self.context)
-        availables = [name for name, interface in interfaces if interface.extends(ICustomizableMarker)]
+        availables = [name for name, interface in interfaces if interface.extends(ICustomizableTag)]
         return sorted(list(set(availables).difference(set(self.usedMarkers))))
 
     def removeMarker(self, name):
@@ -218,3 +218,5 @@ class ManageEditCustomizeMarker(silvaviews.ZMIView):
 
     def render(self):
         return 'Edit markers.'
+
+
