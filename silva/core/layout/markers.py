@@ -7,7 +7,6 @@
 from zope.app.container.interfaces import IObjectAddedEvent
 from zope.app.interface import PersistentInterfaceClass
 from zope.app.intid.interfaces import IIntIds
-from zope.component.interface import interfaceToName
 from zope.component.interfaces import ObjectEvent
 from zope.component import getUtility, getUtilitiesFor
 from zope.interface.interfaces import IInterface
@@ -34,7 +33,7 @@ from silva.core.views import views as silvaviews
 from interfaces import ICustomizableType, ICustomizableTag, ICustomizableMarker
 from interfaces import IObjectHaveBeenMarked, IObjectHaveBeenUnmarked
 from interfaces import IObjectMarkEvent, IMarkManager
-from customization import CustomizationManagementView, findSite
+from utils import findSite
 
 
 # Marker object

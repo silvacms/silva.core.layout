@@ -3,12 +3,9 @@
 # See also LICENSE.txt
 # $Id$
 
-from zope.app.component.interfaces import ISite
 from zope.component import getGlobalSiteManager
 from zope.component import getUtility, getUtilitiesFor
-from zope.interface.interface import InterfaceClass
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
-from zope.traversing.interfaces import IContainmentRoot
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from OFS.Folder import Folder
@@ -16,9 +13,6 @@ from OFS.Folder import Folder
 from Products.Silva.BaseService import SilvaService
 from Products.Silva.helpers import add_and_edit
 from Products.Silva.interfaces import ISilvaObject
-from Products.SilvaLayout.interfaces import ISilvaLayer, ISilvaSkin
-
-from five.localsitemanager.utils import get_parent
 
 from silva.core import conf as silvaconf
 from silva.core.views.ttwtemplates import TTWViewTemplate
@@ -27,6 +21,8 @@ from silva.core.views import views as silvaviews
 
 from interfaces import ICustomizableType, ILayerType, ICustomizable
 from interfaces import ICustomizableMarker
+
+from utils import findSite, findNextSite
 
 class CustomizationService(Folder, SilvaService):
 
@@ -76,31 +72,6 @@ class CustomizationManagementView(silvaviews.ZMIView):
             base = IDefaultBrowserLayer
         layers = getUtilitiesFor(ILayerType)
         return sorted([name for name, layer in layers if layer.isOrExtends(base)])
-
-
-def findSite(container):
-    """Return the nearest site.
-    """
-
-    if ISite.providedBy(container):
-        return container
-    return findNextSite(container)
-
-
-def findNextSite(container):
-    """Return the next site.
-    """
-    while container:
-        if IContainmentRoot.providedBy(container):
-            return None
-        try:
-            container = get_parent(container)
-            if container is None:
-                return None
-        except TypeError:
-            return None
-        if ISite.providedBy(container):
-            return container
 
 
 def getViews(where, interface, layer):
