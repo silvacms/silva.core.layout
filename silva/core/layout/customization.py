@@ -3,6 +3,7 @@
 # See also LICENSE.txt
 # $Id$
 
+from zope.interface import implements
 from zope.component import getGlobalSiteManager
 from zope.component import getUtility, getUtilitiesFor
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
@@ -20,58 +21,9 @@ from silva.core.views.interfaces import ITemplate, ICustomizedTemplate
 from silva.core.views import views as silvaviews
 
 from interfaces import ICustomizableType, ILayerType, ICustomizable
-from interfaces import ICustomizableMarker
+from interfaces import ICustomizableMarker, ICustomizationService
 
 from utils import findSite, findNextSite
-
-class CustomizationService(Folder, SilvaService):
-
-    meta_type = 'Silva Customization Service'
-
-    silvaconf.icon('customization.png')
-    silvaconf.factory('manage_addCustomizationServiceForm')
-    silvaconf.factory('manage_addCustomizationService')
-
-    manage_options = (
-        {'label':'Customize', 'action':'manage_customization'},
-        ) + Folder.manage_options
-
-
-class CustomizationManagementView(silvaviews.ZMIView):
-
-    silvaconf.context(CustomizationService)
-    silvaconf.require('zope2.ViewManagementScreens')
-    silvaconf.baseclass()
-
-    interface = None
-    layer = None
-
-    def availablesInterfaces(self, extra=None):
-        """Return available interfaces starting from base.
-        """
-        base = self.interface
-        if base is None:
-            base = ICustomizable
-
-        def predicat(value):
-            return value.isOrExtends(base) or (extra and value.isOrExtends(extra))
-
-        interfaces = getUtilitiesFor(ICustomizableType, context=self.context)
-        return sorted([name for name, interface in interfaces if predicat(interface)])
-
-    def availablesInterfacesAndMarkers(self):
-        """Return available interfaces starting from base and markers.
-        """
-        return self.availablesInterfaces(extra=ICustomizableMarker)
-
-    def availablesLayers(self):
-        """Return available layers starting from base.
-        """
-        base = self.layer
-        if base is None:
-            base = IDefaultBrowserLayer
-        layers = getUtilitiesFor(ILayerType)
-        return sorted([name for name, layer in layers if layer.isOrExtends(base)])
 
 
 def getViews(where, interface, layer):
@@ -101,6 +53,102 @@ def isAFiveTemplate(factory):
     """
     return (hasattr(factory, '__name__') and factory.__name__.startswith('SimpleViewClass'))
 
+
+class CustomizationService(Folder, SilvaService):
+
+    meta_type = 'Silva Customization Service'
+
+    silvaconf.icon('customization.png')
+    silvaconf.factory('manage_addCustomizationServiceForm')
+    silvaconf.factory('manage_addCustomizationService')
+
+    implements(ICustomizationService)
+
+    manage_options = (
+        {'label':'Customize', 'action':'manage_customization'},
+        ) + Folder.manage_options
+
+
+    def availablesInterfaces(self, base=ICustomizable):
+        interfaces = getUtilitiesFor(ICustomizableType, context=self)
+        return sorted([name for name, interface in interfaces if interface.isOrExtends(base)])
+
+    def availablesLayers(self, base=IDefaultBrowserLayer):
+        layers = getUtilitiesFor(ILayerType)
+        return sorted([name for name, layer in layers if layer.isOrExtends(base)])
+
+    def availablesTemplates(self, interface, layer=IDefaultBrowserLayer):
+
+        templates = []
+
+        for reg, origin in sorted(getViews(self, interface, layer), key=lambda r: r[0].name):
+            customizable = True
+            link = False
+            if ITemplate.implementedBy(reg.factory):
+                if hasattr(reg.factory, 'template'):
+                    template = reg.factory.template._template.filename
+                else:
+                    template = u'direct rendering'
+                    customizable = False
+                config = u'Grok page template'
+            elif ICustomizedTemplate.providedBy(reg.factory):
+                template = reg.factory.getPhysicalPath() + ('manage_workspace',)
+                config = u'Customized page template'
+                link = reg.factory.id
+                customizable = False
+            elif isAFiveTemplate(reg.factory):
+                template = reg.factory.index.filename
+                config = reg.info.file
+            else:           # Unknown view type.
+                continue
+            templates.append({
+                    'name': reg.name,
+                    'for': reg.required[0].__identifier__,
+                    'layer': reg.required[1].__identifier__,
+                    'template': template,
+                    'config': config,
+                    'origin': origin,
+                    'customizable': customizable,
+                    'link': link
+                    })
+        return templates
+
+
+class CustomizationManagementView(silvaviews.ZMIView):
+
+    silvaconf.context(CustomizationService)
+    silvaconf.require('zope2.ViewManagementScreens')
+    silvaconf.baseclass()
+
+    interface = None
+    layer = None
+
+    def availablesInterfaces(self):
+        """Return available interfaces starting from base.
+        """
+        base = self.interface
+        if base is None:
+            base = ICustomizable
+
+        return self.context.availablesInterfaces(base)
+
+    def availablesInterfacesAndMarkers(self):
+        """Return available interfaces starting from base and markers.
+        """
+        interfaces = self.availablesInterfaces()
+        interfaces.extend(self.context.availablesInterfaces(ICustomizableMarker))
+        return interfaces
+
+    def availablesLayers(self):
+        """Return available layers starting from base.
+        """
+        base = self.layer
+        if base is None:
+            base = IDefaultBrowserLayer
+
+        return self.context.availablesLayers(base)
+
+
 class ManageCustomTemplates(CustomizationManagementView):
 
     silvaconf.name('manage_customization')
@@ -111,42 +159,10 @@ class ManageCustomTemplates(CustomizationManagementView):
         self.selectedLayer = self.request.form.get('layer', IDefaultBrowserLayer.__identifier__)
 
         if self.selectedInterface:
-
             interface = getUtility(ICustomizableType, name=self.selectedInterface)
             layer = getUtility(ILayerType, name=self.selectedLayer)
-            absolute_url = self.context.absolute_url()
-            templates = getViews(self.context, interface, layer)
 
-            for reg, origin in sorted(templates, key=lambda r: r[0].name):
-                customizable = True
-                link = False
-                if ITemplate.implementedBy(reg.factory):
-                    if hasattr(reg.factory, 'template'):
-                        template = reg.factory.template._template.filename
-                    else:
-                        template = u'direct rendering'
-                        customizable = False
-                    config = u'Grok page template'
-                elif ICustomizedTemplate.providedBy(reg.factory):
-                    template = absolute_url + '/' + reg.factory.id + '/manage_workspace'
-                    config = u'Customized page template'
-                    link = reg.factory.id
-                    customizable = False
-                elif isAFiveTemplate(reg.factory):
-                    template = reg.factory.index.filename
-                    config = reg.info.file
-                else:           # Unknown view type.
-                    continue
-                self.availableTemplates.append({
-                        'name': reg.name,
-                        'for': reg.required[0].__identifier__,
-                        'layer': reg.required[1].__identifier__,
-                        'template': template,
-                        'config': config,
-                        'origin': origin,
-                        'customizable': customizable,
-                        'link': link
-                        })
+            self.availableTemplates = self.context.availablesTemplates(interface, layer)
         else:
             self.selectedInterface = ISilvaObject.__identifier__
         
@@ -214,12 +230,12 @@ class ManageCreateCustomTemplate(ManageViewTemplate):
                                        view=viewclass, permission=permission)
         
         self.context._setObject(template_id, new_template)
+        new_template = getattr(self.context, template_id)
 
         manager = findSite(self.context).getSiteManager()
         manager.registerAdapter(new_template, required=(customize_for, customize_layer,),
                                 provided=self.reg.provided, name=self.name)
 
-        new_template = getattr(self.context, template_id)
         self.redirect(new_template.absolute_url() + '/manage_workspace')
 
                                        
@@ -237,5 +253,9 @@ def manage_addCustomizationService(self, id, REQUEST=None):
 
     service = CustomizationService(id)
     self._setObject(id, service)
+    service = getattr(self, id)
+    site = findSite(self)
+    sm = site.getSiteManager()
+    sm.registerUtility(service, ICustomizationService)
     add_and_edit(self, id, REQUEST)
     return ''

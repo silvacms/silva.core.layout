@@ -71,7 +71,7 @@
                   <code tal:content="info/template"
                         tal:condition="not: info/link">template</code>
                   <a href="#"
-                     tal:attributes="href info/template"
+                     tal:attributes="href python:request.physicalPathToURL(info['template'])"
                      tal:condition="info/link">
                     <code tal:content="info/link">
                       template

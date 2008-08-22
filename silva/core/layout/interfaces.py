@@ -5,6 +5,8 @@
 
 from zope.interface.interfaces import IInterface
 from zope.interface import Interface, Attribute
+from zope.publisher.interfaces.browser import IDefaultBrowserLayer
+
 
 # Interfaces types
 
@@ -34,9 +36,9 @@ class ICustomizableMarker(ICustomizableTag):
 
 # Adapters
 
-
 class IMarkManager(Interface):
-    """A Mark manager.
+    """A Mark manager. This let you manage marks on object, so they
+    can be customized after using them.
     """
 
     usedInterfaces = Attribute(u"Skinable interfaces used")
@@ -49,6 +51,25 @@ class IMarkManager(Interface):
 
     def removeMarker(name):
         """Remove marker name from the object.
+        """
+
+# Utility
+
+class ICustomizationService(Interface):
+    """A customization manager let you customize templates.
+    """
+
+    def availablesInterfaces(base=ICustomizable):
+        """List availables interfaces, which can be used to search
+        view to customize.
+        """
+
+    def availablesLayers(base=IDefaultBrowserLayer):
+        """List availables layers, for which you can customize views.
+        """
+
+    def availablesTemplates(interface, layer=IDefaultBrowserLayer):
+        """List availables templates for that interface and layer.
         """
 
 # Events
