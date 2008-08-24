@@ -3,8 +3,9 @@
 # See also LICENSE.txt
 # $Id$
 
-from zope.interface.interfaces import IInterface
 from zope.interface import Interface, Attribute
+from zope.interface.interfaces import IInterface
+from zope.publisher.interfaces.browser import IBrowserSkinType
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
 
@@ -32,6 +33,17 @@ class ICustomizableTag(ICustomizable):
 
 class ICustomizableMarker(ICustomizableTag):
     """Customizable markers.
+    """
+
+
+# Default skin and layers
+
+class ISilvaLayer(IDefaultBrowserLayer):
+    """Default Silva Layer
+    """
+    
+class ISilvaSkin(ISilvaLayer, IBrowserSkinType):
+    """A Silva skin for the default layer.
     """
 
 # Adapters
@@ -87,3 +99,4 @@ class IObjectHaveBeenMarked(IObjectMarkEvent):
 class IObjectHaveBeenUnmarked(IObjectMarkEvent):
     """A Marker have been removed from an object.
     """
+

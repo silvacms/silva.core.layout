@@ -1,0 +1,5 @@
+<ul tal:define="trail context/@@absolute_url/breadcrumbs">
+  <li tal:repeat="step trail">
+    <a tal:content="step/name" tal:attributes="href step/url" />
+  </li>
+</ul>

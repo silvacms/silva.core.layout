@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.or
+g/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <title tal:content="context/get_title">Title</title>
+   
+    <tal:resource tal:replace="structure provider:resources" />
+
+  </head>
+  <body>
+    
+    <div class="breadcrumbs" 
+         tal:content="structure provider:breadcrumbs">
+      Breadcrumbs
+    </div>
+
+    <div id="content"
+         tal:content="structure provider:content">
+      Content
+    </div>
+
+  </body>
+</html>
