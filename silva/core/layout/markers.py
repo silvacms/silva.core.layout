@@ -134,12 +134,14 @@ def unregisterMarker(marker, event):
 
 @silvaconf.subscribe(ISilvaObject, IObjectHaveBeenMarked)
 def objectMarked(item, event):
-    event.marker.addMarkedObject(item)
+    if event.marker.extends(ICustomizableMarker):
+        event.marker.addMarkedObject(item)
 
 
 @silvaconf.subscribe(ISilvaObject, IObjectHaveBeenUnmarked)
 def objectUnmarked(item, event):
-    event.marker.removeMarkedObject(item)
+    if event.marker.extends(ICustomizableMarker):
+        event.marker.removeMarkedObject(item)
 
 
 # Adapters
