@@ -1,4 +1,9 @@
- 
+
+body {
+  color: #2d374c;
+  background-color: #dde5ee;
+} 
+
 div#content {
   margin-left: 20em;
   width: 45em;

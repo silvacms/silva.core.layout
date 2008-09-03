@@ -15,13 +15,33 @@ class MainTemplate(silvaviews.Template):
     silvaconf.name('index.html')
 
 
+class Layout(silvaviews.ContentProvider):
+    """Layout of the page.
+    """
+    pass
+
+
+class Header(silvaviews.ContentProvider):
+    """Define a site header.
+    """
+    pass
+
+
+class Breadcrumbs(silvaviews.ContentProvider):
+    """Breadcrumbs.
+    """
+    pass
+
+
 class Content(silvaviews.ContentProvider):
+    """Content of the page.
+    """
 
     def render(self):
         return self.context.view()
 
-
-class Breadcrumbs(silvaviews.ContentProvider):
+class Footer(silvaviews.ContentProvider):
+    """Site footer.
+    """
     pass
-
 

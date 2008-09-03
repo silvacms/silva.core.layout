@@ -9,15 +9,7 @@ g/TR/xhtml1/DTD/xhtml1-transitional.dtd">
   </head>
   <body>
     
-    <div class="breadcrumbs" 
-         tal:content="structure provider:breadcrumbs">
-      Breadcrumbs
-    </div>
-
-    <div id="content"
-         tal:content="structure provider:content">
-      Content
-    </div>
+    <tal:layout tal:replace="structure provider:layout" />
 
   </body>
 </html>

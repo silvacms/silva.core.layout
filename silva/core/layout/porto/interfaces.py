@@ -11,11 +11,10 @@ class IPorto(ISilvaLayer):
     """
 
     silvaconf.resource('silva.css')
-    silvaconf.resource('porto.css')
 
 class IPortoSkin(IPorto, ISilvaSkin):
     """A skin from Porto.
     """
 
     silvaconf.skin('Porto')
-    
+    silvaconf.resource('porto.css')

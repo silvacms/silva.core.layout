@@ -1,0 +1,18 @@
+<div id="site">
+
+  <div id="header"
+       tal:content="structure provider:header">
+    Header
+  </div>
+
+  <div id="content"
+       tal:content="structure provider:content">
+    Content
+  </div>
+
+  <div id="footer"
+       tal:content="structure provider:footer">
+    Footer
+  </div>
+
+</div>
