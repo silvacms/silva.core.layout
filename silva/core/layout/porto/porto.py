@@ -3,6 +3,10 @@
 # See also LICENSE.txt
 # $Id$
 
+import zope.cachedescriptors.property
+
+from Products.SilvaLayout.interfaces import IMetadata
+
 from silva.core.views import views as silvaviews
 from silva.core import conf as silvaconf
 
@@ -13,6 +17,10 @@ silvaconf.layer(IPorto)
 class MainTemplate(silvaviews.Template):
 
     silvaconf.name('index.html')
+
+    @zope.cachedescriptors.property.CachedProperty
+    def metadata(self):
+        return IMetadata(self.context)
 
 
 class Layout(silvaviews.ContentProvider):
@@ -39,6 +47,7 @@ class Content(silvaviews.ContentProvider):
 
     def render(self):
         return self.context.view()
+
 
 class Footer(silvaviews.ContentProvider):
     """Site footer.
