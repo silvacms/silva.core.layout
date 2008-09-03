@@ -6,6 +6,7 @@ div#content {
 
 div.breadcrumbs {
   margin: 1em 1.6em 2em;
+  border-bottom: 2px solid maroon; 
   font-size: 90%;
 }
  
