@@ -3,6 +3,7 @@
 # See also LICENSE.txt
 # $Id$
 
+from zope.app.component.interfaces import ISite
 from zope.interface import implements
 from zope.component import getGlobalSiteManager
 from zope.component import getUtility, getUtilitiesFor
@@ -10,6 +11,7 @@ from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from OFS.Folder import Folder
+from zExceptions import BadRequest
 
 from Products.Silva.BaseService import SilvaService
 from Products.Silva.helpers import add_and_edit
@@ -116,7 +118,6 @@ class CustomizationService(Folder, SilvaService):
 
 class CustomizationManagementView(silvaviews.ZMIView):
 
-    silvaconf.context(CustomizationService)
     silvaconf.require('zope2.ViewManagementScreens')
     silvaconf.baseclass()
 
@@ -204,7 +205,6 @@ class ManageCreateCustomTemplate(ManageViewTemplate):
 
     silvaconf.name('manage_createCustom')
 
-
     def permission(self):
         permissions = self.factory.__ac_permissions__
         for permission, methods in permissions:
@@ -251,11 +251,15 @@ def manage_addCustomizationService(self, id, REQUEST=None):
     """Add a Customization Service.
     """
 
+    # TODO Add a button on publication `make a local site`.
+    # self is not the real container, get it to verify it's a local site.
+    site = self.Destination()
+    if not ISite.providedBy(site):
+        raise BadRequest, "A customization service can only be created in a local site"
     service = CustomizationService(id)
-    self._setObject(id, service)
-    service = getattr(self, id)
-    site = findSite(self)
+    site._setObject(id, service)
+    service = getattr(site, id)
     sm = site.getSiteManager()
     sm.registerUtility(service, ICustomizationService)
-    add_and_edit(self, id, REQUEST)
+    add_and_edit(site, id, REQUEST)
     return ''
