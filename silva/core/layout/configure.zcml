@@ -15,4 +15,15 @@
      type=".interfaces.ILayerType"
      />
 
+  <!-- Default views should be index.html -->
+  <browser:defaultView
+    for="Products.Silva.interfaces.IContent"
+    name="index.html"
+  />
+
+  <browser:defaultView
+    for="Products.Silva.interfaces.IContainer"
+    name="index.html"
+  />
+
 </configure>
