@@ -2,7 +2,7 @@
 g/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
   <head>
-    <title tal:content="context/get_title">Title</title>
+    <title tal:content="context/get_title_or_id">Title</title>
 
     <meta name="generator" content="Silva" /> 
     <meta name="keywords"
