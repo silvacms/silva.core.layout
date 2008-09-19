@@ -8,6 +8,7 @@ from zope.interface.interfaces import IInterface
 from zope.publisher.interfaces.browser import IBrowserSkinType
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
+from Products.Silva.interfaces.service import ISilvaLocalService
 
 # Interfaces types
 
@@ -67,7 +68,7 @@ class IMarkManager(Interface):
 
 # Utility
 
-class ICustomizationService(Interface):
+class ICustomizationService(ISilvaLocalService):
     """A customization manager let you customize templates.
     """
 

@@ -11,6 +11,7 @@ from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from OFS.Folder import Folder
+from OFS.interfaces import IObjectWillBeRemovedEvent
 from zExceptions import BadRequest
 
 from Products.Silva.BaseService import SilvaService
@@ -251,8 +252,6 @@ def manage_addCustomizationService(self, id, REQUEST=None):
     """Add a Customization Service.
     """
 
-    # TODO Add a button on publication `make a local site`.
-    # self is not the real container, get it to verify it's a local site.
     site = self.Destination()
     if not ISite.providedBy(site):
         raise BadRequest, "A customization service can only be created in a local site"
@@ -263,3 +262,13 @@ def manage_addCustomizationService(self, id, REQUEST=None):
     sm.registerUtility(service, ICustomizationService)
     add_and_edit(site, id, REQUEST)
     return ''
+
+
+@silvaconf.subscribe(ICustomizationService, IObjectWillBeRemovedEvent)
+def unregisterCustomizationService(service, event):
+    site = service.aq_parent
+    if not ISite.providedBy(site):
+        raise ValueError, "Impossible"
+    sm = ISite(site).getSiteManager()
+    sm.unregisterUtility(service, ICustomizationService)
+
