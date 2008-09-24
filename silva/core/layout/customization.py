@@ -161,6 +161,10 @@ class DefaultViewEntry(grok.Adapter):
                 return permission
         return None
 
+    def _view(self):
+        # Return the view class to use:
+        return self.context.__bases__[0]
+
     def customize(self, where, customized_for=None, customized_layer=None):
 
         if customized_for is None:
@@ -169,7 +173,11 @@ class DefaultViewEntry(grok.Adapter):
             customized_layer = self.registration.required[1]
 
         template_id = str(self.generateId())
-        viewclass = self.context.__bases__[0]
+        viewclass = self._view()
+
+        if ITemplateNotCustomizable.implementedBy(viewclass):
+            raise ValueError, "This view don't want to be customized."
+
         permission = self.permission()
         service = getUtility(interfaces.ICustomizationService)
         new_template = TTWViewTemplate(template_id, self.code, 
@@ -207,6 +215,7 @@ class GrokViewEntry(DefaultViewEntry):
 
     def generateId(self):
         return 'grok-template-%s' % super(GrokViewEntry, self).generateId()
+
 
 class GrokContentProviderEntry(GrokViewEntry):
     """A Grok Content Provider.
@@ -250,6 +259,12 @@ class CustomizedViewEntry(DefaultViewEntry):
 
     def generateId(self):
         return 'customized-%s' % super(CustomizedViewEntry, self).generateId()
+
+    def _view(self):
+        return self.context.view
+
+    def permission(self):
+        return self.context.permission
 
 
 class FiveViewEntry(DefaultViewEntry):
