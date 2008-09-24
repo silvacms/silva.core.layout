@@ -66,6 +66,50 @@ class IMarkManager(Interface):
         """Remove marker name from the object.
         """
 
+
+class IViewEntry(Interface):
+    """This is a view that your are going to customize.
+    """
+
+    name = Attribute(u"Name of the view")
+    type_ = Attribute(u"Kind of template type")
+    template = Attribute(u"Template rendering the view")
+    config = Attribute(u"Where is configured that view")
+    for_ = Attribute(u"For which content is registered the view") 
+    layer = Attribute(u"On which layer is registered the view")
+    origin = Attribute(u"Where the view is defined")
+    signature = Attribute(u"Signature of the view (as text)")
+    code = Attribute(u"Code of the associated template")
+
+    def generateId():
+        """Generate ID of a possible customized template.
+        """
+
+    def permission():
+        """Return the permission required to view that view/template.
+        """
+
+    def customize(where, customized_for=None, customized_layer=None):
+        """Customize the template for the given site.
+
+        If customized_for or customized_layer are given, the template
+        will be customized for this entries instead of the current
+        ones.
+        """
+
+
+class IViewManager(Interface):
+    """Manages Views.
+    """
+
+    def search(interface, layer, sort=False):
+        """Search all views for that interface and layer.
+        """
+
+    def get(type_, name, origin, required):
+        """Search the view which match that kind, name and signature.
+        """
+
 # Utility
 
 class ICustomizationService(ISilvaLocalService):

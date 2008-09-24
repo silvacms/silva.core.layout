@@ -6,6 +6,8 @@
 # Zope 3
 from zope.app.component.interfaces import ISite
 from zope.traversing.interfaces import IContainmentRoot
+from zope.interface import implementedBy
+from zope import component
 
 from five.localsitemanager.utils import get_parent
 
@@ -33,3 +35,13 @@ def findNextSite(container):
         if ISite.providedBy(container):
             return container
 
+
+def queryAdapterOnClass(klass, interface, name=u''):
+    sm = component.getGlobalSiteManager()
+    required = implementedBy(klass)
+    factory = sm.adapters.lookup((required,), interface, name)
+    if factory is not None:
+        result = factory(klass)
+        if result is not None:
+            return result
+    return None

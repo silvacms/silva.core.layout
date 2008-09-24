@@ -53,12 +53,12 @@
             <img src="misc_/PageTemplates/zpt.gif"
                  tal:attributes="src string:${context/absolute_url}/misc_/PageTemplates/zpt.gif" />
             <a href=""
-               tal:attributes="href string:${context/absolute_url}/manage_template?name=${info/name}&for=${info/for}&layer=${info/layer}&origin=${info/origin}"
-               tal:condition="info/customizable"
+               tal:attributes="href string:${context/absolute_url}/manage_template?signature=${info/signature}"
+               tal:condition="info/template"
                tal:content="info/name">
               Name
             </a>
-            <span tal:condition="not: info/customizable"
+            <span tal:condition="not: info/template"
                   tal:content="info/name">
               Name
             </span>
@@ -66,37 +66,34 @@
           <td>
             <table>
               <tr>
+                <td width="80px">Type</td>
+                <td tal:content="info/type_">Template type</td>
+              </tr>
+              <tr tal:condition="info/template">
                 <td>Template</td>
                 <td>
-                  <code tal:content="info/template"
-                        tal:condition="not: info/link">template</code>
-                  <a href="#"
-                     tal:attributes="href python:request.physicalPathToURL(info['template'])"
-                     tal:condition="info/link">
-                    <code tal:content="info/link">
-                      template
-                    </code>
-                  </a>
+                  <code tal:content="info/template">template</code>
                 </td>
               </tr>
               <tr>
                 <td>Object</td> 
-                <td><code tal:content="info/for">for</code></td>
+                <td><code tal:content="info/for_">for</code></td>
               </tr>
               <tr>
                 <td>Layer</td>
                 <td><code tal:content="info/layer">type</code></td>
               </tr>
-              <tr>
+              <tr tal:condition="info/config">
                 <td>Definition</td>
                 <td><code tal:content="info/config">zcmlfile</code></td>
               </tr>
-              <tr>
+              <tr tal:condition="info/origin">
                 <td>Origin</td>
                 <td><code tal:content="info/origin">where</code></td>
               </tr>
             </table>
           </td>
+
         </tr>
       </table>
 

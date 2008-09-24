@@ -8,33 +8,27 @@
     <div metal:fill-slot="body">
 
       <p i18n:translate="">This is the source of the
-        <code tal:content="view/name">viewname</code> for 
-        <code tal:content="request/form/for">for</code> in layer
-        <code tal:content="request/form/layer">layer</code>:
+        <code tal:content="view/entry/name">viewname</code> for 
+        <code tal:content="view/entry/for_">for</code> in layer
+        <code tal:content="view/entry/layer">layer</code>:
       </p>
 
       <pre style="background-color: #cccccc; border: 1px solid black; padding: 5px;"
-           tal:content="view/code">
+           tal:content="view/entry/code">
         template source
       </pre>
 
       <form action="#" method="post" class="form-text"
             tal:attributes="action string:${context/absolute_url}/manage_createCustom">
-        <input name="name" value="#" type="hidden"
-               tal:attributes="value request/form/name" />
-        <input name="for" value="#" type="hidden"
-               tal:attributes="value request/form/for" />
-        <input name="layer" value="#" type="hidden"
-               tal:attributes="value request/form/layer" />
-        <input name="origin" value="#" type="hidden"
-               tal:attributes="value request/form/origin" />
+        <input name="signature" value="#" type="hidden"
+               tal:attributes="value view/entry/signature" />
         <table>
           <tr>
             <td><label for="customize_for" class="form-mono">For interface</label></td>
             <td>
               <select name="customize_for">
                 <option tal:repeat="interface view/availablesInterfacesAndMarkers"
-                        tal:define="wanted request/form/for"
+                        tal:define="wanted view/entry/for_"
                         tal:attributes="selected python:wanted == interface and 'selected' or None"
                         tal:content="interface">
                   Interface
@@ -46,7 +40,7 @@
             <td>
               <select name="customize_layer">
                 <option tal:repeat="layer view/availablesLayers"
-                        tal:define="wanted request/form/layer"
+                        tal:define="wanted view/entry/layer"
                         tal:attributes="selected python:wanted == layer and 'selected' or None"
                         tal:content="layer">
                   Layer
