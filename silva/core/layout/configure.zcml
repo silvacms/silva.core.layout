@@ -5,7 +5,7 @@
    xmlns:five="http://namespaces.zope.org/five">
 
   <five:registerPackage package="." />
-
+  
   <!-- Grok this package -->
   <grok:grok package="." />
 
@@ -25,5 +25,8 @@
     for="Products.Silva.interfaces.IContainer"
     name="index.html"
   />
+
+  <include package="silva.core.conf" />
+  <include package="silva.core.views" />
 
 </configure>
