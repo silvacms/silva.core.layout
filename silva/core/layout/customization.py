@@ -180,6 +180,12 @@ class DefaultViewEntry(grok.Adapter):
 
         permission = self.permission()
         service = getUtility(interfaces.ICustomizationService)
+        site = findSite(service)
+
+        if ICustomizedTemplate.providedBy(self.context):
+            if self.origin == u'/'.join(site.getPhysicalPath()):
+                raise ValueError, "This template have been already customized in the same directory."
+
         new_template = TTWViewTemplate(template_id, self.code, 
                                        view=viewclass, permission=permission)
         
@@ -190,7 +196,7 @@ class DefaultViewEntry(grok.Adapter):
         required[0] = customized_for
         required[1] = customized_layer
         
-        manager = findSite(service).getSiteManager()
+        manager = site.getSiteManager()
         manager.registerAdapter(new_template, 
                                 required=tuple(required),
                                 provided=self.registration.provided, 
