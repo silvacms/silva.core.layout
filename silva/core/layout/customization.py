@@ -61,12 +61,12 @@ class ViewManager(grok.Adapter):
             if entry is None:
                 if isAFiveTemplate(reg.factory):
                     entry = FiveViewEntry(reg.factory)
-                    
+
         if not (entry is None):
             entry.origin = sitename
             entry.registration = reg
 
-        return entry            
+        return entry
 
 
     def search(self, interface, layer, sort=False):
@@ -80,7 +80,7 @@ class ViewManager(grok.Adapter):
                     interface.isOrExtends(reg.required[0]) and
                     reg.required[0].isOrExtends(ICustomizable) and
                     reg.required[1].isOrExtends(layer)):
-                    
+
                     entry = self._entry(reg, sitename)
                     if entry:
                         yield entry
@@ -122,7 +122,7 @@ class DefaultViewEntry(grok.Adapter):
     origin = None
 
     registration = None
-    
+
     @property
     def name(self):
         return self.registration.name
@@ -186,20 +186,20 @@ class DefaultViewEntry(grok.Adapter):
             if self.origin == u'/'.join(site.getPhysicalPath()):
                 raise ValueError, "This template have been already customized in the same directory."
 
-        new_template = TTWViewTemplate(template_id, self.code, 
+        new_template = TTWViewTemplate(template_id, self.code,
                                        view=viewclass, permission=permission)
-        
+
         service._setObject(template_id, new_template)
         new_template = getattr(service, template_id)
 
         required = list(self.registration.required)
         required[0] = customized_for
         required[1] = customized_layer
-        
+
         manager = site.getSiteManager()
-        manager.registerAdapter(new_template, 
+        manager.registerAdapter(new_template,
                                 required=tuple(required),
-                                provided=self.registration.provided, 
+                                provided=self.registration.provided,
                                 name=self.registration.name)
 
         return new_template
@@ -376,7 +376,7 @@ class ManageCustomTemplates(CustomizationManagementView):
             self.availableTemplates = self.context.availablesTemplates(interface, layer)
         else:
             self.selectedInterface = ISilvaObject.__identifier__
-        
+
 
 class ManageViewTemplate(CustomizationManagementView):
 
@@ -415,7 +415,7 @@ class ManageCreateCustomTemplate(ManageViewTemplate):
 
         self.redirect(new_template.absolute_url() + '/manage_workspace')
 
-                                       
+
     def render(self):
         return u'Customized.'
 

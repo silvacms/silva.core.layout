@@ -42,7 +42,7 @@ class ICustomizableMarker(ICustomizableTag):
 class ISilvaLayer(IDefaultBrowserLayer):
     """Default Silva Layer
     """
-    
+
 class ISilvaSkin(ISilvaLayer, IBrowserSkinType):
     """A Silva skin for the default layer.
     """
@@ -57,7 +57,7 @@ class IMarkManager(Interface):
     usedInterfaces = Attribute(u"Skinable interfaces used")
     usedMarkers = Attribute(u"Skinable markers set on the object")
     availablesMarkers = Attribute(u"Skinable markers that can be set  on the object")
-    
+
     def addMarker(name):
         """Set marker name in the object.
         """
@@ -75,7 +75,7 @@ class IViewEntry(Interface):
     type_ = Attribute(u"Kind of template type")
     template = Attribute(u"Template rendering the view")
     config = Attribute(u"Where is configured that view")
-    for_ = Attribute(u"For which content is registered the view") 
+    for_ = Attribute(u"For which content is registered the view")
     layer = Attribute(u"On which layer is registered the view")
     origin = Attribute(u"Where the view is defined")
     signature = Attribute(u"Signature of the view (as text)")
