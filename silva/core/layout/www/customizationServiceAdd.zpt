@@ -9,7 +9,7 @@ Version of this file: $Revision: 1.4 $
     tal:replace="structure here/manage_form_title">Form Title</h2>
 
 <p class="form-help">
-Add Customization Service 
+Add Customization Service
 </p>
 
 <form action="manage_addCustomizationService" method="post">
@@ -21,7 +21,7 @@ Add Customization Service
     </div>
     </td>
     <td align="left" valign="top">
-    <input type="text" name="id" size="40" />
+    <input type="text" name="id" size="40" value="service_customization" />
     </td>
   </tr>
   <tr>
@@ -29,9 +29,9 @@ Add Customization Service
     </td>
     <td align="left" valign="top">
     <div class="form-element">
-    <input class="form-element" type="submit" name="submit_add" 
-     value=" Add " /> 
-    <input class="form-element" type="submit" name="submit_edit" 
+    <input class="form-element" type="submit" name="submit_add"
+     value=" Add " />
+    <input class="form-element" type="submit" name="submit_edit"
      value=" Add and Edit " />
     </div>
     </td>
