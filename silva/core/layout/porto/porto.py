@@ -3,9 +3,10 @@
 # See also LICENSE.txt
 # $Id$
 
-import zope.cachedescriptors.property
+from zope.cachedescriptors.property import CachedProperty
 
 from Products.SilvaLayout.interfaces import IMetadata
+from Products.Silva.interfaces import IVirtualHosting
 
 from silva.core.views import views as silvaviews
 from silva.core import conf as silvaconf
@@ -18,9 +19,14 @@ class MainTemplate(silvaviews.Template):
 
     silvaconf.name('index.html')
 
-    @zope.cachedescriptors.property.CachedProperty
+    @CachedProperty
     def metadata(self):
         return IMetadata(self.context)
+
+    @CachedProperty
+    def root_url(self):
+        root = IVirtualHosting(self.context).getSilvaOrVirtualRoot()
+        return root.absolute_url()
 
 
 class Layout(silvaviews.ContentProvider):
