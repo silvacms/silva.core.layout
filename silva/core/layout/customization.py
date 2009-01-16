@@ -4,9 +4,10 @@
 # $Id$
 
 from zope.app.component.interfaces import ISite
-from zope.configuration.name import resolve
+from zope.configuration.name import resolve as pythonResolve
 from zope.component import getGlobalSiteManager, queryAdapter
 from zope.component import getUtility, getUtilitiesFor
+from zope.interface.interfaces import IInterface
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 import zope.cachedescriptors.property
 
@@ -32,13 +33,32 @@ from interfaces import ICustomizableMarker, ILayerType
 
 from utils import findSite, findNextSite, queryAdapterOnClass
 
+from grokcore.view.interfaces import ITemplate as IGrokTemplate
 from five import grok
+
+
+def identifier(obj):
+    """Gives the Python identifier for the given object, so after we
+    can do resolve on it to get it back.
+    """
+    if IInterface.providedBy(obj):
+        return obj.__identifier__
+    return obj.__name__
+
+
+def resolve(name):
+    """Resolve the name.
+    """
+    obj = pythonResolve(name)
+    if not IInterface.providedBy(obj):
+        return obj.__provides__._implements
+    return obj
+
 
 class ViewManager(grok.Adapter):
 
     grok.implements(interfaces.IViewManager)
     grok.adapts(ISilvaObject)
-
 
     def sites(self):
         """Gives a list of local sites.
@@ -51,16 +71,16 @@ class ViewManager(grok.Adapter):
 
 
     def _entry(self, reg, sitename):
-        """Build a ViewEntry from the registration info.
+        """Build a ViewInfo from the registration info.
         """
         if ITemplateNotCustomizable.implementedBy(reg.factory):
             return None
-        entry = queryAdapterOnClass(reg.factory, interfaces.IViewEntry)
+        entry = queryAdapterOnClass(reg.factory, interfaces.IViewInfo)
         if entry is None:
-            entry = queryAdapter(reg.factory, interfaces.IViewEntry)
+            entry = queryAdapter(reg.factory, interfaces.IViewInfo)
             if entry is None:
                 if isAFiveTemplate(reg.factory):
-                    entry = FiveViewEntry(reg.factory)
+                    entry = FiveViewInfo(reg.factory)
 
         if not (entry is None):
             entry.origin = sitename
@@ -68,9 +88,8 @@ class ViewManager(grok.Adapter):
 
         return entry
 
-
     def search(self, interface, layer, sort=False):
-        """Search and return all ViewEntry object for customizable
+        """Search and return all ViewInfo object for customizable
         views for interface in layer layer.
         """
 
@@ -90,12 +109,16 @@ class ViewManager(grok.Adapter):
             views.extend(viewsFor(*site))
 
         if sort is True:
-            return sorted(views, key=lambda e: e.name)
-        return views
+            views = sorted(views, key=lambda e: e.name)
 
+        result = []
+        for view in views:
+            result.append({'view': view,
+                           'signature': self.get_signature(view),})
+        return result
 
     def get(self, type_, name, origin, required):
-        """Retrieve the ViewEntry which correspond to the given settings.
+        """Retrieve the ViewInfo which correspond to the given settings.
         """
         for site, sitename in self.sites():
             if sitename != origin:
@@ -108,12 +131,27 @@ class ViewManager(grok.Adapter):
             return None
         return None
 
+    def from_signature(self, signature):
+        signature = signature.split(':')
+        type_ = resolve(signature[0])
+        name = signature[1]
+        origin = signature[2] != 'None' and signature[2] or None
+        required = tuple(map(resolve, signature[3:]))
+        return self.get(type_, name, origin, required)
 
-class DefaultViewEntry(grok.Adapter):
+    def get_signature(self, view_entry):
+        required = ':'.join(map(lambda x: identifier(x), view_entry.registration.required))
+        return '%s:%s:%s:%s' % (identifier(view_entry.registration.provided),
+                                view_entry.registration.name,
+                                view_entry.origin,
+                                required)
+
+
+class DefaultViewInfo(grok.Adapter):
     """Default base class for view entries.
     """
 
-    grok.implements(interfaces.IViewEntry)
+    grok.implements(interfaces.IViewInfo)
     grok.baseclass()
 
     type_ = u'Five Page Template'
@@ -129,19 +167,11 @@ class DefaultViewEntry(grok.Adapter):
 
     @property
     def for_(self):
-        return self.registration.required[0].__identifier__
+        return identifier(self.registration.required[0])
 
     @property
     def layer(self):
-        return self.registration.required[1].__identifier__
-
-    @property
-    def signature(self):
-        required = ':'.join(map(lambda x: x.__identifier__, self.registration.required))
-        return '%s:%s:%s:%s' % (self.registration.provided.__identifier__,
-                                self.registration.name,
-                                self.origin,
-                                required)
+        return identifier(self.registration.required[1])
 
     @property
     def code(self):
@@ -150,7 +180,7 @@ class DefaultViewEntry(grok.Adapter):
         return u''
 
     def generateId(self):
-        tid = '-'.join(map(lambda r: r.__identifier__.split('.')[-1],
+        tid = '-'.join(map(lambda r: identifier(r).split('.')[-1],
                            self.registration.required))
         return '%s-%s' % (tid, self.name)
 
@@ -201,11 +231,11 @@ class DefaultViewEntry(grok.Adapter):
                                 required=tuple(required),
                                 provided=self.registration.provided,
                                 name=self.registration.name)
-
+        import pdb ; pdb.set_trace()
         return new_template
 
 
-class GrokViewEntry(DefaultViewEntry):
+class GrokViewInfo(DefaultViewInfo):
     """A Grok View.
     """
 
@@ -215,15 +245,16 @@ class GrokViewEntry(DefaultViewEntry):
 
     @property
     def template(self):
-        if hasattr(self.context, 'template'):
-            return self.context.template._template.filename
+        if hasattr(self.context, 'template') and self.context.template is not None:
+            if IGrokTemplate.providedBy(self.context.template):
+                return self.context.template._template.filename
         return None
 
     def generateId(self):
-        return 'grok-template-%s' % super(GrokViewEntry, self).generateId()
+        return 'grok-template-%s' % super(GrokViewInfo, self).generateId()
 
 
-class GrokContentProviderEntry(GrokViewEntry):
+class GrokContentProviderEntry(GrokViewInfo):
     """A Grok Content Provider.
     """
 
@@ -231,11 +262,14 @@ class GrokContentProviderEntry(GrokViewEntry):
 
     type_ = u'Grok Content Provider'
 
+    def permission(self):
+        return None
+
     def generateId(self):
-        return 'grok-contentprovider-%s' % super(GrokViewEntry, self).generateId()
+        return 'grok-contentprovider-%s' % super(GrokViewInfo, self).generateId()
 
 
-class GrokViewletEntry(GrokViewEntry):
+class GrokViewletEntry(GrokViewInfo):
     """A Grok Viewlet.
     """
 
@@ -244,10 +278,10 @@ class GrokViewletEntry(GrokViewEntry):
     type_ = u'Grok Viewlet'
 
     def generateId(self):
-        return 'grok-viewlet-%s' % super(GrokViewEntry, self).generateId()
+        return 'grok-viewlet-%s' % super(GrokViewInfo, self).generateId()
 
 
-class CustomizedViewEntry(DefaultViewEntry):
+class CustomizedViewInfo(DefaultViewInfo):
     """A Customized View.
     """
 
@@ -264,7 +298,7 @@ class CustomizedViewEntry(DefaultViewEntry):
         return self.context.read()
 
     def generateId(self):
-        return 'customized-%s' % super(CustomizedViewEntry, self).generateId()
+        return 'customized-%s' % super(CustomizedViewInfo, self).generateId()
 
     def _view(self):
         return self.context.view
@@ -273,7 +307,7 @@ class CustomizedViewEntry(DefaultViewEntry):
         return self.context.permission
 
 
-class FiveViewEntry(DefaultViewEntry):
+class FiveViewInfo(DefaultViewInfo):
     """A regular Five template.
     """
 
@@ -288,7 +322,7 @@ class FiveViewEntry(DefaultViewEntry):
         return self.context.index.filename
 
     def generateId(self):
-        return 'five-template-%s' % super(FiveViewEntry, self).generateId()
+        return 'five-template-%s' % super(FiveViewInfo, self).generateId()
 
 
 
@@ -385,18 +419,14 @@ class ManageViewTemplate(CustomizationManagementView):
     def update(self):
         assert 'signature' in self.request.form
 
-        signature = self.request.form['signature'].split(':')
-        type_ = resolve(signature[0])
-        name = signature[1]
-        origin = signature[2] != 'None' and signature[2] or None
-        required = tuple(map(resolve, signature[3:]))
-        assert len(required) > 1
-        self.interface = required[0]
-        self.layer = required[1]
-
-        self.entry = interfaces.IViewManager(self.context).get(type_, name, origin, required)
+        self.signature = self.request.form['signature']
+        self.entry = interfaces.IViewManager(self.context).from_signature(self.signature)
         if self.entry is None:
             raise ValueError, 'Template not found'
+
+        self.interface = self.entry.registration.required[0]
+        self.layer = self.entry.registration.required[1]
+
 
 
 class ManageCreateCustomTemplate(ManageViewTemplate):

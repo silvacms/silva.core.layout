@@ -67,7 +67,7 @@ class IMarkManager(Interface):
         """
 
 
-class IViewEntry(Interface):
+class IViewInfo(Interface):
     """This is a view that your are going to customize.
     """
 
@@ -78,7 +78,6 @@ class IViewEntry(Interface):
     for_ = Attribute(u"For which content is registered the view")
     layer = Attribute(u"On which layer is registered the view")
     origin = Attribute(u"Where the view is defined")
-    signature = Attribute(u"Signature of the view (as text)")
     code = Attribute(u"Code of the associated template")
 
     def generateId():
@@ -108,6 +107,15 @@ class IViewManager(Interface):
 
     def get(type_, name, origin, required):
         """Search the view which match that kind, name and signature.
+        """
+
+    def from_signature(signature):
+        """Load view information from a signature.
+        """
+
+    def get_signature(view_info):
+        """Return a signature (string) which should uniquely identify
+        the view.
         """
 
 # Utility

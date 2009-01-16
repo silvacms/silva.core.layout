@@ -204,7 +204,7 @@ class ManageEditCustomizeMarker(silvaviews.ZMIView):
     silvaconf.name('manage_editCustomization')
     silvaconf.require('zope2.ViewManagementScreens')
     silvaconf.context(ISilvaObject)
-    
+
     def update(self):
         assert 'marker' in self.request.form
         manager = IMarkManager(self.context)

@@ -3,7 +3,7 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       metal:use-macro="context/@@standard_macros/page">
-    
+
   <body>
     <div metal:fill-slot="body">
 
@@ -54,12 +54,12 @@
                  tal:attributes="src string:${context/absolute_url}/misc_/PageTemplates/zpt.gif" />
             <a href=""
                tal:attributes="href string:${context/absolute_url}/manage_template?signature=${info/signature}"
-               tal:condition="info/template"
-               tal:content="info/name">
+               tal:condition="info/view/template"
+               tal:content="info/view/name">
               Name
             </a>
-            <span tal:condition="not: info/template"
-                  tal:content="info/name">
+            <span tal:condition="not: info/view/template"
+                  tal:content="info/view/name">
               Name
             </span>
           </td>
@@ -67,33 +67,32 @@
             <table>
               <tr>
                 <td width="80px">Type</td>
-                <td tal:content="info/type_">Template type</td>
+                <td tal:content="info/view/type_">Template type</td>
               </tr>
-              <tr tal:condition="info/template">
+              <tr tal:condition="info/view/template">
                 <td>Template</td>
                 <td>
-                  <code tal:content="info/template">template</code>
+                  <code tal:content="info/view/template">template</code>
                 </td>
               </tr>
               <tr>
-                <td>Object</td> 
-                <td><code tal:content="info/for_">for</code></td>
+                <td>Object</td>
+                <td><code tal:content="info/view/for_">for</code></td>
               </tr>
               <tr>
                 <td>Layer</td>
-                <td><code tal:content="info/layer">type</code></td>
+                <td><code tal:content="info/view/layer">type</code></td>
               </tr>
-              <tr tal:condition="info/config">
+              <tr tal:condition="info/view/config">
                 <td>Definition</td>
-                <td><code tal:content="info/config">zcmlfile</code></td>
+                <td><code tal:content="info/view/config">zcmlfile</code></td>
               </tr>
-              <tr tal:condition="info/origin">
+              <tr tal:condition="info/view/origin">
                 <td>Origin</td>
-                <td><code tal:content="info/origin">where</code></td>
+                <td><code tal:content="info/view/origin">where</code></td>
               </tr>
             </table>
           </td>
-
         </tr>
       </table>
 

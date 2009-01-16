@@ -3,12 +3,12 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       metal:use-macro="context/@@standard_macros/page">
-    
+
   <body>
     <div metal:fill-slot="body">
 
       <p i18n:translate="">This is the source of the
-        <code tal:content="view/entry/name">viewname</code> for 
+        <code tal:content="view/entry/name">viewname</code> for
         <code tal:content="view/entry/for_">for</code> in layer
         <code tal:content="view/entry/layer">layer</code>:
       </p>
@@ -21,7 +21,7 @@
       <form action="#" method="post" class="form-text"
             tal:attributes="action string:${context/absolute_url}/manage_createCustom">
         <input name="signature" value="#" type="hidden"
-               tal:attributes="value view/entry/signature" />
+               tal:attributes="value view/signature" />
         <table>
           <tr>
             <td><label for="customize_for" class="form-mono">For interface</label></td>
