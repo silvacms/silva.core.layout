@@ -39,7 +39,16 @@ class ICustomizableMarker(ICustomizableTag):
 
 # Default skin and layers
 
-class ISilvaLayer(IDefaultBrowserLayer):
+class ICustomizableLayer(IDefaultBrowserLayer):
+    """A customizable layer.
+    """
+
+
+class ISMILayer(ICustomizableLayer):
+    """SMI objects.
+    """
+
+class ISilvaLayer(ICustomizableLayer):
     """Default Silva Layer
     """
 
