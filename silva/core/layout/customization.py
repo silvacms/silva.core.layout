@@ -231,7 +231,6 @@ class DefaultViewInfo(grok.Adapter):
                                 required=tuple(required),
                                 provided=self.registration.provided,
                                 name=self.registration.name)
-        import pdb ; pdb.set_trace()
         return new_template
 
 
