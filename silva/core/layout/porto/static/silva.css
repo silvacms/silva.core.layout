@@ -81,3 +81,15 @@ pre {
   background-color: transparent;
   font-size: 120%;
 }
+
+sup {
+  vertical-align: text-top;
+}
+
+sub {
+  vertical-align:   text-bottom;
+}
+
+th {
+  text-align: left;
+}
