@@ -5,6 +5,7 @@
 
 from zope.cachedescriptors.property import CachedProperty
 from zope.publisher.interfaces import INotFound
+from zope.security.interfaces import IUnauthorized
 from zope.interface import implements
 
 from Products.SilvaLayout.interfaces import IMetadata
@@ -30,9 +31,12 @@ class MainTemplate(silvaviews.Template):
         return IMetadata(self.context)
 
     @CachedProperty
+    def root(self):
+        return IVirtualHosting(self.context).getSilvaOrVirtualRoot()
+
+    @CachedProperty
     def root_url(self):
-        root = IVirtualHosting(self.context).getSilvaOrVirtualRoot()
-        return root.absolute_url()
+        return self.root.absolute_url()
 
 
 class Layout(silvaviews.ContentProvider):
@@ -67,7 +71,7 @@ class Footer(silvaviews.ContentProvider):
     pass
 
 
-# Error page
+# 404 page
 
 class IErrorPage(ITemplate):
     pass
@@ -82,3 +86,17 @@ class ErrorContent(silvaviews.ContentProvider):
     silvaconf.view(IErrorPage)
     silvaconf.name('content')
 
+# Unauthorized page
+
+class IUnauthorizedPage(ITemplate):
+    pass
+
+class UnauthorizedPage(MainTemplate):
+    silvaconf.context(IUnauthorized)
+    silvaconf.name('error.html')
+
+    implements(IUnauthorizedPage)
+
+class UnauthorizedContent(silvaviews.ContentProvider):
+    silvaconf.view(IUnauthorizedPage)
+    silvaconf.name('content')
