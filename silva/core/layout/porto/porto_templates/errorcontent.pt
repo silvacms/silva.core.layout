@@ -1,0 +1,4 @@
+<tal:error>
+  <b>404</b><br />
+  The content you are seeking does not exists.
+</tal:error>

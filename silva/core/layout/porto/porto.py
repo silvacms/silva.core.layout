@@ -4,10 +4,13 @@
 # $Id$
 
 from zope.cachedescriptors.property import CachedProperty
+from zope.publisher.interfaces import INotFound
+from zope.interface import implements
 
 from Products.SilvaLayout.interfaces import IMetadata
 from Products.Silva.interfaces import IVirtualHosting
 
+from silva.core.views.interfaces import ITemplate
 from silva.core.views import views as silvaviews
 from silva.core import conf as silvaconf
 
@@ -15,9 +18,12 @@ from interfaces import IPorto
 
 silvaconf.layer(IPorto)
 
+# Main design
+
 class MainTemplate(silvaviews.Template):
 
     silvaconf.name('index.html')
+    silvaconf.template('maintemplate')
 
     @CachedProperty
     def metadata(self):
@@ -59,4 +65,20 @@ class Footer(silvaviews.ContentProvider):
     """Site footer.
     """
     pass
+
+
+# Error page
+
+class IErrorPage(ITemplate):
+    pass
+
+class ErrorPage(MainTemplate):
+    silvaconf.context(INotFound)
+    silvaconf.name('error.html')
+
+    implements(IErrorPage)
+
+class ErrorContent(silvaviews.ContentProvider):
+    silvaconf.view(IErrorPage)
+    silvaconf.name('content')
 
