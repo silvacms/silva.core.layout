@@ -17,7 +17,8 @@ from OFS.interfaces import IObjectWillBeRemovedEvent
 from zExceptions import BadRequest
 
 from Products.Silva.BaseService import SilvaService
-from Products.Silva.helpers import add_and_edit
+from Products.Silva.helpers import add_and_edit, \
+    register_service, unregister_service
 from Products.Silva.interfaces import ISilvaObject
 
 from silva.core import conf as silvaconf
@@ -457,23 +458,14 @@ def manage_addCustomizationService(self, id, REQUEST=None):
     """Add a Customization Service.
     """
 
-    site = self.Destination()
-    if not ISite.providedBy(site):
-        raise BadRequest, "A customization service can only be created in a local site"
     service = CustomizationService(id)
-    site._setObject(id, service)
-    service = getattr(site, id)
-    sm = site.getSiteManager()
-    sm.registerUtility(service, interfaces.ICustomizationService)
+    register_service(self, id, service, interfaces.ICustomizationService)
     add_and_edit(site, id, REQUEST)
     return ''
 
 
-@silvaconf.subscribe(interfaces.ICustomizationService, IObjectWillBeRemovedEvent)
+@silvaconf.subscribe(
+    interfaces.ICustomizationService, IObjectWillBeRemovedEvent)
 def unregisterCustomizationService(service, event):
-    site = service.aq_parent
-    if not ISite.providedBy(site):
-        raise ValueError, "Impossible"
-    sm = ISite(site).getSiteManager()
-    sm.unregisterUtility(service, interfaces.ICustomizationService)
+    unregister_service(service, interfaces.ICustomizationService)
 
