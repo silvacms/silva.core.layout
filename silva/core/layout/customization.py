@@ -14,7 +14,6 @@ import zope.cachedescriptors.property
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from OFS.Folder import Folder
 from OFS.interfaces import IObjectWillBeRemovedEvent
-from zExceptions import BadRequest
 
 from Products.Silva.BaseService import SilvaService
 from Products.Silva.helpers import add_and_edit, \
@@ -460,7 +459,7 @@ def manage_addCustomizationService(self, id, REQUEST=None):
 
     service = CustomizationService(id)
     register_service(self, id, service, interfaces.ICustomizationService)
-    add_and_edit(site, id, REQUEST)
+    add_and_edit(self, id, REQUEST)
     return ''
 
 
