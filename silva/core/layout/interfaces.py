@@ -9,7 +9,7 @@ from zope.publisher.interfaces.browser import IBrowserSkinType
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
 from silva.core.interfaces.service import ISilvaLocalService
-from silva.core.interfaces.service import ICustomizable
+from silva.core.interfaces.content import ICustomizable
 
 # Interfaces types
 
