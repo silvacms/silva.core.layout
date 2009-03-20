@@ -25,9 +25,9 @@ from OFS.interfaces import IObjectWillBeRemovedEvent
 # Silva
 from Products.Silva.BaseService import ZMIObject
 from Products.Silva.helpers import add_and_edit
-from Products.Silva.interfaces import ISilvaObject
 
 from silva.core import conf as silvaconf
+from silva.core.interfaces import ISilvaObject
 from silva.core.views import views as silvaviews
 
 from interfaces import ICustomizableType, ICustomizableTag, ICustomizableMarker

@@ -18,9 +18,9 @@ from OFS.interfaces import IObjectWillBeRemovedEvent
 from Products.Silva.BaseService import SilvaService
 from Products.Silva.helpers import add_and_edit, \
     register_service, unregister_service
-from Products.Silva.interfaces import ISilvaObject
 
 from silva.core import conf as silvaconf
+from silva.core.interfaces import ISilvaObject
 from silva.core.views.ttwtemplates import TTWViewTemplate
 from silva.core.views.interfaces import ITemplate, ICustomizedTemplate
 from silva.core.views.interfaces import IContentProvider, IViewlet

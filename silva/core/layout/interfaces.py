@@ -8,7 +8,8 @@ from zope.interface.interfaces import IInterface
 from zope.publisher.interfaces.browser import IBrowserSkinType
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
-from Products.Silva.interfaces.service import ISilvaLocalService
+from silva.core.interfaces.service import ISilvaLocalService
+from silva.core.interfaces.service import ICustomizable
 
 # Interfaces types
 
@@ -17,20 +18,19 @@ class ICustomizableType(IInterface):
     NOT AN INTERFACE TO PROVIDES OR IMPLEMENTS.
     """
 
+
 class ILayerType(IInterface):
     """This type represent Silva layer. THIS NOT AND INTERFACE TO
     PROVIDES OR IMPLEMENTS.
     """
 
-# Interfaces
 
-class ICustomizable(Interface):
-    """Marker customizable objects.
-    """
+# Interfaces
 
 class ICustomizableTag(ICustomizable):
     """This is a tag that you can set on object to customize them.
     """
+
 
 class ICustomizableMarker(ICustomizableTag):
     """Customizable markers.
@@ -47,6 +47,7 @@ class ICustomizableLayer(IDefaultBrowserLayer):
 class ISMILayer(ICustomizableLayer):
     """SMI objects.
     """
+
 
 class ISilvaLayer(ICustomizableLayer):
     """Default Silva Layer
@@ -65,7 +66,8 @@ class IMarkManager(Interface):
 
     usedInterfaces = Attribute(u"Skinable interfaces used")
     usedMarkers = Attribute(u"Skinable markers set on the object")
-    availablesMarkers = Attribute(u"Skinable markers that can be set  on the object")
+    availablesMarkers = Attribute(
+        u"Skinable markers that can be set  on the object")
 
     def addMarker(name):
         """Set marker name in the object.
@@ -154,9 +156,11 @@ class IObjectMarkEvent(Interface):
 
     marker = Attribute(u"Involved marker")
 
+
 class IObjectHaveBeenMarked(IObjectMarkEvent):
     """An object have been marked by a marker.
     """
+
 
 class IObjectHaveBeenUnmarked(IObjectMarkEvent):
     """A Marker have been removed from an object.

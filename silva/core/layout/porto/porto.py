@@ -9,11 +9,11 @@ from zope.security.interfaces import IUnauthorized
 from zope.interface import implements
 
 from Products.SilvaLayout.interfaces import IMetadata
-from Products.Silva.interfaces import IVirtualHosting
 
+from silva.core import conf as silvaconf
+from silva.core.interfaces import IVirtualHosting
 from silva.core.views.interfaces import ITemplate
 from silva.core.views import views as silvaviews
-from silva.core import conf as silvaconf
 
 from interfaces import IPorto
 

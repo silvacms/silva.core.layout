@@ -34,6 +34,7 @@ setup(name='silva.core.layout',
           'silva.resourceinclude',
           'silva.core.views',
           'silva.core.conf',
+          'silva.core.interfaces',
           'Products.Silva',
           'Products.SilvaLayout'
           ],

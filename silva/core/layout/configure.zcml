@@ -20,12 +20,12 @@
 
   <!-- Default views should be index.html -->
   <browser:defaultView
-    for="Products.Silva.interfaces.IContent"
+    for="silva.core.interfaces.IContent"
     name="index.html"
   />
 
   <browser:defaultView
-    for="Products.Silva.interfaces.IContainer"
+    for="silva.core.interfaces.IContainer"
     name="index.html"
   />
 
