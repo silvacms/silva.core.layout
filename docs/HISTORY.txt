@@ -1,18 +1,9 @@
 Changelog
 =========
 
-2.2b1 - (unreleased)
+2.2a1 - (unreleased)
 --------------------
 
-* ..
+* Initial release for 2.1.
 
-2.2a2 - (2009-01-12)
---------------------
-
-* Improve Porto skin to be extended more easily.
-
-2.2a1 - (2008-11-18)
---------------------
-
-* Initial release
 

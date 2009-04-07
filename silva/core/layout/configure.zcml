@@ -1,34 +1,12 @@
 <configure
    xmlns="http://namespaces.zope.org/zope"
    xmlns:browser="http://namespaces.zope.org/browser"
-   xmlns:grok="http://namespaces.zope.org/grok"
    xmlns:five="http://namespaces.zope.org/five">
 
   <five:registerPackage package="." />
 
   <include package="silva.core.conf" />
   <include package="silva.core.views" />
-
-  <!-- Grok this package -->
-  <grok:grok package="." />
-
-  <!-- Register the default layer as a Silva layer -->
-  <interface
-     interface="zope.publisher.interfaces.browser.IDefaultBrowserLayer"
-     type=".interfaces.ILayerType"
-     />
-
-  <!-- Default views should be index.html -->
-  <browser:defaultView
-    for="silva.core.interfaces.IContent"
-    name="index.html"
-  />
-
-  <browser:defaultView
-    for="silva.core.interfaces.IContainer"
-    name="index.html"
-  />
-
   <include package="silva.resourceinclude" />
 
 </configure>
