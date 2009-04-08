@@ -1,0 +1,77 @@
+<configure
+   xmlns="http://namespaces.zope.org/zope"
+   xmlns:browser="http://namespaces.zope.org/browser">
+
+  <interface
+     interface=".interfaces.IPortoSkin"
+     type="zope.publisher.interfaces.browser.IBrowserSkinType"
+     name="Porto"
+     />
+
+  <browser:resourceDirectory
+     name="silva.core.layout.porto"
+     directory="static"
+     permission="zope2.Public"
+     />
+
+  <browser:resourceInclude
+     layer=".interfaces.IPortoWithCSS"
+     base="silva.core.layout.porto"
+     include="silva.css"
+     />
+
+  <browser:resourceInclude
+     layer=".interfaces.IPortoSkin"
+     base="silva.core.layout.porto"
+     include="porto.css"
+     />
+
+  <browser:page
+     name="index.html"
+     for="Products.Silva.interfaces.ISilvaObject"
+     class=".porto.MainTemplate"
+     template="porto_templates/maintemplate.pt"
+     permission="zope2.View"
+     layer=".interfaces.IPorto"
+     />
+
+  <browser:viewletManager
+     name="layout"
+     class=".porto.Layout"
+     template="porto_templates/layout.pt"
+     permission="zope.Public"
+     layer=".interfaces.IPorto"
+     />
+
+  <browser:viewletManager
+     name="header"
+     class=".porto.Header"
+     template="porto_templates/header.pt"
+     permission="zope.Public"
+     layer=".interfaces.IPorto"
+     />
+
+  <browser:viewletManager
+     name="content"
+     class=".porto.Content"
+     permission="zope.Public"
+     layer=".interfaces.IPorto"
+     />
+
+  <browser:viewletManager
+     name="footer"
+     class=".porto.Footer"
+     template="porto_templates/footer.pt"
+     permission="zope.Public"
+     layer=".interfaces.IPorto"
+     />
+
+  <browser:viewletManager
+     name="breadcrumbs"
+     class=".porto.Breadcrumbs"
+     template="porto_templates/breadcrumbs.pt"
+     permission="zope.Public"
+     layer=".interfaces.IPorto"
+     />
+
+</configure>

@@ -7,24 +7,17 @@ from zope.cachedescriptors.property import CachedProperty
 from zope.publisher.interfaces import INotFound
 from zope.security.interfaces import IUnauthorized
 from zope.interface import implements
+from zope import component
 
 from Products.SilvaLayout.interfaces import IMetadata
 
-from silva.core import conf as silvaconf
-from silva.core.interfaces import IVirtualHosting
-from silva.core.views.interfaces import ITemplate
+from silva.core.views.interfaces import ITemplate, IVirtualSite
 from silva.core.views import views as silvaviews
 
-from interfaces import IPorto
-
-silvaconf.layer(IPorto)
 
 # Main design
 
 class MainTemplate(silvaviews.Template):
-
-    silvaconf.name('index.html')
-    silvaconf.template('maintemplate')
 
     @CachedProperty
     def metadata(self):
@@ -32,7 +25,9 @@ class MainTemplate(silvaviews.Template):
 
     @CachedProperty
     def root(self):
-        return IVirtualHosting(self.context).getSilvaOrVirtualRoot()
+        virtual_site = component.getMultiAdapter(
+            (self.context, self.request), IVirtualSite)
+        return virtual_site.get_root()
 
     @CachedProperty
     def root_url(self):
@@ -71,32 +66,32 @@ class Footer(silvaviews.ContentProvider):
     pass
 
 
-# 404 page
+# # 404 page
 
-class IErrorPage(ITemplate):
-    pass
+# class IErrorPage(ITemplate):
+#     pass
 
-class ErrorPage(MainTemplate):
-    silvaconf.context(INotFound)
-    silvaconf.name('error.html')
+# class ErrorPage(MainTemplate):
+#     silvaconf.context(INotFound)
+#     silvaconf.name('error.html')
 
-    implements(IErrorPage)
+#     implements(IErrorPage)
 
-class ErrorContent(silvaviews.ContentProvider):
-    silvaconf.view(IErrorPage)
-    silvaconf.name('content')
+# class ErrorContent(silvaviews.ContentProvider):
+#     silvaconf.view(IErrorPage)
+#     silvaconf.name('content')
 
-# Unauthorized page
+# # Unauthorized page
 
-class IUnauthorizedPage(ITemplate):
-    pass
+# class IUnauthorizedPage(ITemplate):
+#     pass
 
-class UnauthorizedPage(MainTemplate):
-    silvaconf.context(IUnauthorized)
-    silvaconf.name('error.html')
+# class UnauthorizedPage(MainTemplate):
+#     silvaconf.context(IUnauthorized)
+#     silvaconf.name('error.html')
 
-    implements(IUnauthorizedPage)
+#     implements(IUnauthorizedPage)
 
-class UnauthorizedContent(silvaviews.ContentProvider):
-    silvaconf.view(IUnauthorizedPage)
-    silvaconf.name('content')
+# class UnauthorizedContent(silvaviews.ContentProvider):
+#     silvaconf.view(IUnauthorizedPage)
+#     silvaconf.name('content')
