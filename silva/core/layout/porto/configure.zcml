@@ -35,6 +35,15 @@
      layer=".interfaces.IPorto"
      />
 
+  <browser:page
+     name="preview_html"
+     for="Products.Silva.interfaces.ISilvaObject"
+     class=".porto.MainTemplate"
+     template="porto_templates/maintemplate.pt"
+     permission="silva.ChangeSilvaContent"
+     layer=".interfaces.IPorto"
+     />
+
   <browser:viewletManager
      name="layout"
      class=".porto.Layout"
