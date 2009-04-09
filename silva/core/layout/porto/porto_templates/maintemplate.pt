@@ -2,16 +2,20 @@
 <html>
   <head>
     <title tal:content="context/get_title_or_id">Title</title>
-    <meta name="generator" content="Silva" /> 
+    <meta name="generator" content="Silva" />
+    <meta name="description"
+          tal:define="description view/metadata/silva-extra/content_description | nothing"
+          tal:condition="description"
+          tal:attributes="contents description" />
     <meta name="keywords"
           tal:define="keywords view/metadata/silva-extra/keywords | nothing"
           tal:condition="keywords"
           tal:attributes="contents keywords" />
     <tal:resource tal:replace="structure provider:resources" />
     <!-- Injector for content-specific css/js inclusion -->
-    <link tal:replace="structure here/head_inject | nothing" />
+    <link tal:replace="structure context/head_inject | nothing" />
     <link rel="shortcut icon"
-          tal:attributes="href here/favicon.ico/absolute_url | nothing" />
+          tal:attributes="href context/favicon.ico/absolute_url | nothing" />
   </head>
 
   <body>
