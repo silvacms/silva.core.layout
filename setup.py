@@ -32,6 +32,7 @@ setup(name='silva.core.layout',
       install_requires=[
           'setuptools',
           'silva.resourceinclude',
+          'five.grok',
           'silva.core.views > 2.0.999, < 2.1.999',
           'silva.core.conf > 2.0.999, < 2.1.999',
           ],

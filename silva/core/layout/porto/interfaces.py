@@ -4,6 +4,8 @@
 # $Id$
 
 from silva.core.layout.interfaces import ISilvaLayer, ISilvaSkin
+from five import grok
+
 
 class IPorto(ISilvaLayer):
     """A layer from Porto.
@@ -19,3 +21,4 @@ class IPortoSkin(IPortoWithCSS, ISilvaSkin):
     """A skin from Porto.
     """
 
+    grok.skin('Porto')

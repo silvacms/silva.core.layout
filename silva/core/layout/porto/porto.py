@@ -13,11 +13,18 @@ from Products.SilvaLayout.interfaces import IMetadata
 
 from silva.core.views.interfaces import ITemplate, IVirtualSite
 from silva.core.views import views as silvaviews
+from five import grok
 
+from interfaces import IPorto
+
+grok.layer(IPorto)
 
 # Main design
 
 class MainTemplate(silvaviews.Template):
+
+    grok.name('index.html')
+    grok.template('maintemplate')
 
     @CachedProperty
     def metadata(self):

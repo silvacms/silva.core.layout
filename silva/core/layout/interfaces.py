@@ -21,9 +21,16 @@ class ICustomizableLayer(IDefaultBrowserLayer):
     """A customizable layer.
     """
 
+
+class ISMILayer(ICustomizableLayer):
+    """SMI objects.
+    """
+
+
 class ISilvaLayer(ICustomizableLayer):
     """Default Silva Layer
     """
+
 
 class ISilvaSkin(ISilvaLayer, IBrowserSkinType):
     """A Silva skin for the default layer.

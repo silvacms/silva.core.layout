@@ -1,6 +1,7 @@
 <configure
    xmlns="http://namespaces.zope.org/zope"
    xmlns:browser="http://namespaces.zope.org/browser"
+   xmlns:grok="http://namespaces.zope.org/grok"
    xmlns:five="http://namespaces.zope.org/five">
 
   <five:registerPackage package="." />
@@ -8,8 +9,13 @@
   <include package="silva.core.conf" />
   <include package="silva.core.views" />
   <include package="silva.resourceinclude" />
-  <include package="Products.Silva" />
+
+  <!-- Grok this package -->
+  <grok:grok package="." />
 
   <include package=".porto" />
+
+  <include package="silva.resourceinclude" />
+  <include package="Products.Silva" />
 
 </configure>
