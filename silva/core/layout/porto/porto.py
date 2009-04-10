@@ -7,24 +7,24 @@ from zope.cachedescriptors.property import CachedProperty
 from zope.publisher.interfaces import INotFound
 from zope.security.interfaces import IUnauthorized
 from zope.interface import implements
+from zope import component
 
 from Products.SilvaLayout.interfaces import IMetadata
 
-from silva.core import conf as silvaconf
-from silva.core.interfaces import IVirtualHosting
-from silva.core.views.interfaces import ITemplate
+from silva.core.views.interfaces import ITemplate, IVirtualSite
 from silva.core.views import views as silvaviews
+from five import grok
 
 from interfaces import IPorto
 
-silvaconf.layer(IPorto)
+grok.layer(IPorto)
 
 # Main design
 
 class MainTemplate(silvaviews.Template):
 
-    silvaconf.name('index.html')
-    silvaconf.template('maintemplate')
+    grok.name('index.html')
+    grok.template('maintemplate')
 
     @CachedProperty
     def metadata(self):
@@ -32,7 +32,9 @@ class MainTemplate(silvaviews.Template):
 
     @CachedProperty
     def root(self):
-        return IVirtualHosting(self.context).getSilvaOrVirtualRoot()
+        virtual_site = component.getMultiAdapter(
+            (self.context, self.request), IVirtualSite)
+        return virtual_site.get_root()
 
     @CachedProperty
     def root_url(self):

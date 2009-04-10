@@ -53,6 +53,7 @@ class ISilvaLayer(ICustomizableLayer):
     """Default Silva Layer
     """
 
+
 class ISilvaSkin(ISilvaLayer, IBrowserSkinType):
     """A Silva skin for the default layer.
     """
