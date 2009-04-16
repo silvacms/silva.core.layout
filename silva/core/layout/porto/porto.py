@@ -79,14 +79,14 @@ class IErrorPage(ITemplate):
     pass
 
 class ErrorPage(MainTemplate):
-    silvaconf.context(INotFound)
-    silvaconf.name('error.html')
+    grok.context(INotFound)
+    grok.name('error.html')
 
     implements(IErrorPage)
 
 class ErrorContent(silvaviews.ContentProvider):
-    silvaconf.view(IErrorPage)
-    silvaconf.name('content')
+    grok.view(IErrorPage)
+    grok.name('content')
 
 # Unauthorized page
 
@@ -94,11 +94,11 @@ class IUnauthorizedPage(ITemplate):
     pass
 
 class UnauthorizedPage(MainTemplate):
-    silvaconf.context(IUnauthorized)
-    silvaconf.name('error.html')
+    grok.context(IUnauthorized)
+    grok.name('error.html')
 
     implements(IUnauthorizedPage)
 
 class UnauthorizedContent(silvaviews.ContentProvider):
-    silvaconf.view(IUnauthorizedPage)
-    silvaconf.name('content')
+    grok.view(IUnauthorizedPage)
+    grok.name('content')
