@@ -41,6 +41,12 @@ class MainTemplate(silvaviews.Template):
         return self.root.absolute_url()
 
 
+# We need to define a preview template in 2.1.
+class PreviewTemplate(MainTemplate):
+
+    grok.name('preview_html')
+
+
 class Layout(silvaviews.ContentProvider):
     """Layout of the page.
     """
@@ -89,6 +95,9 @@ class Content(silvaviews.ContentProvider):
     """
 
     def render(self):
+        # We need to check here for preview. It's not done automatically in 2.1.
+        if 'preview_html' in self.request.URL:
+            return self.context.preview()
         return self.context.view()
 
 
