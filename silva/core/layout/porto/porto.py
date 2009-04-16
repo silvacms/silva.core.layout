@@ -6,7 +6,6 @@
 from zope.cachedescriptors.property import CachedProperty
 from zope.publisher.interfaces import INotFound
 from zope.security.interfaces import IUnauthorized
-from zope.interface import implements
 from zope import component
 
 from Products.SilvaLayout.interfaces import IMetadata
@@ -81,8 +80,7 @@ class IErrorPage(ITemplate):
 class ErrorPage(MainTemplate):
     grok.context(INotFound)
     grok.name('error.html')
-
-    implements(IErrorPage)
+    grok.implements(IErrorPage)
 
 class ErrorContent(silvaviews.ContentProvider):
     grok.view(IErrorPage)
@@ -96,8 +94,7 @@ class IUnauthorizedPage(ITemplate):
 class UnauthorizedPage(MainTemplate):
     grok.context(IUnauthorized)
     grok.name('error.html')
-
-    implements(IUnauthorizedPage)
+    grok.implements(IUnauthorizedPage)
 
 class UnauthorizedContent(silvaviews.ContentProvider):
     grok.view(IUnauthorizedPage)
