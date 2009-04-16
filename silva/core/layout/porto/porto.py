@@ -86,9 +86,6 @@ class Navigation(silvaviews.ContentProvider):
             return info
         return None
 
-    def render(self):
-        return u""
-
 
 class Content(silvaviews.ContentProvider):
     """Content of the page.
