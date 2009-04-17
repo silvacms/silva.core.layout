@@ -6,6 +6,7 @@
 from zope.cachedescriptors.property import CachedProperty
 from zope.publisher.interfaces import INotFound
 from zope.security.interfaces import IUnauthorized
+from zope.traversing.browser import absoluteURL
 from zope import component
 
 from Products.Silva.interfaces import IContainer
@@ -69,22 +70,29 @@ class Navigation(silvaviews.ContentProvider):
     """Navigation
     """
 
+    @CachedProperty
+    def filter_service(self):
+        # Should be an utility
+        return self.context.service_toc_filter
+
     def filter_entries(self, nodes):
-        return nodes
+        return filter(lambda node: not self.filter_service.filter(node), nodes)
 
     def navigation_entries(self, node, depth=0, maxdepth=2):
-        if depth < maxdepth:
-            children = []
-            if IContainer.providedBy(node):
-                children = self.filter_entries(node.get_ordered_publishables())
-            info = {'id': node.getId(),
-                    'title': node.get_title_or_id(),
-                    'depth': depth + 1,
-                    'children': children,
-                    'onbranch': node in self.request.PARENTS,
-                    'current': node is self.context}
-            return info
-        return None
+        info = {'url': absoluteURL(node, self.request),
+                'title': node.get_title_or_id(),
+                'depth': depth + 1,
+                'nodes': None,
+                'onbranch': node in self.request.PARENTS,
+                'current': node is self.context}
+        if depth < maxdepth and IContainer.providedBy(node):
+            children = self.filter_entries(node.get_ordered_publishables())
+            info['nodes'] = list(children)
+        return info
+
+    def navigation_root(self):
+        node = self.context.get_publication()
+        return list(self.filter_entries(node.get_ordered_publishables()))
 
 
 class Content(silvaviews.ContentProvider):
