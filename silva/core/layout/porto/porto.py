@@ -12,7 +12,7 @@ from zope import component
 from Products.Silva.interfaces import IContainer
 from Products.SilvaLayout.interfaces import IMetadata
 
-from silva.core.views.interfaces import ITemplate, IVirtualSite
+from silva.core.views.interfaces import IVirtualSite
 from silva.core.views import views as silvaviews
 from five import grok
 
@@ -117,28 +117,14 @@ class Footer(silvaviews.ContentProvider):
 
 # 404 page
 
-class IErrorPage(ITemplate):
-    pass
-
-class ErrorPage(MainTemplate):
+class ErrorPage(silvaviews.Template):
     grok.context(INotFound)
     grok.name('error.html')
-    grok.implements(IErrorPage)
 
-class ErrorContent(silvaviews.ContentProvider):
-    grok.view(IErrorPage)
-    grok.name('content')
 
 # Unauthorized page
 
-class IUnauthorizedPage(ITemplate):
-    pass
-
-class UnauthorizedPage(MainTemplate):
+class UnauthorizedPage(silvaviews.Template):
     grok.context(IUnauthorized)
     grok.name('error.html')
-    grok.implements(IUnauthorizedPage)
 
-class UnauthorizedContent(silvaviews.ContentProvider):
-    grok.view(IUnauthorizedPage)
-    grok.name('content')
