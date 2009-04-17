@@ -78,18 +78,22 @@ class Navigation(silvaviews.ContentProvider):
     def filter_entries(self, nodes):
         return filter(lambda node: not self.filter_service.filter(node), nodes)
 
+    @CachedProperty
+    def navigation_current(self):
+        return self.context.aq_base
+
     def navigation_entries(self, node, depth=0, maxdepth=2):
         info = {'url': absoluteURL(node, self.request),
                 'title': node.get_title_or_id(),
-                'depth': depth + 1,
                 'nodes': None,
                 'onbranch': node in self.request.PARENTS,
-                'current': node is self.context}
+                'current': node.aq_base is self.navigation_current}
         if depth < maxdepth and IContainer.providedBy(node):
             children = self.filter_entries(node.get_ordered_publishables())
             info['nodes'] = list(children)
         return info
 
+    @CachedProperty
     def navigation_root(self):
         node = self.context.get_publication()
         return list(self.filter_entries(node.get_ordered_publishables()))
