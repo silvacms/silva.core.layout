@@ -22,10 +22,9 @@ grok.layer(IPorto)
 
 # Main design
 
-class MainTemplate(silvaviews.Template):
+class MainLayout(silvaviews.Layout):
 
-    grok.name('index.html')
-    grok.template('maintemplate')
+    grok.template('mainlayout')
 
     @CachedProperty
     def metadata(self):
@@ -42,10 +41,21 @@ class MainTemplate(silvaviews.Template):
         return self.root.absolute_url()
 
 
+class MainTemplate(silvaviews.Template):
+
+    grok.name('index.html')
+
+    def render(self):
+        return self.context.view()
+
+
 # We need to define a preview template in 2.1.
-class PreviewTemplate(MainTemplate):
+class PreviewTemplate(silvaviews.Template):
 
     grok.name('preview_html')
+
+    def render(self):
+        return self.context.preview()
 
 
 class Layout(silvaviews.ContentProvider):
@@ -97,17 +107,6 @@ class Navigation(silvaviews.ContentProvider):
     def navigation_root(self):
         node = self.context.get_publication()
         return list(self.filter_entries(node.get_ordered_publishables()))
-
-
-class Content(silvaviews.ContentProvider):
-    """Content of the page.
-    """
-
-    def render(self):
-        # We need to check here for preview. It's not done automatically in 2.1.
-        if 'preview_html' in self.request.URL:
-            return self.context.preview()
-        return self.context.view()
 
 
 class Footer(silvaviews.ContentProvider):
