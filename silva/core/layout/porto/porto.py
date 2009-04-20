@@ -6,11 +6,13 @@
 from zope.cachedescriptors.property import CachedProperty
 from zope.publisher.interfaces import INotFound
 from zope.security.interfaces import IUnauthorized
+from zope.traversing.browser import absoluteURL
 from zope import component
 
+from Products.Silva.interfaces import IContainer
 from Products.SilvaLayout.interfaces import IMetadata
 
-from silva.core.views.interfaces import ITemplate, IVirtualSite
+from silva.core.views.interfaces import IVirtualSite
 from silva.core.views import views as silvaviews
 from five import grok
 
@@ -20,10 +22,9 @@ grok.layer(IPorto)
 
 # Main design
 
-class MainTemplate(silvaviews.Template):
+class MainLayout(silvaviews.Layout):
 
-    grok.name('index.html')
-    grok.template('maintemplate')
+    grok.template('mainlayout')
 
     @CachedProperty
     def metadata(self):
@@ -38,6 +39,14 @@ class MainTemplate(silvaviews.Template):
     @CachedProperty
     def root_url(self):
         return self.root.absolute_url()
+
+
+class MainTemplate(silvaviews.Template):
+
+    grok.name('index.html')
+
+    def render(self):
+        return self.context.view()
 
 
 class Layout(silvaviews.ContentProvider):
@@ -58,12 +67,37 @@ class Breadcrumbs(silvaviews.ContentProvider):
     pass
 
 
-class Content(silvaviews.ContentProvider):
-    """Content of the page.
+class Navigation(silvaviews.ContentProvider):
+    """Navigation
     """
 
-    def render(self):
-        return self.context.view()
+    @CachedProperty
+    def filter_service(self):
+        # Should be an utility
+        return self.context.service_toc_filter
+
+    def filter_entries(self, nodes):
+        return filter(lambda node: not self.filter_service.filter(node), nodes)
+
+    @CachedProperty
+    def navigation_current(self):
+        return self.context.aq_base
+
+    def navigation_entries(self, node, depth=0, maxdepth=2):
+        info = {'url': absoluteURL(node, self.request),
+                'title': node.get_title_or_id(),
+                'nodes': None,
+                'onbranch': node in self.request.PARENTS,
+                'current': node.aq_base is self.navigation_current}
+        if depth < maxdepth and IContainer.providedBy(node):
+            children = self.filter_entries(node.get_ordered_publishables())
+            info['nodes'] = list(children)
+        return info
+
+    @CachedProperty
+    def navigation_root(self):
+        node = self.context.get_publication()
+        return list(self.filter_entries(node.get_ordered_publishables()))
 
 
 class Footer(silvaviews.ContentProvider):
@@ -74,28 +108,14 @@ class Footer(silvaviews.ContentProvider):
 
 # 404 page
 
-class IErrorPage(ITemplate):
-    pass
-
-class ErrorPage(MainTemplate):
+class ErrorPage(silvaviews.Template):
     grok.context(INotFound)
     grok.name('error.html')
-    grok.implements(IErrorPage)
 
-class ErrorContent(silvaviews.ContentProvider):
-    grok.view(IErrorPage)
-    grok.name('content')
 
 # Unauthorized page
 
-class IUnauthorizedPage(ITemplate):
-    pass
-
-class UnauthorizedPage(MainTemplate):
+class UnauthorizedPage(silvaviews.Template):
     grok.context(IUnauthorized)
     grok.name('error.html')
-    grok.implements(IUnauthorizedPage)
 
-class UnauthorizedContent(silvaviews.ContentProvider):
-    grok.view(IUnauthorizedPage)
-    grok.name('content')

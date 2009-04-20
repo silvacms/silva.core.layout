@@ -5,8 +5,13 @@
     Header
   </div>
 
+  <div id="navigation"
+       tal:content="structure provider:navigation">
+    Content
+  </div>
+
   <div id="content"
-       tal:content="structure provider:content">
+       tal:content="structure view/content">
     Content
   </div>
 
