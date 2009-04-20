@@ -10,6 +10,7 @@ div#content {
 }
 
 div.navigation {
+  padding-left: 1.6em;
   float: left;
 }
 
@@ -49,3 +50,4 @@ div.breadcrumbs {
 .breadcrumbs a:hover {
   text-decoration: underline;
 }
+
