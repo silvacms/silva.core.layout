@@ -29,10 +29,6 @@ div.breadcrumbs {
   display: inline;
 }
 
-.breadcrumbs ul li {
-  display: inline;
-}
-
 .breadcrumbs ul li:before {
   content: "\00BB ";
 }
