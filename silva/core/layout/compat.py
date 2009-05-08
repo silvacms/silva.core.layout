@@ -24,5 +24,5 @@ def standard_error_message(context, request, error):
             (providedBy(error), request,), context, name='error.html')
         if page is not None:
             return page.__of__(context)()
-    return u"<p>Sounds like there is an error.</p>"
+    return u"<p>I am sorry, but it sounds like there is an error.</p>"
 
