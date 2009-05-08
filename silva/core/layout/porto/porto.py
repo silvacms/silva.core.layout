@@ -9,7 +9,7 @@ from zope.security.interfaces import IUnauthorized
 from zope.traversing.browser import absoluteURL
 from zope import component
 
-from Products.Silva.interfaces import IContainer
+from silva.core.interfaces import IContainer
 from Products.SilvaLayout.interfaces import IMetadata
 
 from silva.core.views.interfaces import IVirtualSite
