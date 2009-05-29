@@ -7,7 +7,7 @@ from zope.cachedescriptors.property import CachedProperty
 from zope.publisher.interfaces import INotFound
 from zope.security.interfaces import IUnauthorized
 from zope.traversing.browser import absoluteURL
-from zope import component
+from zope import component, interface
 
 from silva.core.interfaces import IContainer
 from Products.SilvaLayout.interfaces import IMetadata
@@ -119,3 +119,8 @@ class UnauthorizedPage(silvaviews.Template):
     grok.context(IUnauthorized)
     grok.name('error.html')
 
+# Other error
+
+class OtherErrorPage(silvaviews.Template):
+    grok.context(interface.Interface)
+    grok.name('error.html')
