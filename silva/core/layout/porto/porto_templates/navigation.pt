@@ -4,10 +4,10 @@
      tal:condition="nodes">
   <ul metal:define-macro="navigation-level"
       tal:attributes="id python:not depth and 'navigation-menu' or None;
-                      class python:depth and 'navigation-submenu%d' % depth or None">
+                      class string:navigation-level-${depth}">
     <tal:entries tal:repeat="node nodes">
       <li tal:define="info python:provider.navigation_entries(node, depth)"
-          tal:attributes="class string:level${depth}">
+          tal:attributes="class string:level-${depth}">
         <a tal:attributes="href info/url;
                            title info/title"
            tal:content="info/title">Title</a>
