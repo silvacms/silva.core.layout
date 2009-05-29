@@ -15,7 +15,6 @@
 
   <include package=".porto" />
 
-  <include package="silva.resourceinclude" />
   <include package="Products.Silva" />
 
 </configure>
