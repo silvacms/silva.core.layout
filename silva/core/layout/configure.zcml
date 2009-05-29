@@ -8,6 +8,7 @@
 
   <include package="silva.core.conf" />
   <include package="silva.core.views" />
+  <include package="silva.resourceinclude" />
 
   <!-- Grok this package -->
   <grok:grok package="." />
@@ -28,7 +29,5 @@
     for="silva.core.interfaces.IContainer"
     name="index.html"
   />
-
-  <include package="silva.resourceinclude" />
 
 </configure>
