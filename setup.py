@@ -31,6 +31,7 @@ setup(name='silva.core.layout',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'martian',
           'silva.resourceinclude',
           'silva.core.views',
           'silva.core.conf',

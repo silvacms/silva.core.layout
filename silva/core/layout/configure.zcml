@@ -30,4 +30,7 @@
     name="index.html"
   />
 
+  <!-- Grok Silva interfaces -->
+  <grok:grok package="silva.core.interfaces" />
+
 </configure>
