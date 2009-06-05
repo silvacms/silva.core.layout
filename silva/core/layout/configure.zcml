@@ -13,6 +13,12 @@
   <!-- Grok this package -->
   <grok:grok package="." />
 
+  <!-- Register the default layer as a Silva layer -->
+  <interface
+     interface="zope.publisher.interfaces.browser.IDefaultBrowserLayer"
+     type=".interfaces.ILayerType"
+     />
+
   <include package=".porto" />
 
   <include package="Products.Silva" />

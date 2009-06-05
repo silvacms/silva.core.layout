@@ -31,6 +31,7 @@ setup(name='silva.core.layout',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'martian',
           'silva.resourceinclude',
           'five.grok',
           'silva.core.views > 2.0.999, < 2.1.999',

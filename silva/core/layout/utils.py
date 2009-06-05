@@ -4,8 +4,54 @@
 # $Id$
 
 # Zope 3
+from zope.app.component.interfaces import ISite
+from zope.traversing.interfaces import IContainmentRoot
 from zope.interface import implementedBy, providedBy, Interface
 from zope import component
+
+from Acquisition import aq_parent, aq_inner
+
+
+def getParent(item):
+    """Return the parent item of a given item or None.
+    """
+    if IContainmentRoot.providedBy(obj):
+        return None
+
+    parent = getattr(obj, '__parent__', None)
+    if parent is not None:
+        return parent
+
+    parent = aq_parent(aq_inner(obj))
+    if parent is not None:
+        return parent
+
+    raise ValueError
+
+
+def findSite(container):
+    """Return the nearest site.
+    """
+
+    if ISite.providedBy(container):
+        return container
+    return findNextSite(container)
+
+
+def findNextSite(container):
+    """Return the next site.
+    """
+    while container:
+        if IContainmentRoot.providedBy(container):
+            return None
+        try:
+            container = getParent(container)
+            if container is None:
+                return None
+        except TypeError:
+            return None
+        if ISite.providedBy(container):
+            return container
 
 
 def queryAdapterOnClass(klass, interface=None, name=u''):
@@ -19,6 +65,7 @@ def queryAdapterOnClass(klass, interface=None, name=u''):
         if result is not None:
             return result
     return None
+
 
 def queryMultiAdapterWithInterface(adapts, obj, interface=None, name=u""):
     """Query a multiple adapter, where the first is already an
