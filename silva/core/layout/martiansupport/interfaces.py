@@ -26,7 +26,8 @@ class SilvaInterfaceGrokker(martian.InstanceGrokker):
                 callable=provideInterface,
                 args=('', interface, ICustomizableType))
             return True
-        if interface.extends(ICustomizableLayer) and not interface.isOrExtends(ISilvaSkin):
+        if interface.extends(ICustomizableLayer) and \
+                not interface.isOrExtends(ISilvaSkin):
             config.action(
                 discriminator=('utility', ILayerType, interface),
                 callable=provideInterface,

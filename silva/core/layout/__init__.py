@@ -46,5 +46,5 @@ def initialize(context):
         markers.CustomizationMarker,
         constructors = (markers.manage_addCustomizationMarkerForm,
                         markers.manage_addCustomizationMarker),
-        icon="markes.png",
+        icon="markers.png",
         )

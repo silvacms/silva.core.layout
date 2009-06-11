@@ -45,7 +45,7 @@ class CustomizationMarker(PersistentInterfaceClass, SimpleItem.SimpleItem):
         self.id = name
         PersistentInterfaceClass.__init__(
             self, name=name, bases=(ICustomizableMarker,), __doc__=doc)
-        ZMIObject.__init__(self, name)
+        SimpleItem.SimpleItem.__init__(self, name)
         self.marked = PersistentList()
 
     def updateIdentifier(self):
@@ -183,7 +183,7 @@ class MarkManager(grok.Adapter):
 
 # Forms to mark objects
 
-class ManageCustomizeMarker(silvaviews.SMIView):
+class ManageCustomizeMarker(silvaviews.ZMIView):
 
     grok.name('tab_customization')
     grok.require('zope2.ViewManagementScreens')
