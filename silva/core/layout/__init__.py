@@ -5,6 +5,7 @@
 
 from Products.Silva.ExtensionRegistry import extensionRegistry
 from silva.core.conf.installer import DefaultInstaller
+from silva.core.upgrade import localsite
 import zope.interface
 
 
@@ -28,6 +29,7 @@ from silva.core.layout.compat import standard_error_message
 
 return standard_error_message(context, context.REQUEST, error_value)
 """)
+        localsite.activate(root)
 
 
 
@@ -35,6 +37,14 @@ install = CoreLayoutInstaller('Silva Core Layout', IExtension)
 
 
 def initialize(context):
+    import markers
+
     extensionRegistry.register(
         'Silva Core Layout', 'Silva 2.2 Layout system compatiblity',
         context, [], install, depends_on=('Silva', 'SilvaLayout',),)
+    context.registerClass(
+        markers.CustomizationMarker,
+        constructors = (markers.manage_addCustomizationMarkerForm,
+                        markers.manage_addCustomizationMarker),
+        icon="markes.png",
+        )
