@@ -68,7 +68,7 @@ class IMarkManager(Interface):
 
     usedInterfaces = Attribute(u"Skinable interfaces used")
     usedMarkers = Attribute(u"Skinable markers set on the object")
-    availablesMarkers = Attribute(
+    availableMarkers = Attribute(
         u"Skinable markers that can be set  on the object")
 
     def addMarker(name):

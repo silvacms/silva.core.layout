@@ -11,12 +11,18 @@ from zope.component.interfaces import ObjectEvent
 from zope.component import getUtility, getUtilitiesFor
 from zope.interface.interfaces import IInterface
 from zope.interface import providedBy, directlyProvides, directlyProvidedBy
+from zope.schema.interfaces import IContextSourceBinder
+from zope.interface import Interface
 from zope.event import notify
+from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
+from zope import schema
 import zope.cachedescriptors.property
 
 from persistent.list import PersistentList
 
 from five import grok
+
+from z3c.form import field, button
 
 # Zope 2
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -28,6 +34,7 @@ from Products.Silva.helpers import add_and_edit
 from Products.Silva.interfaces import ISilvaObject
 
 from silva.core.views import views as silvaviews
+from silva.core.views import z3cforms as silvaz3cforms
 
 from interfaces import ICustomizableType, ICustomizableTag, ICustomizableMarker
 from interfaces import IObjectHaveBeenMarked, IObjectHaveBeenUnmarked
@@ -164,7 +171,7 @@ class MarkManager(grok.Adapter):
         return self._listInterfaces(ICustomizableTag)
 
     @zope.cachedescriptors.property.CachedProperty
-    def availablesMarkers(self):
+    def availableMarkers(self):
         interfaces = getUtilitiesFor(ICustomizableType, context=self.context)
         availables = [name for name, interface in interfaces
                       if interface.extends(ICustomizableTag)]
@@ -183,38 +190,46 @@ class MarkManager(grok.Adapter):
 
 # Forms to mark objects
 
-class ManageCustomizeMarker(silvaviews.ZMIView):
+@grok.provider(IContextSourceBinder)
+def usedInterfacesForContent(context):
+    manager = IMarkManager(context)
+    return SimpleVocabulary([SimpleTerm(i) for i in manager.usedInterfaces])
+
+@grok.provider(IContextSourceBinder)
+def usedMarkersForContent(context):
+    manager = IMarkManager(context)
+    return SimpleVocabulary([SimpleTerm(i) for i in manager.usedMarkers])
+
+@grok.provider(IContextSourceBinder)
+def availableMarkersForContent(context):
+    manager = IMarkManager(context)
+    return SimpleVocabulary([SimpleTerm(i) for i in manager.availableMarkers])
+
+
+class IManageCustomizationMarker(Interface):
+
+    usedInterface = schema.Choice(
+        title=u"Used interfaces",
+        source=usedInterfacesForContent)
+    usedMarkers = schema.Choice(
+        title=u"Used markers",
+        source=usedMarkersForContent)
+    availablesMarkers = schema.Choice(
+        title=u"Available markers",
+        source=availableMarkersForContent)
+
+class ManageCustomizeMarker(silvaz3cforms.PageForm):
 
     grok.name('tab_customization')
-    grok.require('zope2.ViewManagementScreens')
-    grok.context(ISilvaObject)
 
-    def update(self):
+    fields = field.Fields(IManageCustomizationMarker)
+    ignoreContext = True
+
+    @button.buttonAndHandler(u"Add", name="add")
+    def add(self,*data):
         manager = IMarkManager(self.context)
-        self.usedInterfaces = manager.usedInterfaces
-        self.usedMarkers = manager.usedMarkers
-        self.availablesMarkers = manager.availablesMarkers
 
-
-class ManageEditCustomizeMarker(silvaviews.ZMIView):
-
-    grok.name('manage_editCustomization')
-    grok.require('zope2.ViewManagementScreens')
-    grok.context(ISilvaObject)
-
-    def update(self):
-        assert 'marker' in self.request.form
+    @button.buttonAndHandler(u"Remove", name="remove")
+    def remove(self,*data):
         manager = IMarkManager(self.context)
-        if 'add' in self.request.form:
-            for marker in self.request.form['marker']:
-                manager.addMarker(marker)
-        elif 'remove' in self.request.form:
-            for marker in self.request.form['marker']:
-                manager.removeMarker(marker)
-
-        self.redirect(self.context.absolute_url() + '/edit/tab_customization')
-
-    def render(self):
-        return 'Edit markers.'
-
 
