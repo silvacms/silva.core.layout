@@ -257,7 +257,7 @@ class DisplayUsedInterfaces(silvaz3cforms.SubForm):
     grok.view(ManageCustomizeMarker)
     grok.order(10)
 
-    label = "Used interfaces by the content which change it's rendering"
+    label = "Used interfaces by the content which change its rendering"
     fields = field.Fields(IDisplayUsedInterfaces)
     mode = DISPLAY_MODE
 
@@ -271,13 +271,19 @@ class AddCustomizationMarker(silvaz3cforms.SubForm):
     fields = field.Fields(IAddCustomizationMarker)
     ignoreContext = True
 
-    @button.buttonAndHandler(u"Add", name="add")
-    def handle_add(self , action):
-        values = self.widgets['availablesMarkers'].extract()
-        manager = IMarkManager(self.context)
-        for value in values:
-            manager.addMarker(value)
-        self.status = u"Marker added."
+    @button.buttonAndHandler(
+        u"Add", name="add",
+        condition=lambda form: form.widgets['availablesMarkers'].terms)
+    def handle_add(self, action):
+        values, errors = self.extractData()
+        if not values['availablesMarkers']:
+            self.status = u"You need to select a marker."
+            self.status_type = 'error'
+        else:
+            manager = IMarkManager(self.context)
+            for value in values['availablesMarkers']:
+                manager.addMarker(value)
+            self.status = u"Marker added."
 
 
 class RemoveCustomizationMarker(silvaz3cforms.SubForm):
@@ -289,13 +295,19 @@ class RemoveCustomizationMarker(silvaz3cforms.SubForm):
     fields = field.Fields(IRemoveCustomizationMarker)
     ignoreContext = True
 
-    @button.buttonAndHandler(u"Remove", name="remove")
-    def handle_remove(self , action):
-        values = self.widgets['usedMarkers'].extract()
-        manager = IMarkManager(self.context)
-        for value in values:
-            manager.removeMarker(value)
-        self.status = u"Marker removed."
+    @button.buttonAndHandler(
+        u"Remove", name="remove",
+        condition=lambda form: form.widgets['usedMarkers'].terms)
+    def handle_remove(self, action):
+        values, errors = self.extractData()
+        if not values['usedMarkers']:
+            self.status = u"You need to select a marker."
+            self.status_type = 'error'
+        else:
+            manager = IMarkManager(self.context)
+            for value in values['usedMarkers']:
+                manager.removeMarker(value)
+            self.status = u"Marker removed."
 
 
 from Products.Silva.browser.smi import SMIButton
