@@ -23,4 +23,13 @@
 
   <include package="Products.Silva" />
 
+  <browser:viewlet
+     name="smi.buttons.customization"
+     for="Products.Silva.interfaces.ISilvaObject"
+     view="Products.Silva.browser.interfaces.IPropertiesTab"
+     manager="Products.Silva.browser.interfaces.ISMIButtonManager"
+     class=".markers.ManageCustomizationButton"
+     permission="silva.ChangeSilvaContent"
+     />
+
 </configure>
