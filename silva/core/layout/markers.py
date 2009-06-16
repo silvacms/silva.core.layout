@@ -33,6 +33,7 @@ from OFS import SimpleItem
 # Silva
 from Products.Silva.helpers import add_and_edit
 from Products.Silva.interfaces import ISilvaObject
+from Products.Silva.browser.smi import SMIButton, PropertiesTab
 
 from silva.core.views import views as silvaviews
 from silva.core.views import z3cforms as silvaz3cforms
@@ -244,11 +245,11 @@ class ContentInterfaces(grok.Adapter):
         return manager.usedInterfaces
 
 
-class ManageCustomizeMarker(silvaz3cforms.ComposedForm):
+class ManageCustomizeMarker(silvaz3cforms.ComposedForm, PropertiesTab):
 
     grok.name('tab_customization')
 
-    label = "Manage customization markers"
+    label = "customization markers"
     description = "This let you marker your content with markers who are going to change how it is displayed."
 
 
@@ -309,8 +310,6 @@ class RemoveCustomizationMarker(silvaz3cforms.SubForm):
                 manager.removeMarker(value)
             self.status = u"Marker removed."
 
-
-from Products.Silva.browser.smi import SMIButton
 
 class ManageCustomizationButton(SMIButton):
 
