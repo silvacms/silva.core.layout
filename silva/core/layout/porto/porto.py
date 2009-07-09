@@ -94,7 +94,7 @@ class Navigation(silvaviews.ContentProvider):
 
     def navigation_entries(self, node, depth=0, maxdepth=2):
         info = {'url': absoluteURL(node, self.request),
-                'title': node.get_title_or_id(),
+                'title': node.get_short_title(),
                 'nodes': None,
                 'onbranch': node in self.request.PARENTS,
                 'current': node.aq_base is self.navigation_current}
