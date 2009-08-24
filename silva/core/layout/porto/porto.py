@@ -92,6 +92,12 @@ class Navigation(silvaviews.ContentProvider):
     def navigation_current(self):
         return self.context.aq_base
 
+    def navigation_css_class(self, info, depth):
+        css_class = ['level-%d' % depth]
+        if info['current'] or info['onbranch']:
+            css_class.append('selected')
+        return ' '.join(css_class)
+
     def navigation_entries(self, node, depth=0, maxdepth=2):
         info = {'url': absoluteURL(node, self.request),
                 'title': node.get_short_title(),

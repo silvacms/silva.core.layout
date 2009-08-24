@@ -7,7 +7,7 @@
                       class string:navigation-level-${depth}">
     <tal:entries tal:repeat="node nodes">
       <li tal:define="info python:provider.navigation_entries(node, depth)"
-          tal:attributes="class string:level-${depth}">
+          tal:attributes="class python:provider.navigation_css_class(info, depth)">
         <a tal:attributes="href info/url;
                            title info/title"
            tal:content="info/title">Title</a>
