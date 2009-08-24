@@ -80,6 +80,9 @@ class Navigation(silvaviews.ContentProvider):
     """Navigation
     """
 
+    max_depth = 2
+    only_first_container = False
+
     @CachedProperty
     def filter_service(self):
         # Should be an utility
@@ -93,20 +96,28 @@ class Navigation(silvaviews.ContentProvider):
         return self.context.aq_base
 
     def navigation_css_class(self, info, depth):
-        css_class = ['level-%d' % depth]
-        if info['current'] or info['onbranch']:
+        # CSS class on li
+        css_class = ['level-%d' % depth,]
+        if info['onbranch'] or info['current']:
             css_class.append('selected')
         return ' '.join(css_class)
 
-    def navigation_entries(self, node, depth=0, maxdepth=2):
+    def navigation_link_css_class(self, info, depth):
+        # CSS class on a
+        return (info['onbranch'] or info['current']) and 'selected' or None
+
+    def navigation_entries(self, node, depth=0, maxdepth=None):
+        if maxdepth is None:
+            maxdepth = self.max_depth
         info = {'url': absoluteURL(node, self.request),
                 'title': node.get_short_title(),
                 'nodes': None,
                 'onbranch': node in self.request.PARENTS,
                 'current': node.aq_base is self.navigation_current}
         if depth < maxdepth and IContainer.providedBy(node):
-            children = self.filter_entries(node.get_ordered_publishables())
-            info['nodes'] = list(children)
+            if (not self.only_first_container or info['onbranch']):
+                children = self.filter_entries(node.get_ordered_publishables())
+                info['nodes'] = list(children)
         return info
 
     @CachedProperty

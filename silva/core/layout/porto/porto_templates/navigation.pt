@@ -9,7 +9,8 @@
       <li tal:define="info python:provider.navigation_entries(node, depth)"
           tal:attributes="class python:provider.navigation_css_class(info, depth)">
         <a tal:attributes="href info/url;
-                           title info/title"
+                           title info/title;
+                           class python:provider.navigation_link_css_class(info, depth)"
            tal:content="info/title">Title</a>
         <div tal:condition="info/nodes">
           <tal:subentries tal:define="nodes info/nodes;
