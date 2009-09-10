@@ -116,7 +116,7 @@ class Navigation(silvaviews.ContentProvider):
                 'current': node.aq_base is self.navigation_current}
         if depth < maxdepth and IContainer.providedBy(node):
             if ((self.only_container is not None and
-                 self.only_container < depth) or info['onbranch']):
+                 depth < self.only_container) or info['onbranch']):
                 children = self.filter_entries(node.get_ordered_publishables())
                 info['nodes'] = list(children)
         return info
