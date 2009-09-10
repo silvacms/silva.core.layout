@@ -81,7 +81,7 @@ class Navigation(silvaviews.ContentProvider):
     """
 
     max_depth = 2
-    only_first_container = False
+    only_container = None
 
     @CachedProperty
     def filter_service(self):
@@ -115,7 +115,8 @@ class Navigation(silvaviews.ContentProvider):
                 'onbranch': node in self.request.PARENTS,
                 'current': node.aq_base is self.navigation_current}
         if depth < maxdepth and IContainer.providedBy(node):
-            if (not self.only_first_container or info['onbranch']):
+            if ((self.only_container is not None and
+                 self.only_container < depth) or info['onbranch']):
                 children = self.filter_entries(node.get_ordered_publishables())
                 info['nodes'] = list(children)
         return info
