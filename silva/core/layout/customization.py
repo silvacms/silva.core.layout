@@ -22,18 +22,19 @@ from Products.Silva.helpers import add_and_edit, \
 from silva.core import conf as silvaconf
 from silva.core.interfaces import ISilvaObject
 from silva.core.views.ttwtemplates import TTWViewTemplate
-from silva.core.views.interfaces import ITemplate, ICustomizedTemplate
+from silva.core.views.interfaces import ICustomizedTemplate
 from silva.core.views.interfaces import IContentProvider, IViewlet
 from silva.core.views.interfaces import ITemplateNotCustomizable
 from silva.core.views import views as silvaviews
 
-import interfaces
-from interfaces import ICustomizable, ICustomizableType
-from interfaces import ICustomizableMarker, ILayerType
+from silva.core.layout import interfaces
+from silva.core.layout.interfaces import ICustomizable, ICustomizableType
+from silva.core.layout.interfaces import ICustomizableMarker, ILayerType
 
-from utils import findSite, findNextSite, queryAdapterOnClass
+from silva.core.layout.utils import findSite, findNextSite, queryAdapterOnClass
 
 from grokcore.view.interfaces import ITemplate as IGrokTemplate
+from megrok.layout.interfaces import IPage
 from five import grok
 
 
@@ -238,7 +239,7 @@ class GrokViewInfo(DefaultViewInfo):
     """A Grok View.
     """
 
-    grok.context(ITemplate)
+    grok.context(IPage)
 
     type_ = u'Grok Page Template'
 
