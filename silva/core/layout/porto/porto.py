@@ -41,7 +41,7 @@ class MainLayout(silvaviews.Layout):
         return self.root.absolute_url()
 
 
-class MainTemplate(silvaviews.Template):
+class MainTemplate(silvaviews.Page):
 
     grok.name('index.html')
 
@@ -50,7 +50,7 @@ class MainTemplate(silvaviews.Template):
 
 
 # We need to define a preview template in 2.1.
-class PreviewTemplate(silvaviews.Template):
+class PreviewTemplate(silvaviews.Page):
 
     grok.name('preview_html')
 
@@ -135,19 +135,19 @@ class Footer(silvaviews.ContentProvider):
 
 # 404 page
 
-class ErrorPage(silvaviews.Template):
+class ErrorPage(silvaviews.Page):
     grok.context(INotFound)
     grok.name('error.html')
 
 
 # Unauthorized page
 
-class UnauthorizedPage(silvaviews.Template):
+class UnauthorizedPage(silvaviews.Page):
     grok.context(IUnauthorized)
     grok.name('error.html')
 
 # Other error
 
-class OtherErrorPage(silvaviews.Template):
+class OtherErrorPage(silvaviews.Page):
     grok.context(interface.Interface)
     grok.name('error.html')
