@@ -41,7 +41,7 @@ class MainLayout(silvaviews.Layout):
         return self.root.absolute_url()
 
 
-class MainTemplate(silvaviews.Template):
+class MainTemplate(silvaviews.Page):
 
     grok.name('index.html')
 
@@ -71,6 +71,9 @@ class Navigation(silvaviews.ContentProvider):
     """Navigation
     """
 
+    max_depth = 2
+    only_container = None
+
     @CachedProperty
     def filter_service(self):
         # Should be an utility
@@ -83,15 +86,30 @@ class Navigation(silvaviews.ContentProvider):
     def navigation_current(self):
         return self.context.aq_base
 
-    def navigation_entries(self, node, depth=0, maxdepth=2):
+    def navigation_css_class(self, info, depth):
+        # CSS class on li
+        css_class = ['level-%d' % depth,]
+        if info['onbranch'] or info['current']:
+            css_class.append('selected')
+        return ' '.join(css_class)
+
+    def navigation_link_css_class(self, info, depth):
+        # CSS class on a
+        return (info['onbranch'] or info['current']) and 'selected' or None
+
+    def navigation_entries(self, node, depth=0, maxdepth=None):
+        if maxdepth is None:
+            maxdepth = self.max_depth
         info = {'url': absoluteURL(node, self.request),
-                'title': node.get_title_or_id(),
+                'title': node.get_short_title(),
                 'nodes': None,
                 'onbranch': node in self.request.PARENTS,
                 'current': node.aq_base is self.navigation_current}
         if depth < maxdepth and IContainer.providedBy(node):
-            children = self.filter_entries(node.get_ordered_publishables())
-            info['nodes'] = list(children)
+            if ((self.only_container is not None and
+                 depth < self.only_container) or info['onbranch']):
+                children = self.filter_entries(node.get_ordered_publishables())
+                info['nodes'] = list(children)
         return info
 
     @CachedProperty
@@ -108,19 +126,19 @@ class Footer(silvaviews.ContentProvider):
 
 # 404 page
 
-class ErrorPage(silvaviews.Template):
+class ErrorPage(silvaviews.Page):
     grok.context(INotFound)
     grok.name('error.html')
 
 
 # Unauthorized page
 
-class UnauthorizedPage(silvaviews.Template):
+class UnauthorizedPage(silvaviews.Page):
     grok.context(IUnauthorized)
     grok.name('error.html')
 
 # Other error
 
-class OtherErrorPage(silvaviews.Template):
+class OtherErrorPage(silvaviews.Page):
     grok.context(interface.Interface)
     grok.name('error.html')
