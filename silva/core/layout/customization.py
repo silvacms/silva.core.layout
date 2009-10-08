@@ -15,7 +15,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from OFS.Folder import Folder
 from OFS.interfaces import IObjectWillBeRemovedEvent
 
-from Products.Silva.BaseService import SilvaService
+from silva.core.services.base import SilvaService
 from Products.Silva.helpers import add_and_edit, \
     register_service, unregister_service
 

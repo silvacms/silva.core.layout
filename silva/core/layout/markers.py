@@ -23,10 +23,10 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from OFS.interfaces import IObjectWillBeRemovedEvent
 
 # Silva
-from Products.Silva.BaseService import ZMIObject
 from Products.Silva.helpers import add_and_edit
 
 from silva.core import conf as silvaconf
+from silva.core.services.base import ZMIObject
 from silva.core.interfaces import ISilvaObject
 from silva.core.views import views as silvaviews
 
