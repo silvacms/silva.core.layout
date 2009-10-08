@@ -16,7 +16,7 @@ import zope.cachedescriptors.property
 
 from persistent.list import PersistentList
 
-from grokcore import component
+from five import grok
 
 # Zope 2
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -92,7 +92,7 @@ def manage_addCustomizationMarker(self, name, REQUEST=None):
 
 class ObjectMarkEvent(ObjectEvent):
 
-    component.implements(IObjectMarkEvent)
+    grok.implements(IObjectMarkEvent)
 
     def __init__(self, item, marker):
         super(ObjectMarkEvent, self).__init__(item)
@@ -101,17 +101,17 @@ class ObjectMarkEvent(ObjectEvent):
 
 class ObjectHaveBeenMarked(ObjectMarkEvent):
 
-    component.implements(IObjectHaveBeenMarked)
+    grok.implements(IObjectHaveBeenMarked)
 
 
 class ObjectHaveBeenUnmarked(ObjectMarkEvent):
 
-    component.implements(IObjectHaveBeenUnmarked)
+    grok.implements(IObjectHaveBeenUnmarked)
 
 
 REGISTERED_TYPES = [IInterface, ICustomizableType,]
 
-@silvaconf.subscribe(CustomizationMarker, IObjectAddedEvent)
+@grok.subscribe(CustomizationMarker, IObjectAddedEvent)
 def registerMarker(marker, event):
     site = findSite(event.newParent)
     if site:
@@ -121,7 +121,7 @@ def registerMarker(marker, event):
             sm.registerUtility(marker, iface_type, marker.__identifier__)
 
 
-@silvaconf.subscribe(CustomizationMarker, IObjectWillBeRemovedEvent)
+@grok.subscribe(CustomizationMarker, IObjectWillBeRemovedEvent)
 def unregisterMarker(marker, event):
     site = findSite(event.oldParent)
     for item in marker.markedObjects():
@@ -132,13 +132,13 @@ def unregisterMarker(marker, event):
             sm.unregisterUtility(marker, iface_type, marker.__identifier__)
 
 
-@silvaconf.subscribe(ISilvaObject, IObjectHaveBeenMarked)
+@grok.subscribe(ISilvaObject, IObjectHaveBeenMarked)
 def objectMarked(item, event):
     if event.marker.extends(ICustomizableMarker):
         event.marker.addMarkedObject(item)
 
 
-@silvaconf.subscribe(ISilvaObject, IObjectHaveBeenUnmarked)
+@grok.subscribe(ISilvaObject, IObjectHaveBeenUnmarked)
 def objectUnmarked(item, event):
     if event.marker.extends(ICustomizableMarker):
         event.marker.removeMarkedObject(item)
@@ -146,15 +146,16 @@ def objectUnmarked(item, event):
 
 # Adapters
 
-class MarkManager(component.Adapter):
+class MarkManager(grok.Adapter):
 
-    component.implements(IMarkManager)
-    silvaconf.context(ISilvaObject)
-    silvaconf.require('zope2.ManageProperties')
+    grok.implements(IMarkManager)
+    grok.context(ISilvaObject)
+    grok.require('zope2.ManageProperties')
 
     def _listInterfaces(self, base):
         interfaces = providedBy(self.context).interfaces()
-        return sorted([iface.__identifier__ for iface in interfaces if iface.extends(base)])
+        return sorted([iface.__identifier__ for iface in interfaces
+                       if iface.extends(base)])
 
     def _fetchMarker(self, name):
         return getUtility(ICustomizableType, name=name)
@@ -170,7 +171,8 @@ class MarkManager(component.Adapter):
     @zope.cachedescriptors.property.CachedProperty
     def availablesMarkers(self):
         interfaces = getUtilitiesFor(ICustomizableType, context=self.context)
-        availables = [name for name, interface in interfaces if interface.extends(ICustomizableTag)]
+        availables = [name for name, interface in interfaces
+                      if interface.extends(ICustomizableTag)]
         return sorted(list(set(availables).difference(set(self.usedMarkers))))
 
     def removeMarker(self, name):
@@ -186,11 +188,11 @@ class MarkManager(component.Adapter):
 
 # Forms to mark objects
 
-class ManageCustomizeMarker(silvaviews.ZMIView):
+class ManageCustomizeMarker(silvaviews.SMIView):
 
-    silvaconf.name('manage_customization')
-    silvaconf.require('zope2.ViewManagementScreens')
-    silvaconf.context(ISilvaObject)
+    grok.name('tab_customization')
+    grok.require('zope2.ViewManagementScreens')
+    grok.context(ISilvaObject)
 
     def update(self):
         manager = IMarkManager(self.context)
@@ -201,9 +203,9 @@ class ManageCustomizeMarker(silvaviews.ZMIView):
 
 class ManageEditCustomizeMarker(silvaviews.ZMIView):
 
-    silvaconf.name('manage_editCustomization')
-    silvaconf.require('zope2.ViewManagementScreens')
-    silvaconf.context(ISilvaObject)
+    grok.name('manage_editCustomization')
+    grok.require('zope2.ViewManagementScreens')
+    grok.context(ISilvaObject)
 
     def update(self):
         assert 'marker' in self.request.form
@@ -215,7 +217,7 @@ class ManageEditCustomizeMarker(silvaviews.ZMIView):
             for marker in self.request.form['marker']:
                 manager.removeMarker(marker)
 
-        self.redirect(self.context.absolute_url() + '/manage_customization')
+        self.redirect(self.context.absolute_url() + '/edit/tab_customization')
 
     def render(self):
         return 'Edit markers.'

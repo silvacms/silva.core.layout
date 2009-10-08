@@ -32,6 +32,7 @@ setup(name='silva.core.layout',
       install_requires=[
           'setuptools',
           'martian',
+          'five.localsitemanager',
           'silva.resourceinclude',
           'silva.core.views',
           'silva.core.conf',

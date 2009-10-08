@@ -1,73 +1,77 @@
-<h1 tal:replace="structure here/manage_page_header">Header</h1>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      metal:use-macro="context/@@standard_macros/page">
+  <body>
+    <div metal:fill-slot="body">
 
-<h2 tal:define="manage_tabs_message options/manage_tabs_message | nothing"
-    tal:replace="structure here/manage_tabs">Tabs</h2>
+      <form action="#" method="post" class="form-text"
+            tal:attributes="action string:${context/absolute_url}/manage_editCustomization">
 
-<br />
+        <fieldset>
+          <legend>
+            Natives implemented interfaces used by the layout system
+          </legend>
+          <ul>
+            <li tal:repeat="interface view/usedInterfaces"
+                tal:content="interface">
+            </li>
+        </fieldset>
 
-<form action="#" method="post" class="form-text"
-      tal:attributes="action string:${context/absolute_url}/manage_editCustomization">
-
-  <fieldset>
-    <legend>Natives implemented interfaces used by the layout system</legend>
-    <ul>
-      <li tal:repeat="interface view/usedInterfaces"
-          tal:content="interface">
-      </li>
-  </fieldset>
-
-  <tal:remove tal:condition="view/usedMarkers">
-    <br />
-
-    <fieldset>
-      <legend>Marker interface set on this object to customize its layout</legend>
-      <tal:loop tal:repeat="interface view/usedMarkers">
-        <tal:name tal:define="name string:remove:${interface}">
-          <input type="checkbox" name="marker:list" value="#" id="#"
-                 tal:attributes="value interface;
-                                 id name" />
-          <label for="#" class="form-mono"
-                 tal:attributes="for name"
-                 tal:content="interface">
-            Marker
-          </label>
+        <tal:remove tal:condition="view/usedMarkers">
           <br />
-        </tal:name>
-      </tal:loop>
-      
-      <input class="form-element" type="submit" value="Remove" name="remove" />
-    </fieldset>
 
-  </tal:remove>
+          <fieldset>
+            <legend>
+              Marker interface set on this object to customize its layout
+            </legend>
+            <tal:loop tal:repeat="interface view/usedMarkers">
+              <tal:name tal:define="name string:remove:${interface}">
+                <input type="checkbox" name="marker:list" value="#" id="#"
+                       tal:attributes="value interface;
+                                       id name" />
+                <label for="#" class="form-mono"
+                       tal:attributes="for name"
+                       tal:content="interface">
+                  Marker
+                </label>
+                <br />
+              </tal:name>
+            </tal:loop>
 
-  <tal:add tal:condition="view/availablesMarkers">
+            <input class="form-element" type="submit" value="Remove" name="remove" />
+          </fieldset>
 
-    <br />
+        </tal:remove>
 
-    <fieldset>
-      <legend>Available marker interface to customize layouts</legend>
-      <tal:loop tal:repeat="interface view/availablesMarkers">
-        <tal:name tal:define="name string:add:${interface}">
-          <input type="checkbox" name="marker:list" value="#" id="#"
-                 tal:attributes="value interface;
-                                 id name" />
-          <label for="#" class="form-mono" 
-                 tal:attributes="for name"
-                 tal:content="interface">
-            Marker
-          </label>
+        <tal:add tal:condition="view/availablesMarkers">
+
           <br />
-        </tal:name>
-      </tal:loop>
-      
-      <input class="form-element" type="submit" value="Add" name="add" />
-    </fieldset>
 
-  </tal:add>
+          <fieldset>
+            <legend>Available marker interface to customize layouts</legend>
+            <tal:loop tal:repeat="interface view/availablesMarkers">
+              <tal:name tal:define="name string:add:${interface}">
+                <input type="checkbox" name="marker:list" value="#" id="#"
+                       tal:attributes="value interface;
+                                       id name" />
+                <label for="#" class="form-mono"
+                       tal:attributes="for name"
+                       tal:content="interface">
+                  Marker
+                </label>
+                <br />
+              </tal:name>
+            </tal:loop>
 
-</form>
+            <input class="form-element" type="submit" value="Add" name="add" />
+          </fieldset>
 
+        </tal:add>
 
+      </form>
 
-<h1 tal:replace="structure here/manage_page_footer">Footer</h1>
-
+    </div>
+  </body>
+</html>
