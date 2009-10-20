@@ -19,19 +19,21 @@ class SilvaInterfaceGrokker(martian.InstanceGrokker):
     martian.component(InterfaceClass)
 
     def grok(self, name, interface, module_info, config, **kw):
-
         if interface.extends(ICustomizable):
             config.action(
                 discriminator=('utility', ICustomizableType, interface),
                 callable=provideInterface,
                 args=('', interface, ICustomizableType))
             return True
-        if interface.extends(ICustomizableLayer) and not interface.isOrExtends(ISilvaSkin):
+
+        if (interface.extends(ICustomizableLayer) and
+            not interface.isOrExtends(ISilvaSkin)):
             config.action(
                 discriminator=('utility', ILayerType, interface),
                 callable=provideInterface,
                 args=('', interface, ILayerType))
             return True
+
         return False
 
 
