@@ -181,12 +181,14 @@ class MarkManager(grok.Adapter):
 
     def removeMarker(self, name):
         marker = self._fetchMarker(name)
-        directlyProvides(self.context, directlyProvidedBy(self.context) - marker)
+        directlyProvides(
+            self.context, directlyProvidedBy(self.context) - marker)
         notify(ObjectHaveBeenUnmarked(self.context, marker))
 
     def addMarker(self, name):
         marker = self._fetchMarker(name)
-        directlyProvides(self.context, directlyProvidedBy(self.context), marker)
+        directlyProvides(
+            self.context, directlyProvidedBy(self.context), marker)
         notify(ObjectHaveBeenMarked(self.context, marker))
 
 
@@ -248,6 +250,7 @@ class ContentInterfaces(grok.Adapter):
 class ManageCustomizeMarker(silvaz3cforms.ComposedForm, PropertiesTab):
 
     grok.name('tab_customization')
+    grok.require('silva.ChangeSilvaContent')
 
     label = "customization markers"
     description = "This let you marker your content with markers who are going to change how it is displayed."
