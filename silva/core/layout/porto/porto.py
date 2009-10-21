@@ -26,6 +26,10 @@ class MainLayout(silvaviews.Layout):
 
     grok.template('mainlayout')
 
+    def update(self):
+        self.response.setHeader('Content-Type', 'text/html;charset=utf-8')
+        self.response.setHeader('Cache-Control','max-age=7200')
+
     @CachedProperty
     def metadata(self):
         return IMetadata(self.context)
