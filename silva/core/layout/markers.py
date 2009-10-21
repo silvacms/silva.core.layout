@@ -256,6 +256,7 @@ class ContentInterfaces(grok.Adapter):
 class ManageCustomizeMarker(silvaz3cforms.ComposedForm, PropertiesTab):
 
     grok.name('tab_customization')
+    grok.require('silva.ChangeSilvaContent')
 
     label = "customization markers"
     description = "This let you marker your content with markers who are going to change how it is displayed."
