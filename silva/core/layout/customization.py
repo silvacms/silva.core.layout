@@ -445,6 +445,9 @@ class ManageCreateCustomTemplate(ManageViewTemplate):
 
         self.redirect(new_template.absolute_url() + '/manage_workspace')
 
+    def render(self):
+	return u''
+
 
 manage_addCustomizationServiceForm = PageTemplateFile(
     "www/customizationServiceAdd", globals(),
