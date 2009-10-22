@@ -15,11 +15,4 @@
      include="porto.css"
      />
 
-  <browser:resourceInclude
-     layer=".interfaces.IPortoSkin"
-     base="silva.core.layout.porto"
-     include="print.css"
-     />
-
-
 </configure>
