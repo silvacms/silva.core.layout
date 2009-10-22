@@ -16,6 +16,9 @@
     <link tal:replace="structure context/head_inject | nothing" />
     <link rel="shortcut icon"
           tal:attributes="href context/favicon.ico/absolute_url | nothing" />
+    <!-- print css -->
+    <link rel="stylesheet" type="text/css" media="print" href="print.css" />
+
   </head>
 
   <body>
