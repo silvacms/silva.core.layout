@@ -28,7 +28,7 @@ class MainLayout(silvaviews.Layout):
 
     def update(self):
         self.response.setHeader('Content-Type', 'text/html;charset=utf-8')
-        self.response.setHeader('Cache-Control','max-age=7200')
+        self.response.setHeader('Cache-Control','max-age=7200, must-revalidate')
 
     @CachedProperty
     def metadata(self):
