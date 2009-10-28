@@ -9,7 +9,7 @@ from zope.security.interfaces import IUnauthorized
 from zope.traversing.browser import absoluteURL
 from zope import component, interface
 
-from Products.Silva.interfaces import IContainer
+from Products.Silva.interfaces import IContainer, IPublishable
 from Products.SilvaLayout.interfaces import IMetadata
 
 from silva.core.views.interfaces import IVirtualSite
@@ -93,7 +93,12 @@ class Navigation(silvaviews.ContentProvider):
         return self.context.service_toc_filter
 
     def filter_entries(self, nodes):
-        return filter(lambda node: not self.filter_service.filter(node), nodes)
+        def filter_entry(node):
+            # This should in the toc filter ?
+            if IPublishable.providedBy(node) and not node.is_published():
+                return False
+            return not self.filter_service.filter(node)
+        return filter(lambda node: filter_entry(node), nodes)
 
     @CachedProperty
     def navigation_current(self):
