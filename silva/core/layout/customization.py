@@ -381,7 +381,8 @@ class CustomizationManagementView(silvaviews.ZMIView):
         """Return available interfaces starting from base and markers.
         """
         interfaces = self.availablesInterfaces()
-        interfaces.extend(self.context.availablesInterfaces(ICustomizableMarker))
+        interfaces.extend(self.context.availablesInterfaces(
+                ICustomizableMarker))
         return interfaces
 
     def availablesLayers(self):
@@ -401,13 +402,16 @@ class ManageCustomTemplates(CustomizationManagementView):
     def update(self):
         self.availableTemplates = []
         self.selectedInterface = self.request.form.get('interface', None)
-        self.selectedLayer = self.request.form.get('layer', IDefaultBrowserLayer.__identifier__)
+        self.selectedLayer = self.request.form.get(
+            'layer', IDefaultBrowserLayer.__identifier__)
 
         if self.selectedInterface:
-            interface = getUtility(ICustomizableType, name=self.selectedInterface)
+            interface = getUtility(
+                ICustomizableType, name=self.selectedInterface)
             layer = getUtility(ILayerType, name=self.selectedLayer)
 
-            self.availableTemplates = self.context.availablesTemplates(interface, layer)
+            self.availableTemplates = self.context.availablesTemplates(
+                interface, layer)
         else:
             self.selectedInterface = ISilvaObject.__identifier__
 
@@ -415,12 +419,15 @@ class ManageCustomTemplates(CustomizationManagementView):
 class ManageViewTemplate(CustomizationManagementView):
 
     silvaconf.name('manage_template')
+    # Fix for grok template inherit issue
+    silvaconf.template('manageviewtemplate')
 
     def update(self):
         assert 'signature' in self.request.form
 
         self.signature = self.request.form['signature']
-        self.entry = interfaces.IViewManager(self.context).from_signature(self.signature)
+        self.entry = interfaces.IViewManager(self.context).from_signature(
+            self.signature)
         if self.entry is None:
             raise ValueError, 'Template not found'
 
@@ -441,12 +448,11 @@ class ManageCreateCustomTemplate(ManageViewTemplate):
         customize_for = getUtility(ICustomizableType, name=for_name)
         customize_layer = getUtility(ILayerType, name=layer_name)
 
-        new_template = self.entry.customize(self, customize_for, customize_layer)
+        new_template = self.entry.customize(
+            self, customize_for, customize_layer)
 
         self.redirect(new_template.absolute_url() + '/manage_workspace')
 
-    def render(self):
-	return u''
 
 
 manage_addCustomizationServiceForm = PageTemplateFile(
