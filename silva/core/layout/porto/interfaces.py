@@ -24,5 +24,5 @@ class IPortoSkin(IPortoWithCSS, ISilvaSkin):
     """A skin from Porto.
     """
 
-    grok.skin('Porto')
+    # We don't register that skin by default
     silvaconf.resource('porto.css')
