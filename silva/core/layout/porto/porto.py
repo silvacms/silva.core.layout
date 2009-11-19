@@ -12,7 +12,7 @@ from zope import component, interface
 from Products.Silva.interfaces import IContainer, IPublishable
 from Products.SilvaLayout.interfaces import IMetadata
 
-from silva.core.views.interfaces import IVirtualSite
+from silva.core.views.interfaces import IVirtualSite, IHTTPResponseHeaders
 from silva.core.views import views as silvaviews
 from five import grok
 
@@ -27,8 +27,8 @@ class MainLayout(silvaviews.Layout):
     grok.template('mainlayout')
 
     def update(self):
-        self.response.setHeader('Content-Type', 'text/html;charset=utf-8')
-        self.response.setHeader('Cache-Control','max-age=7200, must-revalidate')
+        component.getMultiAdapter(
+            (self.context, self.request), IHTTPResponseHeaders)()
 
     @CachedProperty
     def metadata(self):
