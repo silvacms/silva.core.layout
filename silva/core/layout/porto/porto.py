@@ -9,6 +9,8 @@ from zope.security.interfaces import IUnauthorized
 from zope.traversing.browser import absoluteURL
 from zope import component, interface
 
+from AccessControl import getSecurityManager
+
 from Products.Silva.interfaces import IContainer, IPublishable
 from Products.SilvaLayout.interfaces import IMetadata
 
@@ -93,9 +95,13 @@ class Navigation(silvaviews.ContentProvider):
         return self.context.service_toc_filter
 
     def filter_entries(self, nodes):
+        checkPermission = getSecurityManager().checkPermission
         def filter_entry(node):
             # This should in the toc filter ?
             if IPublishable.providedBy(node) and not node.is_published():
+                return False
+            # Should be in the toc filter
+            if not checkPermission('View', node):
                 return False
             return not self.filter_service.filter(node)
         return filter(lambda node: filter_entry(node), nodes)
