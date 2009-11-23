@@ -2,7 +2,6 @@
    xmlns="http://namespaces.zope.org/zope"
    xmlns:browser="http://namespaces.zope.org/browser">
 
-
   <browser:resourceInclude
      layer=".interfaces.IPortoWithCSS"
      base="silva.core.layout.porto"

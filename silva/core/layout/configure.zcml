@@ -35,20 +35,13 @@
      />
 
   <!-- Fix for PAS: we don't want it to be rendered -->
-  <!-- We could do it with a interface and use class implements -->
-  <class class="Products.PluggableAuthService.plugins.BasePlugin.BasePlugin"
-         zcml:condition="installed Products.PluggableAuthService">
-    <allow interface="silva.core.layout.porto.interfaces.IDefaultLayoutRenderable" />
-  </class>
-
-  <class class="Products.PluggableAuthService.PluggableAuthService.PluggableAuthService"
-         zcml:condition="installed Products.PluggableAuthService">
-    <allow interface="silva.core.layout.porto.interfaces.IDefaultLayoutRenderable" />
-  </class>
 
   <browser:defaultView
      for="silva.core.layout.porto.interfaces.IDefaultLayoutRenderable"
      name="index.html"
      />
+
+  <include file="pas.zcml"
+           zcml:condition="installed Products.PluggableAuthService" />
 
 </configure>
