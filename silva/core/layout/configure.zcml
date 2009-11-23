@@ -2,6 +2,7 @@
    xmlns="http://namespaces.zope.org/zope"
    xmlns:browser="http://namespaces.zope.org/browser"
    xmlns:grok="http://namespaces.zope.org/grok"
+   xmlns:zcml="http://namespaces.zope.org/zcml"
    xmlns:five="http://namespaces.zope.org/five">
 
   <five:registerPackage package="." initialize=".initialize" />
@@ -19,6 +20,7 @@
      type=".interfaces.ILayerType"
      />
 
+
   <include package=".porto" />
 
   <include package="Products.Silva" />
@@ -31,5 +33,19 @@
      class=".markers.ManageCustomizationButton"
      permission="silva.ChangeSilvaContent"
      />
+
+  <!-- Fix for PAS: we don't want it to be rendered -->
+  <!-- We could do it with a interface and use class implements -->
+  <browser:defaultView
+     for="Products.PluggableAuthService.plugins.BasePlugin.BasePlugin"
+     name="index.html"
+     zcml:condition="installed Products.PluggableAuthService"
+     />
+  <browser:defaultView
+     for="Products.PluggableAuthService.PluggableAuthService.PluggableAuthService"
+     name="index.html"
+     zcml:condition="installed Products.PluggableAuthService"
+     />
+
 
 </configure>
