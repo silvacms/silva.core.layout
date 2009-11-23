@@ -6,11 +6,12 @@
 from Products.Silva.interfaces import ISilvaObject
 from Acquisition import aq_parent
 
-from zope.interface import Interface
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
 from silva.core.views import views as silvaviews
 from five import grok
+
+from silva.core.layout.porto.interfaces import IDefaultLayoutRenderable
 
 grok.layer(IDefaultBrowserLayer)
 
@@ -20,7 +21,7 @@ class MainLayout(silvaviews.Layout):
     Silva ones. It will redirect you to the first SilvaObject found in
     the path.
     """
-    grok.context(Interface)
+    grok.context(IDefaultLayoutRenderable)
 
     def render(self):
         # There is nothing to see here. Try to get to the nearest
@@ -37,7 +38,7 @@ class MainTemplate(silvaviews.Page):
     """This template is for Zope object which can be asked to be
     rendered in a layout. They have no templates by default.
     """
-    grok.context(Interface)
+    grok.context(IDefaultLayoutRenderable)
     grok.name('index.html')
 
     def render(self):

@@ -36,16 +36,19 @@
 
   <!-- Fix for PAS: we don't want it to be rendered -->
   <!-- We could do it with a interface and use class implements -->
-  <browser:defaultView
-     for="Products.PluggableAuthService.plugins.BasePlugin.BasePlugin"
-     name="index.html"
-     zcml:condition="installed Products.PluggableAuthService"
-     />
-  <browser:defaultView
-     for="Products.PluggableAuthService.PluggableAuthService.PluggableAuthService"
-     name="index.html"
-     zcml:condition="installed Products.PluggableAuthService"
-     />
+  <class class="Products.PluggableAuthService.plugins.BasePlugin.BasePlugin"
+         zcml:condition="installed Products.PluggableAuthService">
+    <allow interface="silva.core.layout.porto.interfaces.IDefaultLayoutRenderable" />
+  </class>
 
+  <class class="Products.PluggableAuthService.PluggableAuthService.PluggableAuthService"
+         zcml:condition="installed Products.PluggableAuthService">
+    <allow interface="silva.core.layout.porto.interfaces.IDefaultLayoutRenderable" />
+  </class>
+
+  <browser:defaultView
+     for="silva.core.layout.porto.interfaces.IDefaultLayoutRenderable"
+     name="index.html"
+     />
 
 </configure>

@@ -18,7 +18,7 @@ from silva.core.views.interfaces import IVirtualSite, IHTTPResponseHeaders
 from silva.core.views import views as silvaviews
 from five import grok
 
-from interfaces import IPorto
+from silva.core.layout.porto.interfaces import IPorto
 
 grok.layer(IPorto)
 
