@@ -9,7 +9,9 @@
 
 from AccessControl import ModuleSecurityInfo, allow_module
 from silva.core.layout.utils import queryMultiAdapterWithInterface
+from silva.core.views.interfaces import IHTTPResponseHeaders
 from zope.interface import providedBy
+from zope.component import queryMultiAdapter
 
 allow_module('silva.core.layout.compat')
 module_security = ModuleSecurityInfo('silva.core.layout.compat')
@@ -19,6 +21,13 @@ module_security.declarePublic('standard_error_message')
 # context, and not an interface ... which does not make code really
 # reusable.
 def standard_error_message(context, request, error):
+    header_handler = queryMultiAdapter(
+        (error, request), IHTTPResponseHeaders)
+    if header_handler: header_handler()
+
+    if request.method == 'HEAD':
+        return ''
+
     if error:
         page = queryMultiAdapterWithInterface(
             (providedBy(error), request,), context, name='error.html')
