@@ -38,8 +38,7 @@ class MainLayout(silvaviews.Layout):
 
     @CachedProperty
     def root(self):
-        virtual_site = component.getMultiAdapter(
-            (self.context, self.request), IVirtualSite)
+        virtual_site = component.getAdapter(self.request, IVirtualSite)
         return virtual_site.get_root()
 
     @CachedProperty
