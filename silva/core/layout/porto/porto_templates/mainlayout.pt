@@ -6,7 +6,7 @@
     <meta name="description"
           tal:define="description layout/metadata/silva-extra/content_description | nothing"
           tal:condition="description"
-          tal:attributes="contents description" />
+          tal:attributes="content description" />
     <meta name="keywords"
           tal:define="keywords layout/metadata/silva-extra/keywords | nothing"
           tal:condition="keywords"
