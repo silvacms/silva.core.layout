@@ -6,7 +6,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '2.1.3dev'
+version = '2.1.4dev'
 
 setup(name='silva.core.layout',
       version=version,
