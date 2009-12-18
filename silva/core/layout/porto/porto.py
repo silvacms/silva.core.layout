@@ -9,14 +9,16 @@ from zope.security.interfaces import IUnauthorized
 from zope.traversing.browser import absoluteURL
 from zope import component, interface
 
-from silva.core.interfaces import IContainer
+from AccessControl import getSecurityManager
+
+from silva.core.interfaces import IContainer, IPublishable
 from Products.SilvaLayout.interfaces import IMetadata
 
-from silva.core.views.interfaces import IVirtualSite
+from silva.core.views.interfaces import IVirtualSite, IHTTPResponseHeaders
 from silva.core.views import views as silvaviews
 from five import grok
 
-from interfaces import IPorto
+from silva.core.layout.porto.interfaces import IPorto
 
 grok.layer(IPorto)
 
@@ -27,8 +29,8 @@ class MainLayout(silvaviews.Layout):
     grok.template('mainlayout')
 
     def update(self):
-        self.response.setHeader('Content-Type', 'text/html;charset=utf-8')
-        self.response.setHeader('Cache-Control','max-age=7200, must-revalidate')
+        component.getMultiAdapter(
+            (self.context, self.request), IHTTPResponseHeaders)()
 
     @CachedProperty
     def metadata(self):
@@ -36,8 +38,7 @@ class MainLayout(silvaviews.Layout):
 
     @CachedProperty
     def root(self):
-        virtual_site = component.getMultiAdapter(
-            (self.context, self.request), IVirtualSite)
+        virtual_site = component.getAdapter(self.request, IVirtualSite)
         return virtual_site.get_root()
 
     @CachedProperty
@@ -84,7 +85,16 @@ class Navigation(silvaviews.ContentProvider):
         return self.context.service_toc_filter
 
     def filter_entries(self, nodes):
-        return filter(lambda node: not self.filter_service.filter(node), nodes)
+        checkPermission = getSecurityManager().checkPermission
+        def filter_entry(node):
+            # This should in the toc filter ?
+            if IPublishable.providedBy(node) and not node.is_published():
+                return False
+            # Should be in the toc filter
+            if not checkPermission('View', node):
+                return False
+            return not self.filter_service.filter(node)
+        return filter(lambda node: filter_entry(node), nodes)
 
     @CachedProperty
     def navigation_current(self):
