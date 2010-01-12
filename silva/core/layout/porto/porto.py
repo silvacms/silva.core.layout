@@ -46,6 +46,20 @@ class MainLayout(silvaviews.Layout):
         return self.root.absolute_url()
 
 
+class FallbackLayout(silvaviews.Layout):
+    """ Layout for objects that do not provide ISilvaObject
+    """
+    grok.context(interface.Interface)
+
+    def render(self):
+        return """
+            <html>
+                <head><!-- no layout --></head>
+                <body>%s</body>
+            </html>
+        """ % self.view.content()
+
+
 class MainTemplate(silvaviews.Page):
 
     grok.name('index.html')
