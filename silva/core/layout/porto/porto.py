@@ -123,7 +123,11 @@ class Navigation(silvaviews.ContentProvider):
 
     def navigation_link_css_class(self, info, depth):
         # CSS class on a
-        return (info['onbranch'] or info['current']) and 'selected' or None
+        if info['current']:
+            return 'selected'
+        if info['onbranch']:
+            return 'onbranch'
+        return None
 
     def navigation_entries(self, node, depth=0, maxdepth=None):
         if maxdepth is None:
@@ -132,7 +136,7 @@ class Navigation(silvaviews.ContentProvider):
                 'title': node.get_short_title(),
                 'nodes': None,
                 'onbranch': node in self.request.PARENTS,
-                'current': node.aq_base is self.navigation_current}
+                'current': node.aq_base == self.navigation_current}
         if depth < maxdepth and IContainer.providedBy(node):
             if ((self.only_container is not None and
                  depth < self.only_container) or info['onbranch']):
