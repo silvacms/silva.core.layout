@@ -1,18 +1,29 @@
 Changelog
 =========
 
-2.2b1 - (unreleased)
---------------------
+2.2b1 (unreleased)
+------------------
 
-* ..
+* Porto skin is now not registered by default but only usuable as base
+  skin for more complicated skins.
 
-2.2a2 - (2009-01-12)
---------------------
+* Add support to render error pages in modern skins.
+
+* Various bug fixes and improvement in the Porto skin:
+
+  * Set HTTP cache header by default.
+
+  * Improve navigation generation code.
+
+* Use silva.core.interfaces and silva.translations.
+
+2.2a2 (2009-01-12)
+------------------
 
 * Improve Porto skin to be extended more easily.
 
-2.2a1 - (2008-11-18)
---------------------
+2.2a1 (2008-11-18)
+------------------
 
 * Initial release
 

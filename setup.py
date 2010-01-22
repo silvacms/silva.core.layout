@@ -10,12 +10,11 @@ version = '2.2b1dev'
 
 setup(name='silva.core.layout',
       version=version,
-      description="Layout for Silva",
+      description="Layout system for Silva base on Zope Tool Kit and Grok",
       long_description=open("README.txt").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
-      # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
-        "Programming Language :: Python",
+        "Framework :: Zope2",
         "License :: OSI Approved :: BSD License",
         "Programming Language :: Python",
         "Topic :: Software Development :: Libraries :: Python Modules",
@@ -31,14 +30,15 @@ setup(name='silva.core.layout',
       zip_safe=False,
       install_requires=[
           'setuptools',
-          'martian',
+          'zope.interface',
+          'zope.component',
           'five.localsitemanager',
+          'martian',
           'silva.resourceinclude',
           'silva.core.views',
           'silva.core.conf',
           'silva.core.interfaces',
           'silva.core.services',
-          'Products.Silva',
           'Products.SilvaLayout',
           ],
       )

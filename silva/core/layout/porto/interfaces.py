@@ -5,7 +5,6 @@
 
 from silva.core.layout.interfaces import ISilvaLayer, ISilvaSkin
 from silva.core import conf as silvaconf
-from five import grok
 
 
 class IPorto(ISilvaLayer):

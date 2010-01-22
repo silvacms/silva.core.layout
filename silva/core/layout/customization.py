@@ -3,13 +3,11 @@
 # See also LICENSE.txt
 # $Id$
 
-from zope.app.component.interfaces import ISite
 from zope.configuration.name import resolve as pythonResolve
 from zope.component import getGlobalSiteManager, queryAdapter
 from zope.component import getUtility, getUtilitiesFor
 from zope.interface.interfaces import IInterface
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
-import zope.cachedescriptors.property
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from OFS.Folder import Folder
