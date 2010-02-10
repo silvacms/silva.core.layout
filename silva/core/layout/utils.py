@@ -4,7 +4,7 @@
 # $Id$
 
 # Zope 3
-from zope.app.component.interfaces import ISite
+from zope.location.interfaces import ISite
 from zope.traversing.interfaces import IContainmentRoot
 from zope.interface import implementedBy, providedBy, Interface
 from zope import component

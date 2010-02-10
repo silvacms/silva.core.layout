@@ -33,15 +33,15 @@ from OFS.interfaces import IObjectWillBeRemovedEvent
 from Products.Silva.helpers import add_and_edit
 
 from silva.core import conf as silvaconf
-from silva.core.services.base import ZMIObject
 from silva.core.interfaces import ISilvaObject
+from silva.core.services.base import ZMIObject
 from silva.core.smi.smi import SMIButton, PropertiesTab
 from silva.core.views import z3cforms as silvaz3cforms
 
-from interfaces import ICustomizableType, ICustomizableTag, ICustomizableMarker
-from interfaces import IObjectHaveBeenMarked, IObjectHaveBeenUnmarked
-from interfaces import IObjectMarkEvent, IMarkManager
-from utils import findSite
+from silva.core.layout.interfaces import ICustomizableType, ICustomizableTag, \
+    ICustomizableMarker, IObjectHaveBeenMarked, IObjectHaveBeenUnmarked, \
+    IObjectMarkEvent, IMarkManager
+from silva.core.layout.utils import findSite
 
 
 # Marker object

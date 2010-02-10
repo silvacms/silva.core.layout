@@ -2,8 +2,6 @@
 # See also LICENSE.txt
 # $Id$
 
-from AccessControl import Unauthorized
-
 from zope.interface.interfaces import IInterface
 from zope.interface.verify import verifyObject
 

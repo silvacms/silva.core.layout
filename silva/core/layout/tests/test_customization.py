@@ -8,7 +8,7 @@ from os.path import basename
 # Zope 3
 from zope.component import getUtility
 from zope.interface.verify import verifyObject
-from zope.app.component.interfaces import ISite
+from zope.location.interfaces import ISite
 
 # Zope 2
 from zExceptions import BadRequest
@@ -17,8 +17,8 @@ from five.localsitemanager import make_objectmanager_site
 # Silva
 from silva.core.layout.interfaces import ICustomizationService, \
     IViewManager, IViewInfo
-from silva.core.layout.porto.interfaces import IPortoSkin, IPorto
-from silva.core.interfaces.content import IFolder, IContainer
+from silva.core.layout.porto.interfaces import IPorto
+from silva.core.interfaces.content import IContainer
 
 from Products.Silva.tests import SilvaTestCase
 
@@ -178,7 +178,7 @@ class ViewEntryTestCase(SilvaTestCase.SilvaTestCase):
         signature = "zope.viewlet.interfaces.IViewletManager:footer:None:" \
             "silva.core.interfaces.content.ISilvaObject:" \
             "silva.core.layout.porto.interfaces.IPorto:" \
-            "zope.publisher.interfaces.browser.IBrowserView"
+            "zope.browser.interfaces.IBrowserView"
         manager = IViewManager(self.utility)
         view = manager.from_signature(signature)
         self.failIf(view is None)
