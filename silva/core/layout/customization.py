@@ -360,8 +360,8 @@ class CustomizationService(Folder, SilvaService):
 
 class CustomizationManagementView(silvaviews.ZMIView):
 
-    silvaconf.require('zope2.ViewManagementScreens')
-    silvaconf.baseclass()
+    grok.require('zope2.ViewManagementScreens')
+    grok.baseclass()
 
     interface = None
     layer = None
@@ -395,7 +395,7 @@ class CustomizationManagementView(silvaviews.ZMIView):
 
 class ManageCustomTemplates(CustomizationManagementView):
 
-    silvaconf.name('manage_customization')
+    grok.name('manage_customization')
 
     def update(self):
         self.availableTemplates = []
@@ -436,7 +436,7 @@ class ManageViewTemplate(CustomizationManagementView):
 
 class ManageCreateCustomTemplate(ManageViewTemplate):
 
-    silvaconf.name('manage_createCustom')
+    grok.name('manage_createCustom')
 
     def update(self):
         super(ManageCreateCustomTemplate, self).update()
