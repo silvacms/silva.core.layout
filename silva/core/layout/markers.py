@@ -252,6 +252,9 @@ class ContentInterfaces(grok.Adapter):
 
 
 class ManageCustomizeMarker(silvaz3cforms.ComposedForm, PropertiesTab):
+    """This form let you add and remove customization markers from the
+    current content.
+    """
 
     grok.name('tab_customization')
     grok.require('silva.ChangeSilvaContent')
