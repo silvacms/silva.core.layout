@@ -162,6 +162,9 @@ class ErrorPage(silvaviews.Page):
     grok.context(INotFound)
     grok.name('error.html')
 
+    def update(self):
+        self.response.setStatus(404)
+
 
 # Unauthorized page
 
@@ -169,8 +172,15 @@ class UnauthorizedPage(silvaviews.Page):
     grok.context(IUnauthorized)
     grok.name('error.html')
 
+    def update(self):
+        self.response.setStatus(401)
+        self.response.setHeader('WWW-Authenticate', 'basic realm="Zope"')
+
 # Other error
 
 class OtherErrorPage(silvaviews.Page):
     grok.context(interface.Interface)
     grok.name('error.html')
+
+    def update(self):
+        self.response.setStatus(500)
