@@ -44,11 +44,6 @@ class ICustomizableLayer(IDefaultBrowserLayer):
     """
 
 
-class ISMILayer(ICustomizableLayer):
-    """SMI objects.
-    """
-
-
 class ISilvaLayer(ICustomizableLayer):
     """Default Silva Layer
     """
