@@ -3,24 +3,21 @@
 # See also LICENSE.txt
 # $Id$
 
-from zope.cachedescriptors.property import CachedProperty
-from zope.publisher.interfaces import INotFound
-from zope.security.interfaces import IUnauthorized
-from zope.traversing.browser import absoluteURL
+from five import grok
 from zope import component, interface
+from zope.cachedescriptors.property import CachedProperty
+from zope.traversing.browser import absoluteURL
 
 from AccessControl import getSecurityManager
-
-from silva.core.interfaces import IContainer, IPublishable
 from Products.SilvaLayout.interfaces import IMetadata
 
-from silva.core.views.interfaces import IVirtualSite, IHTTPResponseHeaders
-from silva.core.views import views as silvaviews
-from five import grok
-
+from silva.core.interfaces import IContainer, IPublishable
 from silva.core.layout.porto.interfaces import IPorto
+from silva.core.views import views as silvaviews
+from silva.core.views.interfaces import IVirtualSite, IHTTPResponseHeaders
 
 grok.layer(IPorto)
+
 
 # Main design
 
@@ -100,6 +97,7 @@ class Navigation(silvaviews.ContentProvider):
 
     def filter_entries(self, nodes):
         checkPermission = getSecurityManager().checkPermission
+
         def filter_entry(node):
             # This should in the toc filter ?
             if IPublishable.providedBy(node) and not node.is_published():
@@ -108,6 +106,7 @@ class Navigation(silvaviews.ContentProvider):
             if not checkPermission('View', node):
                 return False
             return not self.filter_service.filter(node)
+
         return filter(lambda node: filter_entry(node), nodes)
 
     @CachedProperty
@@ -116,7 +115,7 @@ class Navigation(silvaviews.ContentProvider):
 
     def navigation_css_class(self, info, depth):
         # CSS class on li
-        css_class = ['level-%d' % depth,]
+        css_class = ['level-%d' % depth]
         if info['onbranch'] or info['current']:
             css_class.append('selected')
         return ' '.join(css_class)
@@ -154,33 +153,3 @@ class Footer(silvaviews.ContentProvider):
     """Site footer.
     """
     pass
-
-
-# 404 page
-
-class ErrorPage(silvaviews.Page):
-    grok.context(INotFound)
-    grok.name('error.html')
-
-    def update(self):
-        self.response.setStatus(404)
-
-
-# Unauthorized page
-
-class UnauthorizedPage(silvaviews.Page):
-    grok.context(IUnauthorized)
-    grok.name('error.html')
-
-    def update(self):
-        self.response.setStatus(401)
-        self.response.setHeader('WWW-Authenticate', 'basic realm="Zope"')
-
-# Other error
-
-class OtherErrorPage(silvaviews.Page):
-    grok.context(interface.Interface)
-    grok.name('error.html')
-
-    def update(self):
-        self.response.setStatus(500)
