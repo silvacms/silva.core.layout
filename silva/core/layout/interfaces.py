@@ -11,6 +11,7 @@ from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 from silva.core.interfaces.service import ISilvaLocalService
 from silva.core.interfaces.content import ICustomizable
 
+
 # Interfaces types
 
 class ICustomizableType(IInterface):
@@ -52,6 +53,7 @@ class ISilvaLayer(ICustomizableLayer):
 class ISilvaSkin(ISilvaLayer, IBrowserSkinType):
     """A Silva skin for the default layer.
     """
+
 
 # Adapters
 
@@ -125,6 +127,7 @@ class IViewManager(Interface):
         the view.
         """
 
+
 # Utility
 
 class ICustomizationService(ISilvaLocalService):
@@ -144,6 +147,7 @@ class ICustomizationService(ISilvaLocalService):
         """List availables templates for that interface and layer.
         """
 
+
 # Events
 
 class IObjectMarkEvent(Interface):
@@ -161,4 +165,3 @@ class IObjectHaveBeenMarked(IObjectMarkEvent):
 class IObjectHaveBeenUnmarked(IObjectMarkEvent):
     """A Marker have been removed from an object.
     """
-
