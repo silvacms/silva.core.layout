@@ -139,7 +139,8 @@ class ViewManager(grok.Adapter):
         return self.get(type_, name, origin, required)
 
     def get_signature(self, view_entry):
-        required = ':'.join(map(lambda x: identifier(x), view_entry.registration.required))
+        required = ':'.join(map(lambda x: identifier(x),
+                                view_entry.registration.required))
         return '%s:%s:%s:%s' % (identifier(view_entry.registration.provided),
                                 view_entry.registration.name,
                                 view_entry.origin,
@@ -243,7 +244,8 @@ class GrokViewInfo(DefaultViewInfo):
 
     @property
     def template(self):
-        if hasattr(self.context, 'template') and self.context.template is not None:
+        if (hasattr(self.context, 'template') and
+            self.context.template is not None):
             if IGrokTemplate.providedBy(self.context.template):
                 return self.context.template._template.filename
         return None
@@ -274,6 +276,9 @@ class GrokViewletEntry(GrokViewInfo):
     grok.context(IViewlet)
 
     type_ = u'Grok Viewlet'
+
+    def _view(self):
+        return self.context
 
     def generateId(self):
         return 'grok-viewlet-%s' % super(GrokViewInfo, self).generateId()
@@ -328,7 +333,8 @@ def isAFiveTemplate(factory):
     """There is no interfaces for Five templates. That's the hack to
     guess it's an five template.
     """
-    return (hasattr(factory, '__name__') and factory.__name__.startswith('SimpleViewClass'))
+    return (hasattr(factory, '__name__') and
+            factory.__name__.startswith('SimpleViewClass'))
 
 
 class CustomizationService(Folder, SilvaService):
