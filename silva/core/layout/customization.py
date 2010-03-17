@@ -14,10 +14,10 @@ from OFS.Folder import Folder
 from OFS.interfaces import IObjectWillBeRemovedEvent
 
 from silva.core.services.base import SilvaService
-from Products.Silva.helpers import add_and_edit, \
-    register_service, unregister_service
+from Products.Silva.helpers import add_and_edit
 
 from silva.core import conf as silvaconf
+from silva.core.conf.utils import registerService, unregisterService
 from silva.core.interfaces import ISilvaObject
 from silva.core.views.ttwtemplates import TTWViewTemplate
 from silva.core.views.interfaces import ICustomizedTemplate
@@ -468,7 +468,7 @@ def manage_addCustomizationService(self, id, REQUEST=None):
     """
 
     service = CustomizationService(id)
-    register_service(self, id, service, interfaces.ICustomizationService)
+    registerService(self, id, service, interfaces.ICustomizationService)
     add_and_edit(self, id, REQUEST)
     return ''
 
@@ -476,5 +476,5 @@ def manage_addCustomizationService(self, id, REQUEST=None):
 @silvaconf.subscribe(
     interfaces.ICustomizationService, IObjectWillBeRemovedEvent)
 def unregisterCustomizationService(service, event):
-    unregister_service(service, interfaces.ICustomizationService)
+    unregisterService(service, interfaces.ICustomizationService)
 
