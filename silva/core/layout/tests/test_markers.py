@@ -29,7 +29,8 @@ class CustomizationMarkerTest(SilvaTestCase.SilvaTestCase):
         self.assertEqual(manager.usedMarkers, [])
         # The base interfaces for markers is availables however.
         self.assertEqual(manager.availableMarkers,
-                         [u'silva.core.layout.interfaces.ICustomizableMarker'])
+                         [u'Products.Silva.Folder.IPhotoGallery',
+                          u'silva.core.layout.interfaces.ICustomizableMarker'])
 
 
         # We can add a marker in ZODB
@@ -53,7 +54,8 @@ class CustomizationMarkerTest(SilvaTestCase.SilvaTestCase):
         # Since our manager cache it's result, we need to recreate a new one.
         manager = IMarkManager(self.root)
         self.assertEqual(manager.availableMarkers,
-                         [u'marker:root.ITestMarker',
+                         [u'Products.Silva.Folder.IPhotoGallery',
+                          u'marker:root.ITestMarker',
                           u'silva.core.layout.interfaces.ICustomizableMarker'])
 
         # We can assign a marker to the root
@@ -66,7 +68,8 @@ class CustomizationMarkerTest(SilvaTestCase.SilvaTestCase):
         manager = IMarkManager(self.root)
         self.assertEqual(manager.usedMarkers, [u'marker:root.ITestMarker'])
         self.assertEqual(manager.availableMarkers,
-                         [u'silva.core.layout.interfaces.ICustomizableMarker'])
+                         [u'Products.Silva.Folder.IPhotoGallery',
+                          u'silva.core.layout.interfaces.ICustomizableMarker'])
 
 
         # Like we assign the marker, we can remove it.
@@ -77,7 +80,8 @@ class CustomizationMarkerTest(SilvaTestCase.SilvaTestCase):
         manager = IMarkManager(self.root)
         self.assertEqual(manager.usedMarkers, [])
         self.assertEqual(manager.availableMarkers,
-                         [u'marker:root.ITestMarker',
+                         [u'Products.Silva.Folder.IPhotoGallery',
+                          u'marker:root.ITestMarker',
                           u'silva.core.layout.interfaces.ICustomizableMarker'])
 
         # We can delete the marker
@@ -87,7 +91,8 @@ class CustomizationMarkerTest(SilvaTestCase.SilvaTestCase):
         manager = IMarkManager(self.root)
         self.assertEqual(manager.usedMarkers, [])
         self.assertEqual(manager.availableMarkers,
-                         [u'silva.core.layout.interfaces.ICustomizableMarker'])
+                         [u'Products.Silva.Folder.IPhotoGallery',
+                          u'silva.core.layout.interfaces.ICustomizableMarker'])
 
 
     def test_marker_on_root_delete(self):
@@ -118,7 +123,8 @@ class CustomizationMarkerTest(SilvaTestCase.SilvaTestCase):
         manager = IMarkManager(self.root)
         self.assertEqual(manager.usedMarkers, [])
         self.assertEqual(manager.availableMarkers,
-                         [u'silva.core.layout.interfaces.ICustomizableMarker'])
+                         [u'Products.Silva.Folder.IPhotoGallery',
+                          u'silva.core.layout.interfaces.ICustomizableMarker'])
 
 
 
