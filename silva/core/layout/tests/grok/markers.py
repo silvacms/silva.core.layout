@@ -24,17 +24,17 @@
   So now we should have it:
 
     >>> from silva.core.layout.interfaces import IMarkManager
-    >>> from Products.Silva.tests.grok.markers import IPhotoFolderTag
+    >>> from silva.core.layout.tests.grok.markers import IPhotoFolderTag
     >>> manager = IMarkManager(folder)
     >>> manager.availableMarkers
     [u'Products.Silva.Folder.IPhotoGallery',
-     u'Products.Silva.tests.grok.markers.IPhotoFolderTag',
+     u'silva.core.layout.tests.grok.markers.IPhotoFolderTag',
      u'silva.core.layout.interfaces.ICustomizableMarker']
     >>> manager.usedMarkers
     []
     >>> IPhotoFolderTag.providedBy(folder)
     False
-    >>> manager.addMarker(u'Products.Silva.tests.grok.markers.IPhotoFolderTag')
+    >>> manager.addMarker(u'silva.core.layout.tests.grok.markers.IPhotoFolderTag')
 
   And it will be available on the object:
 
@@ -43,7 +43,7 @@
     [u'Products.Silva.Folder.IPhotoGallery',
      u'silva.core.layout.interfaces.ICustomizableMarker']
     >>> manager.usedMarkers
-    ['Products.Silva.tests.grok.markers.IPhotoFolderTag']
+    ['silva.core.layout.tests.grok.markers.IPhotoFolderTag']
     >>> IPhotoFolderTag.providedBy(folder)
     True
     >>> browser.go('http://localhost/root/folder/photo')
@@ -54,14 +54,14 @@
   And we can remove it:
 
     >>> manager.removeMarker(
-    ...       u'Products.Silva.tests.grok.markers.IPhotoFolderTag')
+    ...       u'silva.core.layout.tests.grok.markers.IPhotoFolderTag')
 
   It won't exists anymore:
 
     >>> manager = IMarkManager(folder)
     >>> manager.availableMarkers
     [u'Products.Silva.Folder.IPhotoGallery',
-     u'Products.Silva.tests.grok.markers.IPhotoFolderTag',
+     u'silva.core.layout.tests.grok.markers.IPhotoFolderTag',
      u'silva.core.layout.interfaces.ICustomizableMarker']
     >>> manager.usedMarkers
     []
@@ -79,7 +79,7 @@
     >>> sm = getGlobalSiteManager()
     >>> sm.unregisterUtility(
     ...         IPhotoFolderTag, ICustomizableType,
-    ...         u'Products.Silva.tests.grok.markers.IPhotoFolderTag')
+    ...         u'silva.core.layout.tests.grok.markers.IPhotoFolderTag')
     True
 
 """
