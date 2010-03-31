@@ -62,7 +62,7 @@
     >>> manager.availableMarkers
     [u'Products.Silva.Folder.IPhotoGallery',
      u'silva.core.layout.interfaces.ICustomizableMarker',
-     u'silva.core.layout.tests.grok.markers.IPhotoFolderTag',]
+     u'silva.core.layout.tests.grok.markers.IPhotoFolderTag']
     >>> manager.usedMarkers
     []
     >>> IPhotoFolderTag.providedBy(folder)
