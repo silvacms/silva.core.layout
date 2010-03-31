@@ -19,7 +19,7 @@
 
   We can grok our marker:
 
-    >>> grok('Products.Silva.tests.grok.markers')
+    >>> grok('silva.core.layout.tests.grok.markers')
 
   So now we should have it:
 
