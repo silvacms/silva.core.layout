@@ -2,7 +2,8 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-      metal:use-macro="context/@@standard_macros/page">
+      metal:use-macro="context/@@standard_macros/page"
+      i18n:domain="silva">
 
   <body>
     <div metal:fill-slot="body">
@@ -11,7 +12,12 @@
             tal:attributes="action string:${context/absolute_url}/manage_customization">
         <table>
           <tr>
-            <td><label for="interface" class="form-mono">Interface</label></td>
+            <td>
+              <label for="interface" class="form-mono"
+                     i18n:translate="">
+                Interface
+              </label>
+            </td>
             <td>
               <select name="interface">
                 <option tal:repeat="interface view/availablesInterfaces"
@@ -22,7 +28,12 @@
               </select>
           </tr>
           <tr>
-            <td><label for="layer" class="form-mono">Layer</label></td>
+            <td>
+              <label for="layer" class="form-mono"
+                     i18n:translate="">
+                Layer
+              </label>
+            </td>
             <td>
               <select name="layer">
                 <option tal:repeat="layer view/availablesLayers"
@@ -45,8 +56,8 @@
       <table border="1"
              tal:condition="view/availableTemplates">
         <tr>
-          <th>Name of View</th>
-          <th>Registration Info</th>
+          <th i18n:translate="">Name of View</th>
+          <th i18n:translate="">Registration Info</th>
         </tr>
         <tr tal:repeat="info view/availableTemplates">
           <td valign="top">
@@ -66,29 +77,29 @@
           <td>
             <table>
               <tr>
-                <td width="80px">Type</td>
+                <td width="80px" i18n:translate="">Type</td>
                 <td tal:content="info/view/type_">Template type</td>
               </tr>
               <tr tal:condition="info/view/template">
-                <td>Template</td>
+                <td i18n:translate="">Template</td>
                 <td>
                   <code tal:content="info/view/template">template</code>
                 </td>
               </tr>
               <tr>
-                <td>Object</td>
+                <td i18n:translate="">Object</td>
                 <td><code tal:content="info/view/for_">for</code></td>
               </tr>
               <tr>
-                <td>Layer</td>
+                <td i18n:translate="">Layer</td>
                 <td><code tal:content="info/view/layer">type</code></td>
               </tr>
               <tr tal:condition="info/view/config">
-                <td>Definition</td>
+                <td i18n:translate="">Definition</td>
                 <td><code tal:content="info/view/config">zcmlfile</code></td>
               </tr>
               <tr tal:condition="info/view/origin">
-                <td>Origin</td>
+                <td i18n:translate="">Origin</td>
                 <td><code tal:content="info/view/origin">where</code></td>
               </tr>
             </table>

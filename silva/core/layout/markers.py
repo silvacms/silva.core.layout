@@ -37,6 +37,7 @@ from silva.core.interfaces import ISilvaObject
 from silva.core.services.base import ZMIObject
 from silva.core.smi.smi import SMIButton, PropertiesTab
 from silva.core.views import z3cforms as silvaz3cforms
+from silva.translations import translate as _
 
 from silva.core.layout.interfaces import ICustomizableType, ICustomizableTag, \
     ICustomizableMarker, IObjectHaveBeenMarked, IObjectHaveBeenUnmarked, \
@@ -218,7 +219,7 @@ def availableMarkersForContent(context):
 class IDisplayUsedInterfaces(Interface):
 
     usedInterface = schema.Set(
-        title=u"Used interfaces",
+        title=_(u"Used interfaces"),
         value_type=schema.Choice(
             source=usedInterfacesForContent),
         required=False)
@@ -227,7 +228,7 @@ class IDisplayUsedInterfaces(Interface):
 class IRemoveCustomizationMarker(Interface):
 
     usedMarkers = schema.Set(
-        title=u"Used markers",
+        title=_(u"Used markers"),
         value_type=schema.Choice(
             source=usedMarkersForContent))
 
@@ -235,7 +236,7 @@ class IRemoveCustomizationMarker(Interface):
 class IAddCustomizationMarker(Interface):
 
     availablesMarkers = schema.Set(
-        title=u"Available markers",
+        title=_(u"Available markers"),
         value_type=schema.Choice(
             source=availableMarkersForContent))
 
@@ -259,7 +260,7 @@ class ManageCustomizeMarker(silvaz3cforms.ComposedForm, PropertiesTab):
     grok.name('tab_customization')
     grok.require('silva.ChangeSilvaContent')
 
-    label = "customization markers"
+    label = _(u"customization markers")
     description = "This let you marker your content with markers who are going to change how it is displayed."
 
 
@@ -268,7 +269,7 @@ class DisplayUsedInterfaces(silvaz3cforms.SubForm):
     grok.view(ManageCustomizeMarker)
     grok.order(10)
 
-    label = "Used interfaces by the content which change its rendering"
+    label = _(u"Used interfaces by the content which change its rendering")
     fields = field.Fields(IDisplayUsedInterfaces)
     mode = DISPLAY_MODE
 
@@ -278,23 +279,23 @@ class AddCustomizationMarker(silvaz3cforms.SubForm):
     grok.view(ManageCustomizeMarker)
     grok.order(20)
 
-    label = "Add a marker to affect the content rendering"
+    label = _(u"Add a marker to affect the content rendering")
     fields = field.Fields(IAddCustomizationMarker)
     ignoreContext = True
 
     @button.buttonAndHandler(
-        u"Add", name="add",
+        _(u"Add"), name="add",
         condition=lambda form: form.widgets['availablesMarkers'].terms)
     def handle_add(self, action):
         values, errors = self.extractData()
         if not values['availablesMarkers']:
-            self.status = u"You need to select a marker."
+            self.status = _(u"You need to select a marker.")
             self.status_type = 'error'
         else:
             manager = IMarkManager(self.context)
             for value in values['availablesMarkers']:
                 manager.addMarker(value)
-            self.status = u"Marker added."
+            self.status = _(u"Marker added.")
 
 
 class RemoveCustomizationMarker(silvaz3cforms.SubForm):
@@ -302,23 +303,23 @@ class RemoveCustomizationMarker(silvaz3cforms.SubForm):
     grok.view(ManageCustomizeMarker)
     grok.order(30)
 
-    label = "Remove a marker"
+    label = _(u"Remove a marker")
     fields = field.Fields(IRemoveCustomizationMarker)
     ignoreContext = True
 
     @button.buttonAndHandler(
-        u"Remove", name="remove",
+        _(u"Remove"), name="remove",
         condition=lambda form: form.widgets['usedMarkers'].terms)
     def handle_remove(self, action):
         values, errors = self.extractData()
         if not values['usedMarkers']:
-            self.status = u"You need to select a marker."
+            self.status = _(u"You need to select a marker.")
             self.status_type = 'error'
         else:
             manager = IMarkManager(self.context)
             for value in values['usedMarkers']:
                 manager.removeMarker(value)
-            self.status = u"Marker removed."
+            self.status = _(u"Marker removed.")
 
 
 class ManageCustomizationButton(SMIButton):
@@ -327,4 +328,4 @@ class ManageCustomizationButton(SMIButton):
     grok.order(110)
 
     tab = 'tab_customization'
-    label = "customization"
+    label = _("customization")
