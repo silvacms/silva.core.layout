@@ -2,10 +2,7 @@
 # See also LICENSE.txt
 # $Id$
 """
-    We set development mode so the css are not merged together
-    >>> import Globals
-    >>> devmode = Globals.DevelopmentMode
-    >>> Globals.DevelopmentMode = 1
+    Development mode is set (see test layer) so the css are not merged together
     
     Grokking the module
     >>> grok('silva.core.layout.tests.grok.porto_fixtures')
@@ -37,6 +34,4 @@
     We render it to check that the css is declared
     >>> "style.css" in view()
     True
-    
-    >>> Globals.DevelopmentMode = devmode
 """
