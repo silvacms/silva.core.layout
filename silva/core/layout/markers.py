@@ -59,7 +59,7 @@ class CustomizationMarker(PersistentInterfaceClass, ZMIObject):
         self.id = name
         PersistentInterfaceClass.__init__(
             self, name=name, bases=(ICustomizableMarker,), __doc__=doc)
-        ZMIObject.__init__(self, name)
+        ZMIObject.__init__(self)
         self.marked = PersistentList()
 
     def updateIdentifier(self):
