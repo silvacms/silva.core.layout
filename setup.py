@@ -29,7 +29,7 @@ setup(name='silva.core.layout',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'Products.SilvaLayout',
+          'Products.Silva',
           'five.grok',
           'five.localsitemanager',
           'martian',

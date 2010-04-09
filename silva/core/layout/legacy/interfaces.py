@@ -7,15 +7,12 @@ from silva.core.layout.interfaces import ISilvaLayer, ISilvaSkin
 from silva.core import conf as silvaconf
 
 
-class ILegacy(ISilvaLayer):
+class ILegacyLayer(ISilvaLayer):
     """ Legacy layer
     """
 
 
-class ILegacySkin(ILegacy, ISilvaSkin):
+class ILegacySkin(ILegacyLayer, ISilvaSkin):
     """ Legacy Skin
     """
     silvaconf.skin('Legacy Skin')
-
-
-silvaconf.layer(ILegacy)
