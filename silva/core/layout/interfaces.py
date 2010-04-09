@@ -165,3 +165,19 @@ class IObjectHaveBeenMarked(IObjectMarkEvent):
 class IObjectHaveBeenUnmarked(IObjectMarkEvent):
     """A Marker have been removed from an object.
     """
+
+
+class IMetadata(Interface):
+
+    def __getitem__(setname):
+        pass
+
+    def __call__(setname, elementname):
+        pass
+
+class IMetadataSet(Interface):
+
+    def __getitem__(elementname):
+        pass
+
+

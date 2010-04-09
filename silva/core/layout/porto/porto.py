@@ -9,8 +9,8 @@ from zope.cachedescriptors.property import CachedProperty
 from zope.traversing.browser import absoluteURL
 
 from AccessControl import getSecurityManager
-from Products.SilvaLayout.interfaces import IMetadata
 
+from silva.core.layout.interfaces import IMetadata
 from silva.core.interfaces import IContainer, IPublishable
 from silva.core.layout.porto.interfaces import IPorto
 from silva.core.views import views as silvaviews

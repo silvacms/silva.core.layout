@@ -34,4 +34,28 @@
   <grok:grok package="silva.core.interfaces" />
   <grok:grok package=".interfaces" />
 
+  <!-- Traversing -->
+  <adapter
+    for="silva.core.interfaces.IPublication
+         zope.publisher.interfaces.browser.IBrowserRequest"
+    factory=".traverser.SkinnyTraverser"
+    provides="zope.publisher.interfaces.browser.IBrowserPublisher"
+    />
+
+  <adapter
+    for="silva.core.interfaces.IPublication
+         zope.publisher.interfaces.browser.IBrowserRequest"
+    factory=".traverser.ResourceSkinnyTraversable"
+    provides="zope.traversing.interfaces.ITraversable"
+    name="resource"
+   />
+
+  <adapter
+    for="silva.core.interfaces.IPublication
+         zope.publisher.interfaces.browser.IBrowserRequest"
+    factory=".traverser.ViewSkinnyTraversable"
+    provides="zope.traversing.interfaces.ITraversable"
+    name="view"
+   />
+
 </configure>
