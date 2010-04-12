@@ -52,7 +52,7 @@
      <value key="extra_item"></value>
      <value key="unicode"></value>
      <value key="items">
-       python: [('not set (acquire setting)', '')] + modules['Products'].SilvaLayout.helpers.getAvailableSkins()
+       python: [('not set (acquire setting)', '')] + modules['silva.core.layout.helpers'].getAvailableSkins()
      </value>
      <value key="hidden"></value>
      <value key="alternate_name"></value>
