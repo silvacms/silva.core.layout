@@ -3,12 +3,12 @@ from silva.core.views import views as silvaviews
 from zope.interface import Interface
 from silva.core.layout.interfaces import ISilvaLayer
 
+grok.layer(ISilvaLayer)
 
 class FallbackLayout(silvaviews.Layout):
     """ Layout for objects that do not provide ISilvaObject
     """
     grok.context(Interface)
-    grok.layer(ISilvaLayer)
 
     def render(self):
         return """
