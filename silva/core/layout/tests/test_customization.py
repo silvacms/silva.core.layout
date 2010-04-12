@@ -97,8 +97,7 @@ class CustomizationServiceTestCase(SilvaTestCase.SilvaTestCase):
 
         # Same goes for layers
         someDefaultLayers = [
-            u'Products.SilvaLayout.browser.silvadefault.skin.ISilvaDefault',
-            u'Products.SilvaLayout.browser.silvalegacy.skin.ISilvaLegacy',
+            u'silva.core.layout.legacy.interfaces.ILegacyLayer',
             u'silva.core.smi.interfaces.ISMILayer',
             u'silva.core.layout.interfaces.ISilvaLayer',
             u'silva.core.layout.porto.interfaces.IPorto',
@@ -107,7 +106,8 @@ class CustomizationServiceTestCase(SilvaTestCase.SilvaTestCase):
 
         foundLayers = utility.availablesLayers()
         for iface in someDefaultLayers:
-            self.failUnless(iface in foundLayers)
+            self.failUnless(iface in foundLayers,
+                "layer %s not available in %s" % (iface, foundLayers))
 
         # We can restrain it to a sub set
         silvaNewStyleLayers = [
