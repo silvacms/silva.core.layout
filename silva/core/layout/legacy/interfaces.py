@@ -15,4 +15,4 @@ class ILegacyLayer(ISilvaLayer):
 class ILegacySkin(ILegacyLayer, ISilvaSkin):
     """ Legacy Skin
     """
-    silvaconf.skin('Legacy Skin')
+    silvaconf.skin('SilvaLegacy')
