@@ -3,37 +3,29 @@
 # See also LICENSE.txt
 # $Id$
 
-from zope.configuration.name import resolve as pythonResolve
+from OFS.Folder import Folder
+
+from five import grok
+from grokcore.view.interfaces import ITemplate as IGrokTemplate
+from megrok.layout.interfaces import IPage
 from zope.component import getGlobalSiteManager, queryAdapter
 from zope.component import getUtility, getUtilitiesFor
+from zope.configuration.name import resolve as pythonResolve
 from zope.interface.interfaces import IInterface
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from OFS.Folder import Folder
-from OFS.interfaces import IObjectWillBeRemovedEvent
-
-from silva.core.services.base import SilvaService
-from Products.Silva.helpers import add_and_edit
-
 from silva.core import conf as silvaconf
-from silva.core.conf.utils import registerService, unregisterService
 from silva.core.interfaces import ISilvaObject
-from silva.core.views.ttwtemplates import TTWViewTemplate
-from silva.core.views.interfaces import ICustomizedTemplate
-from silva.core.views.interfaces import IContentProvider, IViewlet
-from silva.core.views.interfaces import ITemplateNotCustomizable
-from silva.core.views import views as silvaviews
-
 from silva.core.layout import interfaces
 from silva.core.layout.interfaces import ICustomizable, ICustomizableType
 from silva.core.layout.interfaces import ICustomizableMarker, ILayerType
-
 from silva.core.layout.utils import findSite, findNextSite, queryAdapterOnClass
-
-from grokcore.view.interfaces import ITemplate as IGrokTemplate
-from megrok.layout.interfaces import IPage
-from five import grok
+from silva.core.services.base import SilvaService
+from silva.core.views import views as silvaviews
+from silva.core.views.interfaces import IContentProvider, IViewlet
+from silva.core.views.interfaces import ICustomizedTemplate
+from silva.core.views.interfaces import ITemplateNotCustomizable
+from silva.core.views.ttwtemplates import TTWViewTemplate
 
 
 def identifier(obj):
@@ -338,14 +330,12 @@ def isAFiveTemplate(factory):
 
 
 class CustomizationService(Folder, SilvaService):
-
+    """Customize filesystem based templates.
+    """
     meta_type = 'Silva Customization Service'
-
-    silvaconf.icon('customization.png')
-    silvaconf.factory('manage_addCustomizationServiceForm')
-    silvaconf.factory('manage_addCustomizationService')
-
+    default_service_identifier = 'service_customization'
     grok.implements(interfaces.ICustomizationService)
+    silvaconf.icon('customization.png')
 
     manage_options = (
         {'label':'Customize', 'action':'manage_customization'},
@@ -457,24 +447,4 @@ class ManageCreateCustomTemplate(ManageViewTemplate):
 
         self.redirect(new_template.absolute_url() + '/manage_workspace')
 
-
-
-manage_addCustomizationServiceForm = PageTemplateFile(
-    "www/customizationServiceAdd", globals(),
-    __name__='manage_addCustomizationServiceForm')
-
-def manage_addCustomizationService(self, id, REQUEST=None):
-    """Add a Customization Service.
-    """
-
-    service = CustomizationService(id)
-    registerService(self, id, service, interfaces.ICustomizationService)
-    add_and_edit(self, id, REQUEST)
-    return ''
-
-
-@silvaconf.subscribe(
-    interfaces.ICustomizationService, IObjectWillBeRemovedEvent)
-def unregisterCustomizationService(service, event):
-    unregisterService(service, interfaces.ICustomizationService)
 
