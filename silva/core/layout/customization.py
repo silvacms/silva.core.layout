@@ -341,7 +341,6 @@ class CustomizationService(Folder, SilvaService):
         {'label':'Customize', 'action':'manage_customization'},
         ) + Folder.manage_options
 
-
     def availablesInterfaces(self, base=ICustomizable):
         interfaces = getUtilitiesFor(ICustomizableType, context=self)
         return sorted([name for name, interface in interfaces if interface.isOrExtends(base)])

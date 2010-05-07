@@ -36,7 +36,7 @@ from silva.core import conf as silvaconf
 from silva.core.interfaces import ISilvaObject
 from silva.core.services.base import ZMIObject
 from silva.core.smi.smi import SMIButton, PropertiesTab
-from silva.core.views import z3cforms as silvaz3cforms
+from silva.core.forms import z3cforms as silvaz3cforms
 from silva.translations import translate as _
 
 from silva.core.layout.interfaces import ICustomizableType, ICustomizableTag, \
