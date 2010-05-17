@@ -32,7 +32,6 @@
 
   <!-- Grok interfaces -->
   <grok:grok package="silva.core.interfaces" />
-  <grok:grok package=".interfaces" />
 
   <!-- Traversing -->
   <adapter
