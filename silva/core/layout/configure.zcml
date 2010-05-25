@@ -10,8 +10,8 @@
   <include package="silva.core.views" />
   <include package="silva.resourceinclude" />
 
-  <!-- Grok this package -->
-  <grok:grok package="." />
+  <!-- Grok the grokker -->
+  <grok:grok package=".martiansupport" />
 
   <!-- Register the default layer as a Silva layer -->
   <interface
@@ -29,9 +29,6 @@
     for="silva.core.interfaces.IContainer"
     name="index.html"
   />
-
-  <!-- Grok interfaces -->
-  <grok:grok package="silva.core.interfaces" />
 
   <!-- Traversing -->
   <adapter
@@ -56,5 +53,10 @@
     provides="zope.traversing.interfaces.ITraversable"
     name="view"
    />
+
+  <!-- Grok interfaces and the package -->
+  <grok:grok package="silva.core.interfaces" />
+  <grok:grok package="." exclude="martiansupport" />
+
 
 </configure>
