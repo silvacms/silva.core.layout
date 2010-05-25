@@ -8,6 +8,10 @@ import os
 
 version = '2.2dev'
 
+tests_require = [
+    'Products.Silva [test]',
+    ]
+
 setup(name='silva.core.layout',
       version=version,
       description="Layout system for Silva base on Zope Tool Kit and Grok",
@@ -41,9 +45,16 @@ setup(name='silva.core.layout',
           'silva.resourceinclude',
           'silva.translations',
           'zope.component',
+          'zope.container',
+          'zope.event',
           'zope.interface',
+          'zope.intid',
           'zope.location',
+          'zope.publisher',
+          'zope.schema',
           'zope.security',
           'zope.traversing',
           ],
+      tests_require = tests_require,
+      extras_require = {'test': tests_require},
       )

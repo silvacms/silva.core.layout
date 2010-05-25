@@ -4,7 +4,7 @@
 # $Id$
 
 from five import grok
-from zope import component, interface
+from zope import component
 from zope.cachedescriptors.property import CachedProperty
 from zope.traversing.browser import absoluteURL
 

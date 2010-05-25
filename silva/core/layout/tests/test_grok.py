@@ -1,24 +1,32 @@
-from Products.Silva.tests.test_grok import suiteFromPackage
-from Products.Silva.tests.layer import SilvaLayer
+# Copyright (c) 2002-2010 Infrae. All rights reserved.
+# See also LICENSE.txt
+# $Id$
+
+from Products.Silva.testing import FunctionalLayer, suite_from_package
+from Products.Silva.testing import Browser
+
 import unittest
-import Globals
+import doctest
 
+globs = {
+    'grok': FunctionalLayer.grok,
+    'getRootFolder': FunctionalLayer.get_application,
+    'Browser': Browser,
+    }
 
-class ResourceIncludeLayer(SilvaLayer):
-    @classmethod
-    def setUp(self):
-        self.previous_dev_mode = Globals.DevelopmentMode
-        Globals.DevelopmentMode = True
-
-    @classmethod
-    def tearDown(self):
-        Globals.DevelopmentMode = self.previous_dev_mode
+def create_test(build_test_suite, name):
+    test =  build_test_suite(
+        name,
+        globs=globs,
+        optionflags=doctest.ELLIPSIS + doctest.NORMALIZE_WHITESPACE)
+    test.layer = FunctionalLayer
+    return test
 
 
 def test_suite():
     suite = unittest.TestSuite()
-    suite.addTest(suiteFromPackage('grok', 'silva.core.layout.tests',
-        layer=ResourceIncludeLayer))
+    suite.addTest(suite_from_package(
+            'silva.core.layout.tests.grok', create_test))
     return suite
 
 if __name__ == '__main__':

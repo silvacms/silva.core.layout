@@ -4,6 +4,7 @@
 
 # Python
 from os.path import basename
+import unittest
 
 # Zope 3
 from zope.component import getUtility
@@ -15,27 +16,38 @@ from zExceptions import BadRequest
 from five.localsitemanager import make_objectmanager_site
 
 # Silva
-from silva.core.layout.interfaces import ICustomizationService, \
-    IViewManager, IViewInfo
+from silva.core.layout.interfaces import (
+    ICustomizationService, IViewManager, IViewInfo)
 from silva.core.layout.porto.interfaces import IPorto
 from silva.core.interfaces.content import IContainer
 
-from Products.Silva.tests import SilvaTestCase
+from Products.Silva.testing import FunctionalLayer
 
 
-class CustomizationServiceTestCase(SilvaTestCase.SilvaTestCase):
-    """Test service customization setup and methods.
+class CustomizationTestCase(unittest.TestCase):
+    """Set up a customization service before running the test.
     """
+    layer = FunctionalLayer
 
-    def afterSetUp(self):
+    def setUp(self):
+        self.root = self.layer.get_application()
         factory = self.root.manage_addProduct['silva.core.layout']
         factory.manage_addCustomizationService('service_customization')
+        self.utility = getUtility(ICustomizationService)
+
+
+class CustomizationServiceTestCase(CustomizationTestCase):
+    """Test service customization setup and methods.
+    """
 
     def test_utility_only_in_local_site(self):
         # A service_customization can be added only in a local site.
         self.failUnless(ISite.providedBy(self.root))
-        self.publication = self.add_publication(
-            self.root, 'publication', 'Publication')
+
+        factory = self.root.manage_addProduct['Silva']
+        factory.manage_addPublication('publication', 'Publication')
+        self.publication = self.root.publication
+
         self.failIf(ISite.providedBy(self.publication))
         factory = self.publication.manage_addProduct['silva.core.layout']
         self.assertRaises(BadRequest,
@@ -125,21 +137,17 @@ class CustomizationServiceTestCase(SilvaTestCase.SilvaTestCase):
         self.failUnless(verifyObject(IViewManager, manager))
 
 
-class ViewEntryTestCase(SilvaTestCase.SilvaTestCase):
+class ViewEntryTestCase(CustomizationTestCase):
     """Test ViewEntry lookup and objects.
     """
-
-    def afterSetUp(self):
-        factory = self.root.manage_addProduct['silva.core.layout']
-        factory.manage_addCustomizationService('service_customization')
-        self.utility = getUtility(ICustomizationService)
 
     def test_grok_template(self):
         signature = "zope.interface.Interface:index.html:None:" \
             "silva.core.interfaces.content.ISilvaObject:" \
-            "silva.core.layout.porto.interfaces.IPorto"
+            "silva.core.layout.interfaces.ISilvaLayer"
         manager = IViewManager(self.utility)
         view = manager.from_signature(signature)
+
         self.failIf(view is None)
         self.failUnless(verifyObject(IViewInfo, view))
         self.assertEqual(view.type_, 'Grok Page Template')
@@ -149,7 +157,7 @@ class ViewEntryTestCase(SilvaTestCase.SilvaTestCase):
             'silva.core.interfaces.content.ISilvaObject')
         self.assertEqual(
             view.layer,
-            'silva.core.layout.porto.interfaces.IPorto')
+            'silva.core.layout.interfaces.ISilvaLayer')
         self.assertEqual(view.template, None)
         self.assertEqual(view.origin, None)
         self.assertEqual(manager.get_signature(view), signature)
@@ -216,7 +224,6 @@ class ViewEntryTestCase(SilvaTestCase.SilvaTestCase):
         self.assertEqual(manager.get_signature(view), signature)
 
 
-import unittest
 def test_suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(CustomizationServiceTestCase))

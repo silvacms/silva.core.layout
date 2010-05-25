@@ -2,18 +2,24 @@
 # See also LICENSE.txt
 # $Id$
 
-from AccessControl import Unauthorized
+import unittest
 
 from zope.interface.interfaces import IInterface
 from zope.interface.verify import verifyObject
 
-from silva.core.layout.interfaces import IMarkManager, ICustomizableMarker, \
-    ICustomizable
+from silva.core.layout.interfaces import (
+    IMarkManager, ICustomizableMarker, ICustomizable)
 
-from Products.Silva.tests import SilvaTestCase
+from Products.Silva.testing import FunctionalLayer
 
 
-class CustomizationMarkerTest(SilvaTestCase.SilvaTestCase):
+class CustomizationMarkerTestCase(unittest.TestCase):
+    """Test the customization markers.
+    """
+    layer = FunctionalLayer
+
+    def setUp(self):
+        self.root = self.layer.get_application()
 
     def test_marker_on_root(self):
         manager = IMarkManager(self.root)
@@ -126,12 +132,8 @@ class CustomizationMarkerTest(SilvaTestCase.SilvaTestCase):
                          [u'Products.Silva.Folder.IPhotoGallery',
                           u'silva.core.layout.interfaces.ICustomizableMarker'])
 
-
-
-
-import unittest
 def test_suite():
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(CustomizationMarkerTest))
+    suite.addTest(unittest.makeSuite(CustomizationMarkerTestCase))
     return suite
 

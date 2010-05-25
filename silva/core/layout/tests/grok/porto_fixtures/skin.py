@@ -9,17 +9,16 @@ from silva.core.layout.porto import porto
 from silva.core.layout.porto.interfaces import IPorto
 from silva.core.views import views as silvaviews
 
-class INewTheme(IPorto):
-    """Layer for the theme
 
+class INewTheme(IPorto):
+    """Layer for the theme.
     """
     silvaconf.resource('style.css')
 
 
 class INewThemeSkin(INewTheme, ISilvaSkin):
-    """Skin for the new theme
+    """Skin for the new theme.
     """
-
     silvaconf.skin("New theme")
 
 

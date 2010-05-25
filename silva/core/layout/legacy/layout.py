@@ -1,12 +1,16 @@
-from five import grok
-from zope.interface import Interface
-import Acquisition
-from Acquisition import aq_inner
+# -*- coding: utf-8 -*-
+# Copyright (c) 2008-2009 Infrae. All rights reserved.
+# See also LICENSE.txt
+# $Id$
+
 from AccessControl import ClassSecurityInfo
 from App.class_init import InitializeClass
-from silva.core.views import views as silvaviews
-from silva.core.layout.legacy.interfaces import ILegacyLayer
+import Acquisition
+
+from five import grok
 from silva.core.interfaces import ISilvaObject
+from silva.core.layout.legacy.interfaces import ILegacyLayer
+from silva.core.views import views as silvaviews
 
 grok.layer(ILegacyLayer)
 

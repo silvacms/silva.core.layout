@@ -11,11 +11,11 @@ from silva.core.layout.interfaces import ILayerType, ISilvaSkin
 
 import martian
 
-class SilvaInterfaceGrokker(martian.InstanceGrokker):
+
+class InterfaceGrokker(martian.InstanceGrokker):
     """We register interfaces than people can customize as utility on
     ISilvaCustomizable.
     """
-
     martian.component(InterfaceClass)
 
     def grok(self, name, interface, module_info, config, **kw):

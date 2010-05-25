@@ -4,18 +4,18 @@
 # $Id$
 
 # Zope 3
-from zope.app.container.interfaces import IObjectAddedEvent
-from zope.app.interface import PersistentInterfaceClass
-from zope.app.intid.interfaces import IIntIds
-from zope.component.interfaces import ObjectEvent
-from zope.component import getUtility, getUtilitiesFor
-from zope.interface.interfaces import IInterface
-from zope.interface import providedBy, directlyProvides, directlyProvidedBy
-from zope.schema.interfaces import IContextSourceBinder
-from zope.interface import Interface
-from zope.event import notify
-from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 from zope import schema
+from zope.app.interface import PersistentInterfaceClass
+from zope.component import getUtility, getUtilitiesFor
+from zope.component.interfaces import ObjectEvent
+from zope.container.interfaces import IObjectAddedEvent
+from zope.event import notify
+from zope.interface import Interface
+from zope.interface import providedBy, directlyProvides, directlyProvidedBy
+from zope.interface.interfaces import IInterface
+from zope.intid.interfaces import IIntIds
+from zope.schema.interfaces import IContextSourceBinder
+from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 import zope.cachedescriptors.property
 
 from persistent.list import PersistentList

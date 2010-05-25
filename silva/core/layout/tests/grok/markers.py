@@ -5,17 +5,19 @@
 
   First let's create a folder to play with our marker:
 
-    >>> browser = SilvaBrowser()
-    >>> logAsUser(app, 'manager')
-    >>> factory = app.root.manage_addProduct['Silva']
+    >>> browser = Browser()
+    >>> root = getRootFolder()
+    >>> factory = root.manage_addProduct['Silva']
     >>> factory.manage_addFolder('folder', 'Folder')
     ''
-    >>> folder = app.root.folder
+    >>> folder = root.folder
 
   Our purpose is to add a template called `photo`:
 
-    >>> browser.go('http://localhost/root/folder/photo')
-    (404, None)
+    >>> browser.open('http://localhost/root/folder/photo')
+    Traceback (most recent call last):
+      ...
+    HTTPError: HTTP Error 404: Not Found
 
   We can grok our marker:
 
@@ -25,6 +27,7 @@
 
     >>> from silva.core.layout.interfaces import IMarkManager
     >>> from silva.core.layout.tests.grok.markers import IPhotoFolderTag
+
     >>> manager = IMarkManager(folder)
     >>> manager.availableMarkers
     [u'Products.Silva.Folder.IPhotoGallery',
@@ -34,7 +37,8 @@
     []
     >>> IPhotoFolderTag.providedBy(folder)
     False
-    >>> manager.addMarker(u'silva.core.layout.tests.grok.markers.IPhotoFolderTag')
+    >>> manager.addMarker(
+    ...    u'silva.core.layout.tests.grok.markers.IPhotoFolderTag')
 
   And it will be available on the object:
 
@@ -46,8 +50,11 @@
     ['silva.core.layout.tests.grok.markers.IPhotoFolderTag']
     >>> IPhotoFolderTag.providedBy(folder)
     True
-    >>> browser.go('http://localhost/root/folder/photo')
-    (200, 'http://localhost/root/folder/photo')
+    >>> browser.open('http://localhost/root/folder/photo')
+    >>> browser.status
+    '200 OK'
+    >>> browser.url
+    'http://localhost/root/folder/photo'
     >>> print browser.contents
     <html><body>Photo !</body></html>
 
@@ -67,8 +74,10 @@
     []
     >>> IPhotoFolderTag.providedBy(folder)
     False
-    >>> browser.go('http://localhost/root/folder/photo')
-    (404, None)
+    >>> browser.open('http://localhost/root/folder/photo')
+    Traceback (most recent call last):
+      ...
+    HTTPError: HTTP Error 404: Not Found
 
 
   And we remove our marker from the ZCA so others tests don't fail.
