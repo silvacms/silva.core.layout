@@ -27,7 +27,7 @@ class MainLayout(silvaviews.Layout):
 
     def update(self):
         component.getMultiAdapter(
-            (self.context, self.request), IHTTPResponseHeaders)()
+            (self.request, self.context), IHTTPResponseHeaders)()
 
     @CachedProperty
     def metadata(self):
