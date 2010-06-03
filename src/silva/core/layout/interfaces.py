@@ -181,3 +181,34 @@ class IMetadataSet(Interface):
         pass
 
 
+class ITranslator(Interface):
+    def get_available_languages():
+        """Get a list of the globally available translations"""
+        pass
+
+    def has_translation(language):
+        """Is the translation into language available for the context
+        object"""
+        pass
+
+    def get_translation(language):
+        """get the object that is the translation for context and
+        language"""
+        pass
+
+    def current_language():
+        """return the translation context is in if any"""
+        pass
+
+    def get_translation_url(language):
+        """get the url for the object that is the translation for
+        context and language"""
+        pass
+
+
+class ILanguageSelector(Interface):
+    def __call__():
+        """get the html that is displayed as the content of the link
+        to the translation"""
+        pass
+
