@@ -22,7 +22,15 @@ grok.layer(IPorto)
 # Main design
 
 class MainLayout(silvaviews.Layout):
+    """ This is the main layout it is the first entry point of the page.
 
+    DO NOT USE IT DIRECTLY !!
+
+    Use Layout/Body content provider for your themes
+    which permits you to customize the body of the page.
+    To include your javascript and css in the head html tag 
+    use silva.resourceinclude
+    """
     grok.template('mainlayout')
 
     def update(self):
@@ -44,9 +52,15 @@ class MainLayout(silvaviews.Layout):
 
 
 class Layout(silvaviews.ContentProvider):
-    """Layout of the page.
+    """Layout for the page's body.
+
+    This is the body part of the page.
     """
     pass
+
+
+# alias for Layout. Use the one you prefer
+Body = Layout
 
 
 class Header(silvaviews.ContentProvider):
