@@ -4,6 +4,7 @@
 # $Id$
 
 from AccessControl import ClassSecurityInfo
+from Acquisition import aq_base
 from App.class_init import InitializeClass
 import Acquisition
 
@@ -32,6 +33,7 @@ class LegacyCompatWrapper(Acquisition.Implicit):
 
 InitializeClass(LegacyCompatWrapper)
 
+
 def wrap_context(context, view):
     return LegacyCompatWrapper(view).__of__(context.aq_inner)
 
@@ -40,9 +42,15 @@ class LegacyLayout(silvaviews.Layout):
     grok.context(ISilvaObject)
 
     def render(self):
-        template = getattr(
-            wrap_context(self.context, self.view),
-            'index_html')
+        # We look for templates in ZODB and render it
+        is_overrided = hasattr(aq_base(self.context), 'override.html')
+        template_name = is_overrided and 'override.html' or 'index_html'
+        context = wrap_context(self.context, self.view)
+        if not hasattr(context, template_name):
+            self.request.setStatus(500)
+            return u'<html><body>Legacy layout not available.</body></html>'
+
+        template = getattr(context, template_name)
         return template()
 
 
