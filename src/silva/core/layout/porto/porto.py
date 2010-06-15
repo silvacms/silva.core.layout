@@ -59,10 +59,6 @@ class Layout(silvaviews.ContentProvider):
     pass
 
 
-# alias for Layout. Use the one you prefer
-Body = Layout
-
-
 class Header(silvaviews.ContentProvider):
     """Define a site header.
     """
