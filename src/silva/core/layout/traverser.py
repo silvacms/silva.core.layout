@@ -33,7 +33,7 @@ def applySkinButKeepSome(request, skin):
 # This flag is set on the request during *real* traversing
 # to set skin only during this process. Not when traversing
 # in templates on other areas.
-SET_SKIN_ALLOWED_FLAG = 'set_skin_allowed'
+SET_SKIN_ALLOWED_FLAG = 'SILVA_SET_SKIN_ALLOWED'
 
 @grok.subscribe(IPubStart)
 def set_skin_flag_on(event):
