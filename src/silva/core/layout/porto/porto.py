@@ -51,6 +51,14 @@ class MainLayout(silvaviews.Layout):
         return self.root.absolute_url()
 
 
+class MainErrorLayout(MainLayout):
+    grok.context(Exception)
+
+    def update(self):
+        self.context = self.context.get_silva_object()
+        super(MainErrorLayout, self).update()
+
+
 class Layout(silvaviews.ContentProvider):
     """Layout for the page's body.
 
