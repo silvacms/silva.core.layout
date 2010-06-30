@@ -2,7 +2,7 @@
 # See also LICENSE.txt
 # $Id$
 
-from grokcore import component
+from five import grok
 
 # Zope 2
 from AccessControl import getSecurityManager
@@ -10,17 +10,15 @@ from AccessControl import getSecurityManager
 # Silva
 from Products.Silva.SilvaPermissions import ChangeSilvaContent
 
-# SilvaLayout
 from silva.core.layout import interfaces
-
 from silva.core import interfaces as silva_interfaces
 from silva.core.views.interfaces import IPreviewLayer
 
 
-class Metadata(component.Adapter):
-
-    component.implements(interfaces.IMetadata)
-    component.context(silva_interfaces.ISilvaObject)
+class Metadata(grok.Adapter):
+    grok.implements(interfaces.IMetadata)
+    grok.provides(interfaces.IMetadata)
+    grok.context(silva_interfaces.ISilvaObject)
 
     def __init__(self, context):
         super(Metadata, self).__init__(context)
@@ -47,6 +45,7 @@ class Metadata(component.Adapter):
         return self._metadataservice.getMetadataValue(
             self._content, setname, elementname)
 
+
 class GhostMetadata(Metadata):
     """Apparently getMetadataValue does not work with Ghosts.
 
@@ -54,8 +53,7 @@ class GhostMetadata(Metadata):
     very magic. We work around this by using the non-fast-path in the
     metadata system which should work properly with Ghosts.
     """
-
-    component.context(silva_interfaces.IGhost)
+    grok.context(silva_interfaces.IGhostAware)
 
     def __init__(self, context):
         super(GhostMetadata, self).__init__(context)
@@ -70,13 +68,8 @@ class GhostMetadata(Metadata):
         return self._binding.get(setname, elementname)
 
 
-class GhostFolderMetadata(GhostMetadata):
-
-    component.context(silva_interfaces.IGhostFolder)
-
 class MetadataSet(object):
-
-    component.implements(interfaces.IMetadataSet)
+    grok.implements(interfaces.IMetadataSet)
 
     def __init__(self, metadata, setid):
         self.metadata = metadata
