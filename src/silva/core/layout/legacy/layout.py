@@ -9,7 +9,7 @@ from App.class_init import InitializeClass
 import Acquisition
 
 from five import grok
-from silva.core.interfaces import ISilvaObject
+from zope.interface import Interface
 from silva.core.layout.legacy.interfaces import ILegacyLayer
 from silva.core.views import views as silvaviews
 
@@ -39,7 +39,7 @@ def wrap_context(context, view):
 
 
 class LegacyLayout(silvaviews.Layout):
-    grok.context(ISilvaObject)
+    grok.context(Interface)
 
     def render(self):
         # We look for templates in ZODB and render it
