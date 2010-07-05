@@ -7,7 +7,7 @@ from OFS.Folder import Folder
 
 from five import grok
 from grokcore.view.interfaces import ITemplate as IGrokTemplate
-from megrok.layout.interfaces import IPage
+from infrae.layout.interfaces import IPage
 from zope.component import getGlobalSiteManager, queryAdapter
 from zope.component import getUtility, getUtilitiesFor
 from zope.configuration.name import resolve as pythonResolve
