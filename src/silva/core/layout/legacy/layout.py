@@ -47,7 +47,7 @@ class LegacyLayout(silvaviews.Layout):
         context = wrap_context(self.context, self.view)
         if not hasattr(context, template_name):
             self.response.setStatus(500)
-            return u'<html><body><p>(Layout is missing)</p>%s</body></html>' % (
+            return u'<html><body><p>(Legacy layout is missing or not installed)</p>%s</body></html>' % (
                 self.view.content())
 
         template = getattr(context, template_name)
