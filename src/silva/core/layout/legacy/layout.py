@@ -4,7 +4,7 @@
 # $Id$
 
 from AccessControl import ClassSecurityInfo
-from Acquisition import aq_base
+from Acquisition import aq_base, aq_inner
 from App.class_init import InitializeClass
 import Acquisition
 
@@ -35,7 +35,7 @@ InitializeClass(LegacyCompatWrapper)
 
 
 def wrap_context(context, view):
-    return LegacyCompatWrapper(view).__of__(context.aq_inner)
+    return LegacyCompatWrapper(view).__of__(aq_inner(context))
 
 
 class LegacyLayout(silvaviews.Layout):
