@@ -19,7 +19,6 @@ grok.layer(ILegacyLayer)
 class LegacyCompatWrapper(Acquisition.Implicit):
     """ Wrapper object to provides compatibility with legacy templates
     """
-
     security = ClassSecurityInfo()
     security.declareObjectPublic()
 
@@ -47,7 +46,7 @@ class LegacyLayout(silvaviews.Layout):
         template_name = is_overrided and 'override.html' or 'index_html'
         context = wrap_context(self.context, self.view)
         if not hasattr(context, template_name):
-            self.request.setStatus(500)
+            self.response.setStatus(500)
             return u'<html><body>Legacy layout not available.</body></html>'
 
         template = getattr(context, template_name)
