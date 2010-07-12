@@ -18,7 +18,7 @@
           tal:attributes="href context/favicon.ico/absolute_url | nothing" />
   </head>
 
-  <body>
+  <body tal:attributes="id context/id | nothing">
     <tal:layout tal:replace="structure provider:layout" />
   </body>
 </html>
