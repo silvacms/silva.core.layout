@@ -22,9 +22,6 @@ from persistent.list import PersistentList
 
 from five import grok
 
-from z3c.form import field, button
-from z3c.form.interfaces import DISPLAY_MODE
-
 # Zope 2
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from OFS.interfaces import IObjectWillBeRemovedEvent
@@ -34,16 +31,16 @@ from Products.Silva.helpers import add_and_edit
 
 from silva.core import conf as silvaconf
 from silva.core.interfaces import ISilvaObject
+from silva.core.layout.utils import findSite
 from silva.core.services.base import ZMIObject
 from silva.core.smi.smi import SMIButton, PropertiesTab
-from silva.core.forms import z3cforms as silvaz3cforms
 from silva.translations import translate as _
 
 from silva.core.layout.interfaces import ICustomizableType, ICustomizableTag, \
     ICustomizableMarker, IObjectHaveBeenMarked, IObjectHaveBeenUnmarked, \
     IObjectMarkEvent, IMarkManager
-from silva.core.layout.utils import findSite
 
+from zeam.form import silva as silvaforms
 
 # Marker object
 
@@ -163,7 +160,7 @@ class MarkManager(grok.Adapter):
 
     def _listInterfaces(self, base):
         interfaces = providedBy(self.context).interfaces()
-        return sorted([iface.__identifier__ for iface in interfaces
+        return sorted([iface for iface in interfaces
                        if iface.extends(base)])
 
     def _fetchMarker(self, name):
@@ -180,18 +177,20 @@ class MarkManager(grok.Adapter):
     @zope.cachedescriptors.property.CachedProperty
     def availableMarkers(self):
         interfaces = getUtilitiesFor(ICustomizableType, context=self.context)
-        availables = [name for name, interface in interfaces
+        availables = [interface for name, interface in interfaces
                       if interface.extends(ICustomizableTag)]
         return sorted(list(set(availables).difference(set(self.usedMarkers))))
 
-    def removeMarker(self, name):
-        marker = self._fetchMarker(name)
+    def removeMarker(self, marker):
+        if isinstance(marker, basestring):
+            marker = self._fetchMarker(marker)
         directlyProvides(
             self.context, directlyProvidedBy(self.context) - marker)
         notify(ObjectHaveBeenUnmarked(self.context, marker))
 
-    def addMarker(self, name):
-        marker = self._fetchMarker(name)
+    def addMarker(self, marker):
+        if isinstance(marker, basestring):
+            marker = self._fetchMarker(marker)
         directlyProvides(
             self.context, directlyProvidedBy(self.context), marker)
         notify(ObjectHaveBeenMarked(self.context, marker))
@@ -199,26 +198,47 @@ class MarkManager(grok.Adapter):
 
 # Forms to mark objects
 
+
+def interfaceTerm(interface):
+    """Create a vocabulary term to represent an interface.
+    """
+    title = interface.__doc__
+    if '\n' in title:
+        title = title.split('\n', 1)[0].strip()
+    if not title:
+        title = interface.__identifier__
+    return SimpleTerm(token=interface.__identifier__,
+                      value=interface,
+                      title=title)
+
+
 @grok.provider(IContextSourceBinder)
 def usedInterfacesForContent(context):
     manager = IMarkManager(context)
-    return SimpleVocabulary([SimpleTerm(i) for i in manager.usedInterfaces])
+    return SimpleVocabulary(
+        [interfaceTerm(interface)
+         for interface in manager.usedInterfaces])
+
 
 @grok.provider(IContextSourceBinder)
 def usedMarkersForContent(context):
     manager = IMarkManager(context)
-    return SimpleVocabulary([SimpleTerm(i) for i in manager.usedMarkers])
+    return SimpleVocabulary(
+        [interfaceTerm(interface)
+         for interface in manager.usedMarkers])
 
 
 @grok.provider(IContextSourceBinder)
 def availableMarkersForContent(context):
     manager = IMarkManager(context)
-    return SimpleVocabulary([SimpleTerm(i) for i in manager.availableMarkers])
+    return SimpleVocabulary(
+        [interfaceTerm(interface)
+         for interface in manager.availableMarkers])
 
 
 class IDisplayUsedInterfaces(Interface):
 
-    usedInterface = schema.Set(
+    usedInterface = schema.List(
         title=_(u"Used interfaces"),
         value_type=schema.Choice(
             source=usedInterfacesForContent),
@@ -227,7 +247,7 @@ class IDisplayUsedInterfaces(Interface):
 
 class IRemoveCustomizationMarker(Interface):
 
-    usedMarkers = schema.Set(
+    usedMarkers = schema.List(
         title=_(u"Used markers"),
         value_type=schema.Choice(
             source=usedMarkersForContent))
@@ -242,7 +262,6 @@ class IAddCustomizationMarker(Interface):
 
 
 class ContentInterfaces(grok.Adapter):
-
     grok.context(ISilvaObject)
     grok.provides(IDisplayUsedInterfaces)
 
@@ -252,74 +271,81 @@ class ContentInterfaces(grok.Adapter):
         return manager.usedInterfaces
 
 
-class ManageCustomizeMarker(silvaz3cforms.ComposedForm, PropertiesTab):
+class ManageCustomizeMarker(silvaforms.SMIComposedForm):
     """This form let you add and remove customization markers from the
     current content.
     """
-
     grok.name('tab_customization')
     grok.require('silva.ChangeSilvaContent')
+    grok.context(ISilvaObject)
+
+    tab = 'properties'
+    tab_name = 'tab_customization'
 
     label = _(u"customization markers")
-    description = "This let you marker your content with markers who are going to change how it is displayed."
+    description = _(u"This let you marker your content with markers "
+                    u"who are going to change how it is displayed.")
 
 
-class DisplayUsedInterfaces(silvaz3cforms.SubForm):
+class DisplayUsedInterfaces(silvaforms.SMISubForm):
+     grok.view(ManageCustomizeMarker)
+     grok.order(10)
+     grok.context(ISilvaObject)
 
-    grok.view(ManageCustomizeMarker)
-    grok.order(10)
+     label = _(u"Used interfaces by the content which change its rendering")
+     fields = silvaforms.Fields(IDisplayUsedInterfaces)
+     mode = silvaforms.DISPLAY
+     dataManager = silvaforms.makeAdaptiveDataManager(IDisplayUsedInterfaces)
+     ignoreContent = False
+     ignoreRequest = True
 
-    label = _(u"Used interfaces by the content which change its rendering")
-    fields = field.Fields(IDisplayUsedInterfaces)
-    mode = DISPLAY_MODE
 
-
-class AddCustomizationMarker(silvaz3cforms.SubForm):
-
+class AddCustomizationMarker(silvaforms.SMISubForm):
     grok.view(ManageCustomizeMarker)
     grok.order(20)
+    grok.context(ISilvaObject)
 
     label = _(u"Add a marker to affect the content rendering")
-    fields = field.Fields(IAddCustomizationMarker)
-    ignoreContext = True
+    fields = silvaforms.Fields(IAddCustomizationMarker)
 
-    @button.buttonAndHandler(
-        _(u"Add"), name="add",
-        condition=lambda form: form.widgets['availablesMarkers'].terms)
-    def handle_add(self, action):
+    @silvaforms.action(
+        _(u"Add"),
+        available=lambda form: len(form.fields['availablesMarkers'].valueField.getChoices(form.context)))
+    def add(self):
         values, errors = self.extractData()
-        if not values['availablesMarkers']:
-            self.status = _(u"You need to select a marker.")
-            self.status_type = 'error'
-        else:
-            manager = IMarkManager(self.context)
-            for value in values['availablesMarkers']:
-                manager.addMarker(value)
-            self.status = _(u"Marker added.")
+        if not values.get('availablesMarkers', None):
+            self.send_message(_(u"You need to select a marker."), type=u"error")
+            return silvaforms.FAILURE
+
+        manager = IMarkManager(self.context)
+        for value in values['availablesMarkers']:
+            manager.addMarker(value)
+        self.status = _(u"Marker added.")
+        return silvaforms.SUCCESS
 
 
-class RemoveCustomizationMarker(silvaz3cforms.SubForm):
-
+class RemoveCustomizationMarker(silvaforms.SMISubForm):
     grok.view(ManageCustomizeMarker)
     grok.order(30)
+    grok.context(ISilvaObject)
 
     label = _(u"Remove a marker")
-    fields = field.Fields(IRemoveCustomizationMarker)
-    ignoreContext = True
+    fields = silvaforms.Fields(IRemoveCustomizationMarker)
 
-    @button.buttonAndHandler(
-        _(u"Remove"), name="remove",
-        condition=lambda form: form.widgets['usedMarkers'].terms)
-    def handle_remove(self, action):
+    @silvaforms.action(
+        _(u"Remove"),
+        available=lambda form: len(form.fields['usedMarkers'].valueField.getChoices(form.context)))
+    def remove(self):
         values, errors = self.extractData()
-        if not values['usedMarkers']:
-            self.status = _(u"You need to select a marker.")
-            self.status_type = 'error'
-        else:
-            manager = IMarkManager(self.context)
-            for value in values['usedMarkers']:
-                manager.removeMarker(value)
-            self.status = _(u"Marker removed.")
+        if not values.get('usedMarkers', None):
+            self.send_message(_(u"You need to select a marker."), type=u"error")
+            return silvaforms.FAILURE
+
+        manager = IMarkManager(self.context)
+        for value in values['usedMarkers']:
+            manager.removeMarker(value)
+        self.status = _(u"Marker removed.")
+        return silvaforms.SUCCESS
 
 
 class ManageCustomizationButton(SMIButton):

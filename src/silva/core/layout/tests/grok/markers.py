@@ -29,10 +29,10 @@
     >>> from silva.core.layout.tests.grok.markers import IPhotoFolderTag
 
     >>> manager = IMarkManager(folder)
-    >>> manager.availableMarkers
-    [u'Products.Silva.Folder.IPhotoGallery',
-     u'silva.core.layout.interfaces.ICustomizableMarker',
-     u'silva.core.layout.tests.grok.markers.IPhotoFolderTag']
+    >>> sorted(manager.availableMarkers)
+    [<InterfaceClass silva.core.layout.interfaces.ICustomizableMarker>,
+     <InterfaceClass silva.core.layout.tests.grok.markers.IPhotoFolderTag>,
+     <InterfaceClass Products.Silva.Folder.IPhotoGallery>]
     >>> manager.usedMarkers
     []
     >>> IPhotoFolderTag.providedBy(folder)
@@ -43,11 +43,11 @@
   And it will be available on the object:
 
     >>> manager = IMarkManager(folder)
-    >>> manager.availableMarkers
-    [u'Products.Silva.Folder.IPhotoGallery',
-     u'silva.core.layout.interfaces.ICustomizableMarker']
-    >>> manager.usedMarkers
-    ['silva.core.layout.tests.grok.markers.IPhotoFolderTag']
+    >>> sorted(manager.availableMarkers)
+    [<InterfaceClass silva.core.layout.interfaces.ICustomizableMarker>,
+     <InterfaceClass Products.Silva.Folder.IPhotoGallery>]
+    >>> sorted(manager.usedMarkers)
+    [<InterfaceClass silva.core.layout.tests.grok.markers.IPhotoFolderTag>]
     >>> IPhotoFolderTag.providedBy(folder)
     True
     >>> browser.open('http://localhost/root/folder/photo')
@@ -66,10 +66,10 @@
   It won't exists anymore:
 
     >>> manager = IMarkManager(folder)
-    >>> manager.availableMarkers
-    [u'Products.Silva.Folder.IPhotoGallery',
-     u'silva.core.layout.interfaces.ICustomizableMarker',
-     u'silva.core.layout.tests.grok.markers.IPhotoFolderTag']
+    >>> sorted(manager.availableMarkers)
+    [<InterfaceClass silva.core.layout.interfaces.ICustomizableMarker>,
+     <InterfaceClass silva.core.layout.tests.grok.markers.IPhotoFolderTag>,
+     <InterfaceClass Products.Silva.Folder.IPhotoGallery>]
     >>> manager.usedMarkers
     []
     >>> IPhotoFolderTag.providedBy(folder)

@@ -34,7 +34,7 @@ class ICustomizableTag(ICustomizable):
 
 
 class ICustomizableMarker(ICustomizableTag):
-    """Customizable markers.
+    """All Customizable markers
     """
 
 
@@ -67,11 +67,11 @@ class IMarkManager(Interface):
     availableMarkers = Attribute(
         u"Skinable markers that can be set  on the object")
 
-    def addMarker(name):
+    def addMarker(marker):
         """Set marker name in the object.
         """
 
-    def removeMarker(name):
+    def removeMarker(marker):
         """Remove marker name from the object.
         """
 

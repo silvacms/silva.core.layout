@@ -21,22 +21,31 @@ class CustomizationMarkerTestCase(unittest.TestCase):
     def setUp(self):
         self.root = self.layer.get_application()
 
+    def assertInterfaceEqual(self, interfaces, expected):
+        """Verify that the given list of interfaces is the one
+        described in the list.
+        """
+        interfaces_names = [i.__identifier__ for i in interfaces]
+        self.assertEqual(sorted(interfaces_names), sorted(expected))
+
     def test_marker_on_root(self):
         manager = IMarkManager(self.root)
         self.failUnless(verifyObject(IMarkManager, manager))
 
         # By default, we got interfaces implemented by Root
-        self.assertEqual(manager.usedInterfaces,
-                         ['silva.core.interfaces.content.IFolder',
-                          'silva.core.interfaces.content.IPublication',
-                          'silva.core.interfaces.content.IRoot'])
+        self.assertInterfaceEqual(
+            manager.usedInterfaces,
+            ['silva.core.interfaces.content.IFolder',
+             'silva.core.interfaces.content.IPublication',
+             'silva.core.interfaces.content.IRoot'])
 
         # And there is no marker used.
-        self.assertEqual(manager.usedMarkers, [])
+        self.assertInterfaceEqual(manager.usedMarkers, [])
         # The base interfaces for markers is availables however.
-        self.assertEqual(manager.availableMarkers,
-                         [u'Products.Silva.Folder.IPhotoGallery',
-                          u'silva.core.layout.interfaces.ICustomizableMarker'])
+        self.assertInterfaceEqual(
+            manager.availableMarkers,
+            ['Products.Silva.Folder.IPhotoGallery',
+             'silva.core.layout.interfaces.ICustomizableMarker'])
 
 
         # We can add a marker in ZODB
@@ -59,10 +68,11 @@ class CustomizationMarkerTestCase(unittest.TestCase):
         # Now, we should see our marker in availables ones
         # Since our manager cache it's result, we need to recreate a new one.
         manager = IMarkManager(self.root)
-        self.assertEqual(manager.availableMarkers,
-                         [u'Products.Silva.Folder.IPhotoGallery',
-                          u'marker:root.ITestMarker',
-                          u'silva.core.layout.interfaces.ICustomizableMarker'])
+        self.assertInterfaceEqual(
+            manager.availableMarkers,
+            ['Products.Silva.Folder.IPhotoGallery',
+             'marker:root.ITestMarker',
+             'silva.core.layout.interfaces.ICustomizableMarker'])
 
         # We can assign a marker to the root
         manager.addMarker(u'marker:root.ITestMarker')
@@ -72,10 +82,12 @@ class CustomizationMarkerTestCase(unittest.TestCase):
 
         # And we will see changes in the manager
         manager = IMarkManager(self.root)
-        self.assertEqual(manager.usedMarkers, [u'marker:root.ITestMarker'])
-        self.assertEqual(manager.availableMarkers,
-                         [u'Products.Silva.Folder.IPhotoGallery',
-                          u'silva.core.layout.interfaces.ICustomizableMarker'])
+        self.assertInterfaceEqual(
+            manager.usedMarkers, ['marker:root.ITestMarker'])
+        self.assertInterfaceEqual(
+            manager.availableMarkers,
+            ['Products.Silva.Folder.IPhotoGallery',
+             'silva.core.layout.interfaces.ICustomizableMarker'])
 
 
         # Like we assign the marker, we can remove it.
@@ -84,22 +96,23 @@ class CustomizationMarkerTestCase(unittest.TestCase):
         # And it will disppear
         self.failIf(marker.providedBy(self.root))
         manager = IMarkManager(self.root)
-        self.assertEqual(manager.usedMarkers, [])
-        self.assertEqual(manager.availableMarkers,
-                         [u'Products.Silva.Folder.IPhotoGallery',
-                          u'marker:root.ITestMarker',
-                          u'silva.core.layout.interfaces.ICustomizableMarker'])
+        self.assertInterfaceEqual(manager.usedMarkers, [])
+        self.assertInterfaceEqual(
+            manager.availableMarkers,
+            ['Products.Silva.Folder.IPhotoGallery',
+             'marker:root.ITestMarker',
+             'silva.core.layout.interfaces.ICustomizableMarker'])
 
         # We can delete the marker
         self.root.manage_delObjects(['ITestMarker',])
 
         # And it won't appear in the manager anymore (it's gone)
         manager = IMarkManager(self.root)
-        self.assertEqual(manager.usedMarkers, [])
-        self.assertEqual(manager.availableMarkers,
-                         [u'Products.Silva.Folder.IPhotoGallery',
-                          u'silva.core.layout.interfaces.ICustomizableMarker'])
-
+        self.assertInterfaceEqual(manager.usedMarkers, [])
+        self.assertInterfaceEqual(
+            manager.availableMarkers,
+            ['Products.Silva.Folder.IPhotoGallery',
+             'silva.core.layout.interfaces.ICustomizableMarker'])
 
     def test_marker_on_root_delete(self):
         # Here, we create a marker, and check that's it remerber which
@@ -120,17 +133,20 @@ class CustomizationMarkerTestCase(unittest.TestCase):
 
         # And the manager confirm that
         manager = IMarkManager(self.root)
-        self.assertEqual(manager.usedMarkers, [u'marker:root.ITestMarker'])
+        self.assertInterfaceEqual(
+            manager.usedMarkers, [u'marker:root.ITestMarker'])
 
         # Now, I delete the marker before removing from the object.
         self.root.manage_delObjects(['ITestMarker',])
 
         # And root have been updated
         manager = IMarkManager(self.root)
-        self.assertEqual(manager.usedMarkers, [])
-        self.assertEqual(manager.availableMarkers,
-                         [u'Products.Silva.Folder.IPhotoGallery',
-                          u'silva.core.layout.interfaces.ICustomizableMarker'])
+        self.assertInterfaceEqual(manager.usedMarkers, [])
+        self.assertInterfaceEqual(
+            manager.availableMarkers,
+            ['Products.Silva.Folder.IPhotoGallery',
+             'silva.core.layout.interfaces.ICustomizableMarker'])
+
 
 def test_suite():
     suite = unittest.TestSuite()
