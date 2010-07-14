@@ -309,7 +309,7 @@ class AddCustomizationMarker(silvaforms.SMISubForm):
     fields = silvaforms.Fields(IAddCustomizationMarker)
 
     @silvaforms.action(
-        _(u"Add"),
+        _(u"add"),
         available=lambda form: len(form.fields['availablesMarkers'].valueField.getChoices(form.context)))
     def add(self):
         values, errors = self.extractData()
@@ -333,7 +333,7 @@ class RemoveCustomizationMarker(silvaforms.SMISubForm):
     fields = silvaforms.Fields(IRemoveCustomizationMarker)
 
     @silvaforms.action(
-        _(u"Remove"),
+        _(u"remove"),
         available=lambda form: len(form.fields['usedMarkers'].valueField.getChoices(form.context)))
     def remove(self):
         values, errors = self.extractData()
