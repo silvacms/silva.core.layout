@@ -1,10 +1,27 @@
 Changelog
 =========
 
-2.2 (unreleased)
-----------------
+2.3b1 (2010/07/16)
+------------------
 
-* ...
+* Replace ``z3c.form`` with ``zeam.form``.
+
+* Improve default Porto layout.
+
+* Add a ``silva.core.layout`` legacy layout to replace the one of
+  SilvaLayout, with support for overrides.
+
+* Move some dependent code from SilvaLayout to ``silva.core.layout``:
+  traverser to set skin, ``IMetadata`` adapter, skin metadata set.
+
+* Skin is now only set while traversing to the publish object. This
+  prevent to get it changed to something else while accessing other
+  that might have a different skin.
+
+* SMILayer moved to ``silva.core.smi``.
+
+* Update code to be compliant with Zope 2.12 and Python 2.6.
+
 
 2.2b1 (2010-01-25)
 ------------------

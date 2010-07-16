@@ -6,7 +6,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '2.2dev'
+version = '2.3b1'
 
 tests_require = [
     'Products.Silva [test]',
@@ -37,6 +37,8 @@ setup(name='silva.core.layout',
           'Products.Silva',
           'five.grok',
           'five.localsitemanager',
+          'grokcore.view',
+          'infrae.layout',
           'martian',
           'setuptools',
           'silva.core.conf',
@@ -46,7 +48,9 @@ setup(name='silva.core.layout',
           'silva.resourceinclude',
           'silva.translations',
           'zeam.form.silva',
+          'zope.cachedescriptors',
           'zope.component',
+          'zope.configuration',
           'zope.container',
           'zope.event',
           'zope.interface',
