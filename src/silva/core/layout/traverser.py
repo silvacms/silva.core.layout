@@ -40,7 +40,7 @@ def set_skin_flag_on(event):
     event.request[SET_SKIN_ALLOWED_FLAG] = True
 
 @grok.subscribe(IPubAfterTraversal)
-def set_skin_flag_on(event):
+def set_skin_flag_off(event):
     event.request[SET_SKIN_ALLOWED_FLAG] = False
 
 
