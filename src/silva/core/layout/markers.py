@@ -308,9 +308,11 @@ class AddCustomizationMarker(silvaforms.SMISubForm):
     label = _(u"Add a marker to affect the content rendering")
     fields = silvaforms.Fields(IAddCustomizationMarker)
 
-    @silvaforms.action(
-        _(u"add"),
-        available=lambda form: len(form.fields['availablesMarkers'].valueField.getChoices(form.context)))
+    def available(self):
+        markerField = self.fields['availablesMarkers']
+        return len(markerField.valueField.getChoices(self.context))
+
+    @silvaforms.action(_(u"add"))
     def add(self):
         values, errors = self.extractData()
         if not values.get('availablesMarkers', None):
@@ -332,9 +334,11 @@ class RemoveCustomizationMarker(silvaforms.SMISubForm):
     label = _(u"Remove a marker")
     fields = silvaforms.Fields(IRemoveCustomizationMarker)
 
-    @silvaforms.action(
-        _(u"remove"),
-        available=lambda form: len(form.fields['usedMarkers'].valueField.getChoices(form.context)))
+    def available(self):
+        markerField = self.fields['usedMarkers']
+        return len(markerField.valueField.getChoices(self.context))
+
+    @silvaforms.action(_(u"remove"))
     def remove(self):
         values, errors = self.extractData()
         if not values.get('usedMarkers', None):
