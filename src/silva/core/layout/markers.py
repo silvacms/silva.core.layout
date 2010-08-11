@@ -33,7 +33,8 @@ from silva.core import conf as silvaconf
 from silva.core.interfaces import ISilvaObject
 from silva.core.layout.utils import findSite
 from silva.core.services.base import ZMIObject
-from silva.core.smi.smi import SMIButton, PropertiesTab
+from silva.core.smi.interfaces import IPropertiesTab
+from silva.core.smi.smi import SMIButton
 from silva.translations import translate as _
 
 from silva.core.layout.interfaces import ICustomizableType, ICustomizableTag, \
@@ -275,16 +276,17 @@ class ManageCustomizeMarker(silvaforms.SMIComposedForm):
     """This form let you add and remove customization markers from the
     current content.
     """
+    grok.context(ISilvaObject)
+    grok.implements(IPropertiesTab)
     grok.name('tab_customization')
     grok.require('silva.ChangeSilvaContent')
-    grok.context(ISilvaObject)
 
     tab = 'properties'
-    tab_name = 'tab_customization'
 
     label = _(u"customization markers")
-    description = _(u"This let you marker your content with markers "
-                    u"who are going to change how it is displayed.")
+    description = _(u"This screen let you tag your content with markers. "
+                    u"Those markers can change how the content is displayed "
+                    u"for instance.")
 
 
 class DisplayUsedInterfaces(silvaforms.SMISubForm):
@@ -353,8 +355,7 @@ class RemoveCustomizationMarker(silvaforms.SMISubForm):
 
 
 class ManageCustomizationButton(SMIButton):
-
-    grok.view(PropertiesTab)
+    grok.view(IPropertiesTab)
     grok.order(110)
 
     tab = 'tab_customization'
