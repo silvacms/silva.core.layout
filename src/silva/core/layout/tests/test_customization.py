@@ -79,7 +79,6 @@ class CustomizationServiceTestCase(CustomizationTestCase):
             u'silva.core.interfaces.content.IContent',
             u'silva.core.interfaces.content.IFile',
             u'silva.core.interfaces.content.IFolder',
-            u'silva.core.interfaces.content.IGroup',
             u'silva.core.interfaces.content.IPublication',
             u'silva.core.interfaces.content.IRoot',
             u'silva.core.interfaces.content.ISilvaObject',
