@@ -206,7 +206,7 @@ class ViewEntryTestCase(CustomizationTestCase):
         signature = "zope.viewlet.interfaces.IViewlet:settingsbutton:None:" \
             "silva.core.interfaces.content.ISilvaObject:" \
             "silva.core.smi.interfaces.ISMILayer:" \
-            "silva.core.smi.smi.PropertiesTab:" \
+            "silva.core.smi.interfaces.IPropertiesTab:" \
             "silva.core.smi.smi.SMIMiddleGroundManager"
         manager = IViewManager(self.utility)
         view = manager.from_signature(signature)
