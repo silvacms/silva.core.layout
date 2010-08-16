@@ -2,21 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <title tal:content="context/get_title_or_id">Title</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="robots" content="index, follow" />
-    <meta name="revisit-after" content="10 days" /> 
     <meta name="generator" content="Silva" />
-    <!-- Silva subject meta data -->
-    <meta name="subject"
-          tal:define="subject layout/metadata/silva-extra/subject | nothing"
-          tal:condition="subject"
-          tal:attributes="content subject" />
-    <!-- Silva description meta data -->
     <meta name="description"
           tal:define="description layout/metadata/silva-extra/content_description | nothing"
           tal:condition="description"
           tal:attributes="content description" />
-    <!-- Silva keywords meta data -->
     <meta name="keywords"
           tal:define="keywords layout/metadata/silva-extra/keywords | nothing"
           tal:condition="keywords"
@@ -26,10 +16,6 @@
     <!-- Injector for content-specific css/js inclusion -->
     <link tal:replace="structure context/head_inject | nothing" />
 
-    <link rel="shortcut icon" href="/favicon.ico"
-          tal:attributes="href context/favicon.ico/absolute_url | nothing" />
-    <link rel="apple-touch-icon" href="/mobicon.png"
-	  tal:attributes="href context/mobicon.png/absolute_url | nothing"/> 
   </head>
 
   <body tal:attributes="id context/id | nothing">
