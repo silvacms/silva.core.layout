@@ -4,7 +4,7 @@
                   lang metadata/language"
       tal:attributes="lang python:lang or None">
   <head>
-    <title tal:content="context/get_title_or_id">Title</title>
+    <title tal:content="layout/title">Title</title>
     <meta name="generator" content="Silva" />
     <meta name="description"
           tal:define="description metadata/content_description | nothing"

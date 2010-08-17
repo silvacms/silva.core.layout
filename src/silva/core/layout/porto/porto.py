@@ -37,6 +37,10 @@ class MainLayout(silvaviews.Layout):
         component.getMultiAdapter(
             (self.request, self.context), IHTTPResponseHeaders)()
 
+    @property
+    def title(self):
+        return self.context.get_title_or_id()
+
     @CachedProperty
     def metadata(self):
         return IMetadata(self.context)
