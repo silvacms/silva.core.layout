@@ -1,18 +1,21 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      tal:define="metadata layout/metadata/silva-extra;
+                  lang metadata/language"
+      tal:attributes="lang python:lang or None">
   <head>
     <title tal:content="context/get_title_or_id">Title</title>
     <meta name="generator" content="Silva" />
     <meta name="description"
-          tal:define="description layout/metadata/silva-extra/content_description | nothing"
+          tal:define="description metadata/content_description | nothing"
           tal:condition="description"
           tal:attributes="content description" />
     <meta name="keywords"
-          tal:define="keywords layout/metadata/silva-extra/keywords | nothing"
+          tal:define="keywords metadata/keywords | nothing"
           tal:condition="keywords"
           tal:attributes="content keywords" />
     <meta name="subject"
-          tal:define="subject layout/metadata/silva-extra/subject | nothing"
+          tal:define="subject metadata/subject | nothing"
           tal:condition="subject"
           tal:attributes="content subject" />
     <tal:resource tal:replace="structure provider:resources" />
