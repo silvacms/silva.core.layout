@@ -11,6 +11,10 @@
           tal:define="keywords layout/metadata/silva-extra/keywords | nothing"
           tal:condition="keywords"
           tal:attributes="content keywords" />
+    <meta name="subject"
+          tal:define="subject layout/metadata/silva-extra/subject | nothing"
+          tal:condition="subject"
+          tal:attributes="content subject" />
     <tal:resource tal:replace="structure provider:resources" />
 
     <!-- Injector for content-specific css/js inclusion -->
