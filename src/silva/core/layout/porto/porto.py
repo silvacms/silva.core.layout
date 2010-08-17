@@ -28,18 +28,16 @@ class MainLayout(silvaviews.Layout):
 
     Use Layout/Body content provider for your themes
     which permits you to customize the body of the page.
-    To include your javascript and css in the head html tag 
+    To include your javascript and css in the head html tag
     use silva.resourceinclude
     """
     grok.template('mainlayout')
 
     def update(self):
+        self.body_id = self.context.getId().replace('.', '-')
+        self.title = self.context.get_title_or_id()
         component.getMultiAdapter(
             (self.request, self.context), IHTTPResponseHeaders)()
-
-    @property
-    def title(self):
-        return self.context.get_title_or_id()
 
     @CachedProperty
     def metadata(self):
@@ -61,6 +59,12 @@ class MainErrorLayout(MainLayout):
     def update(self):
         self.context = self.context.get_silva_object()
         super(MainErrorLayout, self).update()
+
+
+class HTMLExtraHeader(silvaviews.ViewletManager):
+    """Extra for the HTML Header.
+    """
+    pass
 
 
 class Layout(silvaviews.ContentProvider):

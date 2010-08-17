@@ -19,13 +19,14 @@
           tal:condition="subject"
           tal:attributes="content subject" />
     <tal:resource tal:replace="structure provider:resources" />
+    <tal:headers tal:replace="structure provider:htmlextraheader" />
 
     <!-- Injector for content-specific css/js inclusion -->
     <link tal:replace="structure context/head_inject | nothing" />
 
   </head>
 
-  <body tal:attributes="id context/id | nothing">
+  <body tal:attributes="id layout/body_id">
     <tal:layout tal:replace="structure provider:layout" />
   </body>
 </html>
