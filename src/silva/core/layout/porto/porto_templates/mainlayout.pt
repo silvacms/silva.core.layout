@@ -19,7 +19,7 @@
           tal:attributes="content description" />
     <meta name="generator" content="Silva" />
     <tal:resource tal:replace="structure provider:resources" />
-    <tal:headers tal:replace="structure provider:htmlextraheader" />
+    <tal:extraelements tal:replace="structure provider:htmlheadinsert" />
     <!-- Injector for content-specific css/js inclusion -->
     <link tal:replace="structure context/head_inject | nothing" />
   </head>

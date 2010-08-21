@@ -61,8 +61,8 @@ class MainErrorLayout(MainLayout):
         super(MainErrorLayout, self).update()
 
 
-class HTMLExtraHeader(silvaviews.ViewletManager):
-    """Extra for the HTML Header.
+class HTMLHeadInsert(silvaviews.ViewletManager):
+    """Extra elements to be inserted in the HTML Head.
     """
     pass
 
