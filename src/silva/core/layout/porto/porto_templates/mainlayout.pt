@@ -5,25 +5,23 @@
       tal:attributes="lang python:lang or None">
   <head>
     <title tal:content="layout/title">Title</title>
-    <meta name="generator" content="Silva" />
-    <meta name="description"
-          tal:define="description metadata/content_description | nothing"
-          tal:condition="description"
-          tal:attributes="content description" />
-    <meta name="keywords"
-          tal:define="keywords metadata/keywords | nothing"
-          tal:condition="keywords"
-          tal:attributes="content keywords" />
     <meta name="subject"
           tal:define="subject metadata/subject | nothing"
           tal:condition="subject"
           tal:attributes="content subject" />
+    <meta name="keywords"
+          tal:define="keywords metadata/keywords | nothing"
+          tal:condition="keywords"
+          tal:attributes="content keywords" />
+    <meta name="description"
+          tal:define="description metadata/content_description | nothing"
+          tal:condition="description"
+          tal:attributes="content description" />
+    <meta name="generator" content="Silva" />
     <tal:resource tal:replace="structure provider:resources" />
     <tal:headers tal:replace="structure provider:htmlextraheader" />
-
     <!-- Injector for content-specific css/js inclusion -->
     <link tal:replace="structure context/head_inject | nothing" />
-
   </head>
 
   <body tal:attributes="id layout/body_id">
