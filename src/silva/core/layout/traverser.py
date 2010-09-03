@@ -15,7 +15,7 @@ from zope.traversing import namespace
 from ZPublisher.interfaces import IPubAfterTraversal, IPubStart
 
 from silva.core.views.traverser import SilvaPublishTraverse
-from silva.core.layout.interfaces import ISilvaLayer, IMetadata
+from silva.core.layout.interfaces import ICustomizableLayer, IMetadata
 
 
 logger = logging.getLogger('silva.core.layout')
@@ -24,7 +24,7 @@ logger = logging.getLogger('silva.core.layout')
 def applySkinButKeepSome(request, skin):
     # Known interfaces
     ifaces = [iface for iface in directlyProvidedBy(request)
-              if not iface.extends(ISilvaLayer)]
+              if not iface.extends(ICustomizableLayer)]
     # Add the new skin.
     ifaces.append(skin)
     directlyProvides(request, *ifaces)
