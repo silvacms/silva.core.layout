@@ -42,6 +42,7 @@ from silva.core.layout.interfaces import ICustomizableType, ICustomizableTag, \
     IObjectMarkEvent, IMarkManager
 
 from zeam.form import silva as silvaforms
+from zeam.form.silva.interfaces import IRemoverAction
 
 # Marker object
 
@@ -344,7 +345,8 @@ class RemoveCustomizationMarker(silvaforms.SMISubForm):
 
     @silvaforms.action(
         _(u"remove"),
-        description=_(u"remove the selected marker(s) from the content"))
+        description=_(u"remove the selected marker(s) from the content"),
+        implements=IRemoverAction)
     def remove(self):
         values, errors = self.extractData()
         if not values.get('usedMarkers', None):
