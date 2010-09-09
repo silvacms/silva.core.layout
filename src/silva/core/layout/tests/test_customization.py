@@ -107,7 +107,7 @@ class CustomizationServiceTestCase(CustomizationTestCase):
         utility = getUtility(ICustomizationService)
 
         # Same goes for layers
-        someDefaultLayers = [
+        expected_layers = [
             u'silva.core.layout.legacy.interfaces.ILegacyLayer',
             u'silva.core.smi.interfaces.ISMILayer',
             u'silva.core.layout.interfaces.ISilvaLayer',
@@ -116,7 +116,7 @@ class CustomizationServiceTestCase(CustomizationTestCase):
             u'zope.publisher.interfaces.browser.IDefaultBrowserLayer']
 
         foundLayers = utility.availablesLayers()
-        for iface in someDefaultLayers:
+        for iface in expected_layers:
             self.failUnless(iface in foundLayers,
                 "layer %s not available in %s" % (iface, foundLayers))
 
@@ -218,7 +218,7 @@ class ViewEntryTestCase(CustomizationTestCase):
             view.for_,
             'silva.core.interfaces.content.ISilvaObject')
         self.assertEqual(view.layer, 'silva.core.smi.interfaces.ISMILayer')
-        self.assertEqual(basename(view.template), 'smibutton.pt')
+        self.assertEqual(basename(view.template), 'smibutton.cpt')
         self.assertEqual(view.origin, None)
         self.assertEqual(manager.get_signature(view), signature)
 

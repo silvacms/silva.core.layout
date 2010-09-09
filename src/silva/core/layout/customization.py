@@ -206,7 +206,9 @@ class DefaultViewInfo(grok.Adapter):
 
         if ICustomizedTemplate.providedBy(self.context):
             if self.origin == u'/'.join(site.getPhysicalPath()):
-                raise ValueError, "This template have been already customized in the same directory."
+                raise ValueError(
+                    u"This template have been already customized "
+                    u"in the same directory.")
 
         new_template = TTWViewTemplate(template_id, self.code,
                                        view=viewclass, permission=permission)
@@ -343,11 +345,13 @@ class CustomizationService(Folder, SilvaService):
 
     def availablesInterfaces(self, base=ICustomizable):
         interfaces = getUtilitiesFor(ICustomizableType, context=self)
-        return sorted([name for name, interface in interfaces if interface.isOrExtends(base)])
+        return sorted([name for name, interface in interfaces
+                       if interface.isOrExtends(base)])
 
     def availablesLayers(self, base=IDefaultBrowserLayer):
         layers = getUtilitiesFor(ILayerType)
-        return sorted([name for name, layer in layers if layer.isOrExtends(base)])
+        return sorted([name for name, layer in layers
+                       if layer.isOrExtends(base)])
 
     def availablesTemplates(self, interface, layer=IDefaultBrowserLayer):
         return interfaces.IViewManager(self).search(interface, layer, sort=True)
