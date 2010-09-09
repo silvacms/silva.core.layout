@@ -8,9 +8,7 @@
     >>> browser = Browser()
     >>> root = getRootFolder()
     >>> factory = root.manage_addProduct['Silva']
-    >>> factory.manage_addFolder('folder', 'Folder')
-    ''
-    >>> folder = root.folder
+    >>> folder = factory.manage_addFolder('folder', 'Folder')
 
   Our purpose is to add a template called `photo`:
 
