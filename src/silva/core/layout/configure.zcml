@@ -22,6 +22,11 @@
 
   <!-- Default views should be index.html -->
   <browser:defaultView
+    for="silva.core.interfaces.IAsset"
+    name="index.html"
+  />
+
+  <browser:defaultView
     for="silva.core.interfaces.IContent"
     name="index.html"
   />
