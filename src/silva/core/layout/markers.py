@@ -280,7 +280,7 @@ class ManageCustomizeMarker(silvaforms.SMIComposedForm):
     grok.context(ISilvaObject)
     grok.implements(IPropertiesTab)
     grok.name('tab_customization')
-    grok.require('silva.ChangeSilvaContentSettings')
+    grok.require('silva.ManageSilvaContent')
 
     tab = 'properties'
 
@@ -362,7 +362,7 @@ class RemoveCustomizationMarker(silvaforms.SMISubForm):
 
 class ManageCustomizationButton(SMIButton):
     grok.order(110)
-    grok.require('silva.ChangeSilvaContentSettings')
+    grok.require('silva.ManageSilvaContent')
     grok.view(IPropertiesTab)
 
     tab = 'tab_customization'
