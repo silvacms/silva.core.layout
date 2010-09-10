@@ -361,8 +361,9 @@ class RemoveCustomizationMarker(silvaforms.SMISubForm):
 
 
 class ManageCustomizationButton(SMIButton):
-    grok.view(IPropertiesTab)
     grok.order(110)
+    grok.require('silva.ChangeSilvaContentSettings')
+    grok.view(IPropertiesTab)
 
     tab = 'tab_customization'
     label = _("customization")
