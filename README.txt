@@ -6,9 +6,6 @@ silva.core.layout
 for Silva. It's the base system for new generation filesystem based
 layouts.
 
-You can have more information on how to use this package on
+You can have more information on how to use this package on:
+
 http://docs.infrae.com.
-
-
-
-

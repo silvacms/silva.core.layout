@@ -1,12 +1,20 @@
 Changelog
 =========
 
-2.3 (unreleased)
+2.3 (2010-10-07)
 ----------------
 
-* ...
+* SMI Maker interface moved to `silva.core.smi`.
 
-2.3b1 (2010/07/16)
+* A new content provider ``headinsert`` to extends pages heads.
+
+* Default Porto template have been improved.
+
+* Add JQuery and JQueryUI resources. You can use them in your layout
+  by inheriting from ``silva.core.layout.jquery.interfaces.IJQueryResources`` or
+  ``silva.core.layout.jquery.interfaces.IJQueryUIResources``.
+
+2.3b1 (2010-07-16)
 ------------------
 
 * Replace ``z3c.form`` with ``zeam.form``.
