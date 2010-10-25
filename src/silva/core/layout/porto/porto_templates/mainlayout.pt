@@ -1,7 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      tal:define="metadata layout/metadata/silva-extra;
-                  lang metadata/language"
+      tal:define="
+        metadata layout/metadata/silva-extra;
+        lang metadata/language"
       tal:attributes="lang python:lang or None">
   <head>
     <title tal:content="layout/title">Title</title>
@@ -22,7 +23,7 @@
       tal:attributes="href context/globals/favicon.ico/@@absolute_url | nothing" />
     <tal:resource tal:replace="structure provider:resources" />
     <tal:extraelements tal:replace="structure provider:htmlheadinsert" />
-    <!-- Injector for content-specific css/js inclusion -->
+    <!-- Injector for on-the-fly css/js inclusion -->
     <link tal:replace="structure context/head_inject | nothing" />
   </head>
 
