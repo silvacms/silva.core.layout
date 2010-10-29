@@ -12,12 +12,12 @@
                            title info/title;
                            class python:provider.navigation_link_css_class(info, depth)"
            tal:content="info/title">Title</a>
-        <div tal:condition="info/nodes">
+        <tal:if tal:condition="info/nodes">
           <tal:subentries tal:define="nodes info/nodes;
                                       depth python:depth + 1">
             <metal:macro metal:use-macro="template/macros/navigation-level" />
           </tal:subentries>
-        </div>
+        </tal:if>
       </li>
     </tal:entries>
   </ul>
