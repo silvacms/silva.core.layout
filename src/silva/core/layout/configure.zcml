@@ -21,19 +21,9 @@
 
   <!-- Default views should be index.html -->
   <browser:defaultView
-    for="silva.core.interfaces.IAsset"
-    name="index.html"
-  />
-
-  <browser:defaultView
-    for="silva.core.interfaces.IContent"
-    name="index.html"
-  />
-
-  <browser:defaultView
-    for="silva.core.interfaces.IContainer"
-    name="index.html"
-  />
+     for="silva.core.interfaces.ISilvaObject"
+     name="index.html"
+     />
 
   <!-- Traversing -->
   <adapter
