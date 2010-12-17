@@ -19,8 +19,6 @@
           tal:condition="description"
           tal:attributes="content description" />
     <meta name="generator" content="Silva" />
-    <link rel="shortcut icon" href="globals/favicon.ico"
-      tal:attributes="href context/globals/favicon.ico/@@absolute_url | nothing" />
     <tal:resource tal:replace="structure provider:resources" />
     <tal:extraelements tal:replace="structure provider:htmlheadinsert" />
     <!-- Injector for on-the-fly css/js inclusion -->
