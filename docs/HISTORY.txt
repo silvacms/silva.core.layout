@@ -1,10 +1,14 @@
 Changelog
 =========
 
-2.3.1 (unreleased)
+2.3.1 (2010/12/20)
 ------------------
 
-* ...
+* Add a ``lang`` attribute on the HTML tag of the Porto layout.
+
+* Apply ``silva.core.layout`` layout on all Silva content.
+
+* Update tests.
 
 2.3 (2010-10-07)
 ----------------
