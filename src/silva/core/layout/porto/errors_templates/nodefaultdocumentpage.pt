@@ -1,0 +1,11 @@
+<tal:error>
+
+<div class="not-viewable-error">
+
+  <h2><b>403</b> No Default Document</h2>
+
+  <p>The directory which you have requested does not have an index file.</p>
+
+</div>
+
+</tal:error>

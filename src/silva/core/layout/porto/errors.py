@@ -9,7 +9,7 @@ from zope.security.interfaces import IUnauthorized
 
 from silva.core.layout.interfaces import ICustomizableLayer
 from silva.core.views import views as silvaviews
-from silva.core.interfaces import INotViewable
+from silva.core.interfaces import INotViewable, INoDefaultDocument
 
 grok.layer(ICustomizableLayer)
 
@@ -48,6 +48,13 @@ class NotViewablePage(silvaviews.Page):
             resource.
         """
         self.response.setStatus(409, lock=True)
+        
+class NoDefaultDocumentPage(silvaviews.Page):
+    grok.context(INoDefaultDocument)
+    grok.name('error.html')
+    
+    def update(self):
+        self.response.setStatus(403, lock=True)
 
 # Other error
 
