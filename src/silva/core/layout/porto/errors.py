@@ -9,6 +9,7 @@ from zope.security.interfaces import IUnauthorized
 
 from silva.core.layout.interfaces import ICustomizableLayer
 from silva.core.views import views as silvaviews
+from silva.core.interfaces import INotViewable
 
 grok.layer(ICustomizableLayer)
 
@@ -33,6 +34,20 @@ class UnauthorizedPage(silvaviews.Page):
         self.response.setStatus(401)
         self.response.setHeader('WWW-Authenticate', 'basic realm="Zope"')
 
+class NotViewablePage(silvaviews.Page):
+    grok.context(INotViewable)
+    grok.name('error.html')
+    
+    def update(self):
+       """the apache book states for code 409:
+        409: Conflict: the request could not be completed because of a conflict
+                       with the current state of the resource
+        This seems to be the closest 4XX code to match this condition.  In other
+        words, the "state of this resource" is that it is unpublished, which is 
+        in conflict with the request to serve the published version of the
+        resource.
+        """
+        self.response.setStatus(409, lock=True)
 
 # Other error
 

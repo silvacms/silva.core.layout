@@ -1,0 +1,11 @@
+<tal:error>
+
+<div class="not-viewable-error">
+
+  <h2><b>409</b> Not Viewable</h2>
+
+  <p>The content you are seeking is not published.</p>
+
+</div>
+
+</tal:error>
