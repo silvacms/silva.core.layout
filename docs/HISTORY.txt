@@ -6,6 +6,12 @@ Changelog
 
 * ...
 
+Bethel Changes
+--------------
+
+- Add Error Pages in Porto layout for INotViewable and INoDefaultDocument
+
+
 2.3.1 (2010/12/20)
 ------------------
 
