@@ -67,6 +67,17 @@ class HTMLHeadInsert(silvaviews.ViewletManager):
     pass
 
 
+class Favicon(silvaviews.Viewlet):
+    """ Favicon content provider.
+    """
+    grok.viewletmanager(HTMLHeadInsert)
+    grok.name('favicon')
+
+    @property
+    def favicon_url(self):
+        return self.static['favicon.ico']
+
+
 class Layout(silvaviews.ContentProvider):
     """Layout for the page's body.
 
