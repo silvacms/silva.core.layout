@@ -7,7 +7,7 @@ from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
 
 class IJQueryResources(IDefaultBrowserLayer):
-    silvaconf.resource('jquery-1.4.2.min.js')
+    silvaconf.resource('jquery-1.4.4.js')
 
 
 class IJQueryUIResources(IJQueryResources):
