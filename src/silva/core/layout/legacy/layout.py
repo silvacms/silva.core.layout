@@ -51,7 +51,7 @@ class LegacyLayout(silvaviews.Layout):
                 self.view.content())
 
         template = getattr(context, template_name)
-        if template is None:
+        if not callable(template):
             # In some cases, the template `index_html` will be None
             # (on page templates ...). In that case, we assume that
             # anyway we are not on a valid Silva content and return
