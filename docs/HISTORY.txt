@@ -1,10 +1,13 @@
 Changelog
 =========
 
-2.3.2 (unreleased)
+2.3.2 (2010-02-07)
 ------------------
 
-* ...
+* Improve legacy stability, specially error pages on non-Silva content.
+  Add tests.
+
+* Add a content provider to manage the favicon.
 
 Bethel Changes
 --------------
@@ -12,7 +15,7 @@ Bethel Changes
 - Add Error Pages in Porto layout for INotViewable and INoDefaultDocument
 
 
-2.3.1 (2010/12/20)
+2.3.1 (2010-12-20)
 ------------------
 
 * Add a ``lang`` attribute on the HTML tag of the Porto layout.

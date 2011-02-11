@@ -44,13 +44,21 @@ class LegacyLayout(silvaviews.Layout):
         # We look for templates in ZODB and render it
         is_overrided = hasattr(aq_base(self.context), 'override.html')
         template_name = is_overrided and 'override.html' or 'index_html'
-        context = wrap_context(self.context, self.view)
+        context = wrap_context(self.context.get_silva_object(), self.view)
         if not hasattr(context, template_name):
             self.response.setStatus(500)
             return u'<html><body><p>(Legacy layout is missing or not installed)</p>%s</body></html>' % (
                 self.view.content())
 
         template = getattr(context, template_name)
+        if not callable(template):
+            # In some cases, the template `index_html` will be None
+            # (on page templates ...). In that case, we assume that
+            # anyway we are not on a valid Silva content and return
+            # the message with some basic layout.
+            return u'<html><body>%s</body></html>' % (
+                self.view.content())
+
         return template()
 
 
