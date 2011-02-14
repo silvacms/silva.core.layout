@@ -47,7 +47,7 @@ class NotViewablePage(silvaviews.Page):
             in conflict with the request to serve the published version of the
             resource.
         """
-        self.response.setStatus(409, lock=True)
+        self.response.setStatus(409)
         
 class NoDefaultDocumentPage(silvaviews.Page):
     grok.context(INoDefaultDocument)
