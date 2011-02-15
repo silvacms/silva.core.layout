@@ -14,6 +14,11 @@ Bethel Changes
 
 - Add Error Pages in Porto layout for INotViewable and INoDefaultDocument
 
+- add an 'errors' module to contain exceptions, namely NoDefaultDocument
+
+- raise NoDefaultDocument in default.Page.update (so the error can be raised
+  at the earliest moment)
+
 
 2.3.1 (2010-12-20)
 ------------------
