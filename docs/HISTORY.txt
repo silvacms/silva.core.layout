@@ -18,6 +18,10 @@ Bethel Changes
 
 - raise NoDefaultDocument in default.Page.update (so the error can be raised
   at the earliest moment)
+  
+- for IMetadata adapter, add in ability to not-acquire acquirable metadata
+  by providing an 'acquire=0|1' parameter.  This is already supported in
+  MetadataTool.getMetadataValue.
 
 
 2.3.1 (2010-12-20)

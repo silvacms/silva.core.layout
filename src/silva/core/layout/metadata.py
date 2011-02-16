@@ -33,17 +33,17 @@ class Metadata(grok.Adapter):
         if self._content is None:
             self._content = context.get_viewable()
 
-    def __call__(self, setid, elementid):
-        return self._getValue(setid, elementid)
+    def __call__(self, setid, elementid, acquire=1):
+        return self._getValue(setid, elementid, acquire=acquire)
 
     def __getitem__(self, setid):
         return MetadataSet(self, setid)
 
-    def _getValue(self, setname, elementname):
+    def _getValue(self, setname, elementname, acquire=1):
         if self._content is None:
             return None
         return self._metadataservice.getMetadataValue(
-            self._content, setname, elementname)
+            self._content, setname, elementname, acquire=acquire)
 
 
 class GhostMetadata(Metadata):
