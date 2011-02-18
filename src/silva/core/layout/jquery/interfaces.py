@@ -11,6 +11,6 @@ class IJQueryResources(IDefaultBrowserLayer):
 
 
 class IJQueryUIResources(IJQueryResources):
-    silvaconf.resource('jquery-ui-1.8.4.custom.min.js')
+    silvaconf.resource('jquery-ui-1.8.9.custom.min.js')
     silvaconf.resource('jquery-ui-i18n.js')
-    silvaconf.resource('jquery-ui-1.8.4.custom.css')
+    silvaconf.resource('jquery-ui-1.8.9.custom.css')
