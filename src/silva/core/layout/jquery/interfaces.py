@@ -4,13 +4,14 @@
 
 from silva.core import conf as silvaconf
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
+from js import jquery, jqueryui
 
 
 class IJQueryResources(IDefaultBrowserLayer):
-    silvaconf.resource('jquery-1.4.4.js')
+    silvaconf.resource(jquery.jquery)
 
 
+# XXX i18n is not included in jqueryui silvaconf.resource('jquery-ui-i18n.js')
 class IJQueryUIResources(IJQueryResources):
-    silvaconf.resource('jquery-ui-1.8.9.custom.min.js')
-    silvaconf.resource('jquery-ui-i18n.js')
-    silvaconf.resource('jquery-ui-1.8.9.custom.css')
+    silvaconf.resource(jqueryui.jqueryui)
+    silvaconf.resource(jqueryui.smoothness)

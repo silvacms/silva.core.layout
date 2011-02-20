@@ -35,6 +35,8 @@ setup(name='silva.core.layout',
       zip_safe=False,
       install_requires=[
           'Products.Silva',
+          'js.jquery',
+          'js.jqueryui',
           'five.grok',
           'five.localsitemanager',
           'grokcore.view',
