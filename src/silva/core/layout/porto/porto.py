@@ -97,7 +97,12 @@ class Breadcrumbs(silvaviews.ContentProvider):
     """
     pass
 
-
+class ContentTitle(silvaviews.ContentProvider):
+    """Content Provider to render the content title 
+       (e.g. <h2>content title</h2>)
+    """
+    
+       
 class Navigation(silvaviews.ContentProvider):
     """Navigation
     """

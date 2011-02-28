@@ -23,6 +23,8 @@ Bethel Changes
   by providing an 'acquire=0|1' parameter.  This is already supported in
   MetadataTool.getMetadataValue.
 
+- add a content provider to render the content/page title
+
 
 2.3.1 (2010-12-20)
 ------------------
