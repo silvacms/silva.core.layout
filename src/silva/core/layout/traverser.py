@@ -55,7 +55,7 @@ class SkinSetterMixin(object):
         try:
             metadata = IMetadata(self.context)
         except TypeError, e:
-            request.set('resourcebase', self.context)
+            return
         else:
             try:
                 skin_name = metadata('silva-layout', 'skin')
@@ -75,8 +75,6 @@ class SkinSetterMixin(object):
                     # which was applied on a parent (otherwise we won't
                     # see the change, since it's already provided).
                     applySkinButKeepSome(request, skin)
-                    # Set the base url for resources
-                    request.set('resourcebase', self.context)
                 else:
                     logger.error('Cannot find requested skin %s' % skin_name)
 
