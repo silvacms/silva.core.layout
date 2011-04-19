@@ -108,8 +108,6 @@ class CustomizationServiceTestCase(CustomizationTestCase):
 
         # Same goes for layers
         expected_layers = [
-            u'silva.core.layout.legacy.interfaces.ILegacyLayer',
-            u'silva.core.smi.interfaces.ISMILayer',
             u'silva.core.layout.interfaces.ISilvaLayer',
             u'silva.core.layout.porto.interfaces.IPorto',
             u'silva.core.layout.porto.interfaces.IPortoWithCSS',
@@ -199,26 +197,6 @@ class ViewEntryTestCase(CustomizationTestCase):
             view.layer,
             'silva.core.layout.porto.interfaces.IPorto')
         self.assertEqual(basename(view.template), 'footer.pt')
-        self.assertEqual(view.origin, None)
-        self.assertEqual(manager.get_signature(view), signature)
-
-    def test_grok_viewlet(self):
-        signature = "zope.viewlet.interfaces.IViewlet:settingsbutton:None:" \
-            "silva.core.interfaces.content.ISilvaObject:" \
-            "silva.core.smi.interfaces.ISMILayer:" \
-            "silva.core.smi.interfaces.IPropertiesTab:" \
-            "silva.core.smi.smi.SMIMiddleGroundManager"
-        manager = IViewManager(self.utility)
-        view = manager.from_signature(signature)
-        self.failIf(view is None)
-        self.failUnless(verifyObject(IViewInfo, view))
-        self.assertEqual(view.type_, 'Grok Viewlet')
-        self.assertEqual(view.name, 'settingsbutton')
-        self.assertEqual(
-            view.for_,
-            'silva.core.interfaces.content.ISilvaObject')
-        self.assertEqual(view.layer, 'silva.core.smi.interfaces.ISMILayer')
-        self.assertEqual(basename(view.template), 'smibutton.cpt')
         self.assertEqual(view.origin, None)
         self.assertEqual(manager.get_signature(view), signature)
 

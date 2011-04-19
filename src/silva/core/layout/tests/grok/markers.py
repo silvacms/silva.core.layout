@@ -5,7 +5,7 @@
 
   First let's create a folder to play with our marker:
 
-    >>> browser = Browser()
+    >>> browser = getBrowser()
     >>> root = getRootFolder()
     >>> factory = root.manage_addProduct['Silva']
     >>> folder = factory.manage_addFolder('folder', 'Folder')
@@ -13,9 +13,7 @@
   Our purpose is to add a template called `photo`:
 
     >>> browser.open('http://localhost/root/folder/photo')
-    Traceback (most recent call last):
-      ...
-    HTTPError: HTTP Error 404: Not Found
+    404
 
   We can grok our marker:
 
@@ -30,7 +28,7 @@
     >>> sorted(manager.availableMarkers)
     [<InterfaceClass silva.core.layout.interfaces.ICustomizableMarker>,
      <InterfaceClass silva.core.layout.tests.grok.markers.IPhotoFolderTag>,
-     <InterfaceClass Products.Silva.Folder.IPhotoGallery>]
+     <InterfaceClass Products.Silva.Folder.views.IPhotoGallery>]
     >>> manager.usedMarkers
     []
     >>> IPhotoFolderTag.providedBy(folder)
@@ -43,16 +41,15 @@
     >>> manager = IMarkManager(folder)
     >>> sorted(manager.availableMarkers)
     [<InterfaceClass silva.core.layout.interfaces.ICustomizableMarker>,
-     <InterfaceClass Products.Silva.Folder.IPhotoGallery>]
+     <InterfaceClass Products.Silva.Folder.views.IPhotoGallery>]
     >>> sorted(manager.usedMarkers)
     [<InterfaceClass silva.core.layout.tests.grok.markers.IPhotoFolderTag>]
     >>> IPhotoFolderTag.providedBy(folder)
     True
     >>> browser.open('http://localhost/root/folder/photo')
-    >>> browser.status
-    '200 OK'
-    >>> browser.url
-    'http://localhost/root/folder/photo'
+    200
+    >>> browser.location
+    '/root/folder/photo'
     >>> print browser.contents
     <html><body>Photo !</body></html>
 
@@ -67,15 +64,13 @@
     >>> sorted(manager.availableMarkers)
     [<InterfaceClass silva.core.layout.interfaces.ICustomizableMarker>,
      <InterfaceClass silva.core.layout.tests.grok.markers.IPhotoFolderTag>,
-     <InterfaceClass Products.Silva.Folder.IPhotoGallery>]
+     <InterfaceClass Products.Silva.Folder.views.IPhotoGallery>]
     >>> manager.usedMarkers
     []
     >>> IPhotoFolderTag.providedBy(folder)
     False
     >>> browser.open('http://localhost/root/folder/photo')
-    Traceback (most recent call last):
-      ...
-    HTTPError: HTTP Error 404: Not Found
+    404
 
 
   And we remove our marker from the ZCA so others tests don't fail.

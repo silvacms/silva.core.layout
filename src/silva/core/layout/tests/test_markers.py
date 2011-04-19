@@ -45,7 +45,7 @@ class CustomizationMarkerTestCase(unittest.TestCase):
         # The base interfaces for markers is availables however.
         self.assertInterfaceEqual(
             manager.availableMarkers,
-            ['Products.Silva.Folder.IPhotoGallery',
+            ['Products.Silva.Folder.views.IPhotoGallery',
              'silva.core.layout.interfaces.ICustomizableMarker'])
 
 
@@ -71,7 +71,7 @@ class CustomizationMarkerTestCase(unittest.TestCase):
         manager = IMarkManager(self.root)
         self.assertInterfaceEqual(
             manager.availableMarkers,
-            ['Products.Silva.Folder.IPhotoGallery',
+            ['Products.Silva.Folder.views.IPhotoGallery',
              'marker:root.ITestMarker',
              'silva.core.layout.interfaces.ICustomizableMarker'])
 
@@ -87,7 +87,7 @@ class CustomizationMarkerTestCase(unittest.TestCase):
             manager.usedMarkers, ['marker:root.ITestMarker'])
         self.assertInterfaceEqual(
             manager.availableMarkers,
-            ['Products.Silva.Folder.IPhotoGallery',
+            ['Products.Silva.Folder.views.IPhotoGallery',
              'silva.core.layout.interfaces.ICustomizableMarker'])
 
 
@@ -100,7 +100,7 @@ class CustomizationMarkerTestCase(unittest.TestCase):
         self.assertInterfaceEqual(manager.usedMarkers, [])
         self.assertInterfaceEqual(
             manager.availableMarkers,
-            ['Products.Silva.Folder.IPhotoGallery',
+            ['Products.Silva.Folder.views.IPhotoGallery',
              'marker:root.ITestMarker',
              'silva.core.layout.interfaces.ICustomizableMarker'])
 
@@ -112,7 +112,7 @@ class CustomizationMarkerTestCase(unittest.TestCase):
         self.assertInterfaceEqual(manager.usedMarkers, [])
         self.assertInterfaceEqual(
             manager.availableMarkers,
-            ['Products.Silva.Folder.IPhotoGallery',
+            ['Products.Silva.Folder.views.IPhotoGallery',
              'silva.core.layout.interfaces.ICustomizableMarker'])
 
     def test_marker_on_root_delete(self):
@@ -145,7 +145,7 @@ class CustomizationMarkerTestCase(unittest.TestCase):
         self.assertInterfaceEqual(manager.usedMarkers, [])
         self.assertInterfaceEqual(
             manager.availableMarkers,
-            ['Products.Silva.Folder.IPhotoGallery',
+            ['Products.Silva.Folder.views.IPhotoGallery',
              'silva.core.layout.interfaces.ICustomizableMarker'])
 
 

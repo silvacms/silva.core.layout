@@ -2,16 +2,15 @@
 # See also LICENSE.txt
 # $Id$
 
-from Products.Silva.testing import FunctionalLayer, suite_from_package
-from Products.Silva.testing import Browser
-
 import unittest
 import doctest
+
+from Products.Silva.testing import FunctionalLayer, suite_from_package
 
 globs = {
     'grok': FunctionalLayer.grok,
     'getRootFolder': FunctionalLayer.get_application,
-    'Browser': Browser,
+    'getBrowser': FunctionalLayer.get_browser,
     }
 
 def create_test(build_test_suite, name):
