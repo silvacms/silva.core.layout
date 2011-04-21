@@ -38,6 +38,7 @@ class CustomizationMarkerTestCase(unittest.TestCase):
             ['silva.core.interfaces.content.IFolder',
              'silva.core.interfaces.content.IPublication',
              'silva.core.interfaces.content.IPublishable',
+             'silva.core.interfaces.content.IPublishableBase',
              'silva.core.interfaces.content.IRoot'])
 
         # And there is no marker used.
