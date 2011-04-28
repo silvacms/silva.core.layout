@@ -54,7 +54,7 @@ class NoDefaultDocumentPage(silvaviews.Page):
     grok.name('error.html')
     
     def update(self):
-        self.response.setStatus(403, lock=True)
+        self.response.setStatus(403)
 
 # Other error
 
