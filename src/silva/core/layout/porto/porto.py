@@ -12,6 +12,7 @@ from AccessControl import getSecurityManager
 
 from silva.core.layout.interfaces import IMetadata
 from silva.core.interfaces import IContainer, IPublishable
+from silva.core.services.interfaces import IContentFilteringService
 from silva.core.layout.porto.interfaces import IPorto
 from silva.core.views import views as silvaviews
 from silva.core.views.interfaces import IVirtualSite, IHTTPResponseHeaders
@@ -107,8 +108,7 @@ class Navigation(silvaviews.ContentProvider):
 
     @CachedProperty
     def filter_service(self):
-        # Should be an utility
-        return self.context.service_toc_filter
+        return component.getUtility(IContentFilteringService)
 
     def filter_entries(self, nodes):
         checkPermission = getSecurityManager().checkPermission
