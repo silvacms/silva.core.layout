@@ -49,6 +49,14 @@
     name="view"
    />
 
+  <adapter
+    for="*
+         zope.publisher.interfaces.browser.IBrowserRequest"
+    factory=".traverser.SkinlockTraversable"
+    provides="zope.traversing.interfaces.ITraversable"
+    name="skinlock"
+   />
+
   <!-- Grok interfaces and the package -->
   <grok:grok package="silva.core.interfaces" />
   <grok:grok package="." exclude="martiansupport" />

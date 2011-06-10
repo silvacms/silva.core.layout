@@ -14,7 +14,8 @@ from zope.traversing import namespace
 
 from ZPublisher.interfaces import IPubAfterTraversal, IPubStart
 
-from silva.core.views.traverser import SilvaPublishTraverse
+from silva.core.views.traverser import (SilvaPublishTraverse, 
+    UseParentByAcquisition)
 from silva.core.layout.interfaces import ICustomizableLayer, IMetadata
 
 
@@ -44,6 +45,21 @@ def set_skin_flag_off(event):
     event.request[SET_SKIN_ALLOWED_FLAG] = False
 
 
+def set_skin(context, request, name):
+    skin = component.queryUtility(IBrowserSkinType, name=name)
+    if skin is not None:
+        # Simply override any previously set skin. We have to
+        # do so in order to cover the usecase where we apply
+        # only now a skin which is used as a base for a one
+        # which was applied on a parent (otherwise we won't
+        # see the change, since it's already provided).
+        applySkinButKeepSome(request, skin)
+        # Set the base url for resources
+        request.set('resourcebase', context)
+    else:
+        logger.error('Cannot find requested skin %s' % name)
+
+
 class SkinSetterMixin(object):
 
     def _setSkin(self, request):
@@ -66,19 +82,7 @@ class SkinSetterMixin(object):
                 return
 
             if skin_name:
-                # Retrieve the skin object
-                skin = component.queryUtility(IBrowserSkinType, name=skin_name)
-                if skin is not None:
-                    # Simply override any previously set skin. We have to
-                    # do so in order to cover the usecase where we apply
-                    # only now a skin which is used as a base for a one
-                    # which was applied on a parent (otherwise we won't
-                    # see the change, since it's already provided).
-                    applySkinButKeepSome(request, skin)
-                    # Set the base url for resources
-                    request.set('resourcebase', self.context)
-                else:
-                    logger.error('Cannot find requested skin %s' % skin_name)
+                set_skin(self.context, request, skin_name)
 
 
 class SkinnyTraverser(SilvaPublishTraverse, SkinSetterMixin):
@@ -105,4 +109,18 @@ class ResourceSkinnyTraversable(SkinnyTraversable, namespace.resource):
 
 class ViewSkinnyTraversable(SkinnyTraversable, namespace.view):
     pass
+
+
+class SkinlockTraversable(SkinSetterMixin):
+    """++skinlock++ traverser"""
+
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+
+    def traverse(self, name, furtherPath):
+        set_skin(self.context, self.request, name)
+        self.request[SET_SKIN_ALLOWED_FLAG] = False
+        return UseParentByAcquisition()
+
 
