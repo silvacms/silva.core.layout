@@ -73,6 +73,7 @@ class Favicon(silvaviews.Viewlet):
     """
     grok.viewletmanager(HTMLHeadInsert)
     grok.name('favicon')
+    grok.template('favicon')
 
     @property
     def favicon_url(self):

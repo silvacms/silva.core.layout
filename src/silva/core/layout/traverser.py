@@ -5,21 +5,18 @@
 import logging
 
 from five import grok
-from zope import component
 from zope.interface import directlyProvidedBy, directlyProvides
 from zope.event import notify
 from zope.publisher.browser import SkinChangedEvent
-from zope.publisher.interfaces.browser import IBrowserSkinType
 from zope.traversing import namespace
 
 from ZPublisher.interfaces import IPubAfterTraversal, IPubStart
 
 from silva.core.views.traverser import SilvaPublishTraverse
-from silva.core.layout.interfaces import ICustomizableLayer, IMetadata
+from silva.core.layout.interfaces import ICustomizableLayer, ISkinLookup
 
 
 logger = logging.getLogger('silva.core.layout')
-
 
 def applySkinButKeepSome(request, skin):
     # Known interfaces
@@ -46,54 +43,35 @@ def set_skin_flag_off(event):
 
 class SkinSetterMixin(object):
 
-    def _setSkin(self, request):
-        """Set skin if necessary"""
-
+    def _set_skin(self, request):
+        """Set skin if necessary
+        """
         if not request.get(SET_SKIN_ALLOWED_FLAG):
             return
 
-        try:
-            metadata = IMetadata(self.context)
-        except TypeError, e:
-            return
-        else:
-            try:
-                skin_name = metadata('silva-layout', 'skin')
-            except AttributeError:
-                # AttributeError means that the silva-layout metadata set
-                # was not installed, so just bail out without setting any
-                # skin
-                return
-
-            if skin_name:
-                # Retrieve the skin object
-                skin = component.queryUtility(IBrowserSkinType, name=skin_name)
-                if skin is not None:
-                    # Simply override any previously set skin. We have to
-                    # do so in order to cover the usecase where we apply
-                    # only now a skin which is used as a base for a one
-                    # which was applied on a parent (otherwise we won't
-                    # see the change, since it's already provided).
-                    applySkinButKeepSome(request, skin)
-                else:
-                    logger.error('Cannot find requested skin %s' % skin_name)
+        skin_lookup = ISkinLookup(self.context, None)
+        if skin_lookup is not None:
+            skin = skin_lookup.get_skin(request)
+            if skin is not None:
+                # We found a skin to apply
+                applySkinButKeepSome(request, skin)
 
 
 class SkinnyTraverser(SilvaPublishTraverse, SkinSetterMixin):
 
     def publishTraverse(self, request, name):
-        self._setSkin(request)
+        self._set_skin(request)
         return super(SkinnyTraverser, self).publishTraverse(request, name)
 
     def browserDefault(self, request):
-        self._setSkin(request)
+        self._set_skin(request)
         return super(SkinnyTraverser, self).browserDefault(request)
 
 
 class SkinnyTraversable(SkinSetterMixin):
 
     def traverse(self, name, furtherPath):
-        self._setSkin(self.request)
+        self._set_skin(self.request)
         return super(SkinnyTraversable, self).traverse(name, furtherPath)
 
 

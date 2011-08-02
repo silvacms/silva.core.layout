@@ -57,6 +57,13 @@ class ISilvaSkin(ISilvaLayer, IBrowserSkinType):
 
 # Adapters
 
+class ISkinLookup(Interface):
+
+    def get_skin():
+        """Return a skin to apply on the request, or None.
+        """
+
+
 class IMarkManager(Interface):
     """A Mark manager. This let you manage marks on object, so they
     can be customized after using them.
