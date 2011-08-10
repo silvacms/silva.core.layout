@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.3.2-bethel.2 (2011-08-10)
+---------------------------
+
+- fix ghost metadata so acquired metadata is supported (or can be turned
+  off)
+
 2.3.2-bethel.1 (2011-07-07)
 ---------------------------
 

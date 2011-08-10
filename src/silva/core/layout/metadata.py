@@ -62,10 +62,10 @@ class GhostMetadata(Metadata):
         else:
             self._binding = self._metadataservice.getMetadata(self._content)
 
-    def _getValue(self, setname, elementname):
+    def _getValue(self, setname, elementname, acquire=1):
         if self._binding is None:
             return None
-        return self._binding.get(setname, elementname)
+        return self._binding.get(setname, elementname, acquire=acquire)
 
 
 class MetadataSet(object):
