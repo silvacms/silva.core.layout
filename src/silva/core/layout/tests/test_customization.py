@@ -42,13 +42,13 @@ class CustomizationServiceTestCase(CustomizationTestCase):
 
     def test_utility_only_in_local_site(self):
         # A service_customization can be added only in a local site.
-        self.failUnless(ISite.providedBy(self.root))
+        self.assertTrue(ISite.providedBy(self.root))
 
         factory = self.root.manage_addProduct['Silva']
         factory.manage_addPublication('publication', 'Publication')
         self.publication = self.root.publication
 
-        self.failIf(ISite.providedBy(self.publication))
+        self.assertFalse(ISite.providedBy(self.publication))
         factory = self.publication.manage_addProduct['silva.core.layout']
         self.assertRaises(BadRequest,
                           factory.manage_addCustomizationService,
@@ -56,20 +56,20 @@ class CustomizationServiceTestCase(CustomizationTestCase):
 
         # Now our publication become a local site.
         make_objectmanager_site(self.publication)
-        self.failUnless(ISite.providedBy(self.publication))
+        self.assertTrue(ISite.providedBy(self.publication))
         factory = self.publication.manage_addProduct['silva.core.layout']
         factory.manage_addCustomizationService('service_customization')
-        self.failUnless(hasattr(self.publication, 'service_customization'))
+        self.assertTrue(hasattr(self.publication, 'service_customization'))
 
     def test_utility(self):
-        self.failUnless(hasattr(self.root, 'service_customization'))
+        self.assertTrue(hasattr(self.root, 'service_customization'))
 
         # Now we can fetch it
         utility = getUtility(ICustomizationService)
-        self.failUnless(verifyObject(ICustomizationService, utility))
+        self.assertTrue(verifyObject(ICustomizationService, utility))
 
     def test_utility_available_interfaces(self):
-        self.failUnless(hasattr(self.root, 'service_customization'))
+        self.assertTrue(hasattr(self.root, 'service_customization'))
         utility = getUtility(ICustomizationService)
 
         # We can list availables interfaces
@@ -81,15 +81,15 @@ class CustomizationServiceTestCase(CustomizationTestCase):
             u'silva.core.interfaces.content.IFolder',
             u'silva.core.interfaces.content.IPublication',
             u'silva.core.interfaces.content.IRoot',
-            u'silva.core.interfaces.content.ISilvaObject',
+            u'silva.core.interfaces.content.IViewableObject',
             u'silva.core.interfaces.content.IVersionedContent',
-            u'Products.SilvaDocument.interfaces.IDocument',
             u'silva.core.layout.interfaces.ICustomizableMarker',
             u'silva.core.layout.interfaces.ICustomizableTag']
 
         foundInterfaces = utility.availablesInterfaces()
         for iface in someDefaultInterfaces:
-            self.failUnless(iface in foundInterfaces)
+            self.assertTrue(iface in foundInterfaces,
+                            msg='Missing interface %s' % iface)
 
         # We can restrain it to a sub set
         containerDefaultInterfaces = [
@@ -100,10 +100,10 @@ class CustomizationServiceTestCase(CustomizationTestCase):
 
         foundInterfaces = utility.availablesInterfaces(base=IContainer)
         for iface in containerDefaultInterfaces:
-            self.failUnless(iface in foundInterfaces)
+            self.assertTrue(iface in foundInterfaces)
 
     def test_utility_available_layers(self):
-        self.failUnless(hasattr(self.root, 'service_customization'))
+        self.assertTrue(hasattr(self.root, 'service_customization'))
         utility = getUtility(ICustomizationService)
 
         # Same goes for layers
@@ -115,7 +115,7 @@ class CustomizationServiceTestCase(CustomizationTestCase):
 
         foundLayers = utility.availablesLayers()
         for iface in expected_layers:
-            self.failUnless(iface in foundLayers,
+            self.assertTrue(iface in foundLayers,
                 "layer %s not available in %s" % (iface, foundLayers))
 
         # We can restrain it to a sub set
@@ -125,13 +125,13 @@ class CustomizationServiceTestCase(CustomizationTestCase):
 
         foundLayers = utility.availablesLayers(base=IPorto)
         for iface in silvaNewStyleLayers:
-            self.failUnless(iface in foundLayers)
+            self.assertTrue(iface in foundLayers)
 
     def test_view_manager(self):
         # We are going to create a folder, and a document
         utility = getUtility(ICustomizationService)
         manager = IViewManager(utility)
-        self.failUnless(verifyObject(IViewManager, manager))
+        self.assertTrue(verifyObject(IViewManager, manager))
 
 
 class ViewEntryTestCase(CustomizationTestCase):
@@ -145,8 +145,8 @@ class ViewEntryTestCase(CustomizationTestCase):
         manager = IViewManager(self.utility)
         view = manager.from_signature(signature)
 
-        self.failIf(view is None)
-        self.failUnless(verifyObject(IViewInfo, view))
+        self.assertFalse(view is None)
+        self.assertTrue(verifyObject(IViewInfo, view))
         self.assertEqual(view.type_, 'Grok Page Template')
         self.assertEqual(view.name, 'index.html')
         self.assertEqual(
@@ -165,8 +165,8 @@ class ViewEntryTestCase(CustomizationTestCase):
             "zope.publisher.interfaces.browser.IDefaultBrowserLayer"
         manager = IViewManager(self.utility)
         view = manager.from_signature(signature)
-        self.failIf(view is None)
-        self.failUnless(verifyObject(IViewInfo, view))
+        self.assertFalse(view is None)
+        self.assertTrue(verifyObject(IViewInfo, view))
         self.assertEqual(view.type_, 'Five Page Template')
         self.assertEqual(view.name, 'five_template')
         self.assertEqual(
@@ -186,8 +186,8 @@ class ViewEntryTestCase(CustomizationTestCase):
             "zope.browser.interfaces.IBrowserView"
         manager = IViewManager(self.utility)
         view = manager.from_signature(signature)
-        self.failIf(view is None)
-        self.failUnless(verifyObject(IViewInfo, view))
+        self.assertFalse(view is None)
+        self.assertTrue(verifyObject(IViewInfo, view))
         self.assertEqual(view.type_, 'Grok Content Provider')
         self.assertEqual(view.name, 'footer')
         self.assertEqual(

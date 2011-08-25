@@ -27,8 +27,7 @@
     >>> manager = IMarkManager(folder)
     >>> sorted(manager.availableMarkers)
     [<InterfaceClass silva.core.layout.interfaces.ICustomizableMarker>,
-     <InterfaceClass silva.core.layout.tests.grok.markers.IPhotoFolderTag>,
-     <InterfaceClass Products.Silva.Folder.views.IPhotoGallery>]
+     <InterfaceClass silva.core.layout.tests.grok.markers.IPhotoFolderTag>]
     >>> manager.usedMarkers
     []
     >>> IPhotoFolderTag.providedBy(folder)
@@ -40,8 +39,7 @@
 
     >>> manager = IMarkManager(folder)
     >>> sorted(manager.availableMarkers)
-    [<InterfaceClass silva.core.layout.interfaces.ICustomizableMarker>,
-     <InterfaceClass Products.Silva.Folder.views.IPhotoGallery>]
+    [<InterfaceClass silva.core.layout.interfaces.ICustomizableMarker>]
     >>> sorted(manager.usedMarkers)
     [<InterfaceClass silva.core.layout.tests.grok.markers.IPhotoFolderTag>]
     >>> IPhotoFolderTag.providedBy(folder)
@@ -63,8 +61,7 @@
     >>> manager = IMarkManager(folder)
     >>> sorted(manager.availableMarkers)
     [<InterfaceClass silva.core.layout.interfaces.ICustomizableMarker>,
-     <InterfaceClass silva.core.layout.tests.grok.markers.IPhotoFolderTag>,
-     <InterfaceClass Products.Silva.Folder.views.IPhotoGallery>]
+     <InterfaceClass silva.core.layout.tests.grok.markers.IPhotoFolderTag>]
     >>> manager.usedMarkers
     []
     >>> IPhotoFolderTag.providedBy(folder)
