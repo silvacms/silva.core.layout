@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.3.2-bethel.3 (unreleased)
+---------------------------
+
+- removed the jqueryui i18n js -- as it makes the datepicker chinese
+
 2.3.2-bethel.2 (2011-08-10)
 ---------------------------
 

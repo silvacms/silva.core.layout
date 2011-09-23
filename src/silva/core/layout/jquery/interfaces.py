@@ -11,5 +11,6 @@ class IJQueryResources(IDefaultBrowserLayer):
 
 class IJQueryUIResources(IJQueryResources):
     silvaconf.resource('jquery-ui-1.8.4.custom.min.js')
-    silvaconf.resource('jquery-ui-i18n.js')
+    # including this file makes the datepicker chinese
+    #silvaconf.resource('jquery-ui-i18n.js')
     silvaconf.resource('jquery-ui-1.8.4.custom.css')
