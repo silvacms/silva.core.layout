@@ -69,7 +69,7 @@ class VersionedContentMainPage(silvaviews.Page):
                 view.content = self.context._getOb(version_name, None)
             if view.content is None:
                 msg = _('Sorry, this ${meta_type} is not viewable.',
-                        mapping={'meta_type': self.contex.tmeta_type})
+                        mapping={'meta_type': self.context.meta_type})
                 return '<p>%s</p>' % translate(msg, context=self.request)
         return view()
 
