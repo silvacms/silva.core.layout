@@ -1,10 +1,22 @@
 Changelog
 =========
 
-2.3.3 (unreleased)
+3.0b1 (2011/11/08)
 ------------------
 
-* ...
+* The default page to render a content now does itself, without
+  delegating with the content object. This makes things much more
+  cleaner. ``request.model`` is no longer
+  supported. ``request.resourcebase`` as well.
+
+* Use silva.fanstatic to include resources. Now use fanstatic
+  packaging for jquery and jqueryui.
+
+* Now use the generic package ``grokcore.view`` instead of
+  ``infrae.layout``.
+
+* Support for the legacy layout is no longer supported and have been
+  removed.
 
 2.3.2 (2010-02-07)
 ------------------

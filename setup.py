@@ -6,7 +6,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '2.3.3dev'
+version = '3.0b1'
 
 tests_require = [
     'Products.Silva [test]',
@@ -35,12 +35,12 @@ setup(name='silva.core.layout',
       zip_safe=False,
       install_requires=[
           'Products.Silva',
-          'js.jquery',
-          'js.jqueryui',
           'five.grok',
           'five.localsitemanager',
-          'grokcore.view',
           'grokcore.layout',
+          'grokcore.view',
+          'js.jquery',
+          'js.jqueryui',
           'martian',
           'setuptools',
           'silva.core.conf',
@@ -54,6 +54,7 @@ setup(name='silva.core.layout',
           'zope.configuration',
           'zope.container',
           'zope.event',
+          'zope.i18n',
           'zope.interface',
           'zope.intid',
           'zope.location',
