@@ -24,7 +24,7 @@ from OFS.interfaces import IObjectWillBeRemovedEvent
 from Products.Silva.helpers import add_and_edit
 
 from silva.core import conf as silvaconf
-from silva.core.interfaces import ISilvaObject
+from silva.core.interfaces import ISilvaObject, IVersion
 from silva.core.layout.utils import findSite
 from silva.core.services.base import ZMIObject
 
@@ -128,19 +128,30 @@ def unregisterMarker(marker, event):
         for iface_type in REGISTERED_TYPES:
             sm.unregisterUtility(marker, iface_type, marker.__identifier__)
 
-
-@grok.subscribe(ISilvaObject, IObjectHaveBeenMarked)
-def objectMarked(item, event):
+def _objectMarked(item, event):
     if event.marker.extends(ICustomizableMarker):
         event.marker.addMarkedObject(item)
 
+@grok.subscribe(ISilvaObject, IObjectHaveBeenMarked)
+def objectMarked(item, event):
+    _objectMarked(item, event)
 
-@grok.subscribe(ISilvaObject, IObjectHaveBeenUnmarked)
-def objectUnmarked(item, event):
+@grok.subscribe(IVersion, IObjectHaveBeenMarked)
+def versionMarked(item, event):
+    _objectMarked(item, event)
+
+def _objectUnmarked(item, event):
     if event.marker.extends(ICustomizableMarker):
         event.marker.removeMarkedObject(item)
 
+@grok.subscribe(ISilvaObject, IObjectHaveBeenUnmarked)
+def objectUnmarked(item, event):
+    _objectUnmarked(item, event)
 
+@grok.subscribe(IVersion, IObjectHaveBeenUnmarked)
+def objectUnmarked(item, event):
+    _objectUnmarked(item, event)
+    
 # Adapters
 
 class MarkManager(grok.Adapter):
@@ -148,6 +159,7 @@ class MarkManager(grok.Adapter):
     grok.implements(IMarkManager)
     grok.context(ISilvaObject)
     grok.require('zope2.ManageProperties')
+    
 
     def _listInterfaces(self, base):
         interfaces = providedBy(self.context).interfaces()
@@ -159,7 +171,17 @@ class MarkManager(grok.Adapter):
 
     @zope.cachedescriptors.property.CachedProperty
     def usedInterfaces(self):
-        return self._listInterfaces(ISilvaObject)
+        """Get the interfaces used by self.context which extend from the
+           grok context.  These interfaces affect the rendering of the cotnent.
+
+           Note: we can't just use ISilvaObject here, as that hard-codes
+           this method, and subclasses (e.g. for IVersion) would then need
+           to override.  Instead we get the grok context and use it directly.
+        """
+        contextInterface = getattr(self, 'grokcore.component.directive.context')
+        ifaces = self._listInterfaces(contextInterface)
+        ifaces.append(contextInterface)
+        return ifaces
 
     @zope.cachedescriptors.property.CachedProperty
     def usedMarkers(self):
@@ -186,4 +208,6 @@ class MarkManager(grok.Adapter):
             self.context, directlyProvidedBy(self.context), marker)
         notify(ObjectHaveBeenMarked(self.context, marker))
 
+class VersionMarkManager(MarkManager):
+    grok.context(IVersion)
 
