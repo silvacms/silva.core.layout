@@ -24,6 +24,10 @@
      for="silva.core.interfaces.ISilvaObject"
      name="index.html"
      />
+  <browser:defaultView
+     for="silva.core.interfaces.IVersion"
+     name="index.html"
+     />
 
   <!-- Grok interfaces and the package -->
   <grok:grok package="silva.core.interfaces" />

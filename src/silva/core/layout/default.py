@@ -4,17 +4,16 @@
 # $Id$
 
 from five import grok
-from silva.core.interfaces import IVersionedContent
+from silva.core.interfaces import IVersionedContent, IVersion
 from silva.core.layout.interfaces import ISilvaLayer
 from silva.core.views import views as silvaviews
 from silva.core.views.interfaces import IView
 from silva.translations import translate as _
-from zope.component import queryMultiAdapter
+from grokcore.layout.interfaces import ILayout
+from zope.component import queryMultiAdapter, getMultiAdapter
 from zope.interface import Interface
 from zope.i18n import translate
 
-from AccessControl import Unauthorized
-from AccessControl.security import checkPermission
 from zExceptions import NotFound
 
 grok.layer(ISilvaLayer)
@@ -59,18 +58,34 @@ class VersionedContentMainPage(silvaviews.Page):
             (self.context, self.request), name='content.html')
         if view is None:
             raise NotFound('content.html')
-        if IView.providedBy(view):
-            version_name = self.request.other.get(
-                'SILVA_PREVIEW_NAME', None)
-            if version_name is not None:
-                if not checkPermission('silva.ReadSilvaContent', self.context):
-                    raise Unauthorized(
-                        "You need to be authenticated to access this version")
-                view.content = self.context._getOb(version_name, None)
-            if view.content is None:
-                msg = _('Sorry, this ${meta_type} is not viewable.',
-                        mapping={'meta_type': self.context.meta_type})
-                return '<p>%s</p>' % translate(msg, context=self.request)
+        if IView.providedBy(view) and view.content is None:
+            msg = _('Sorry, this ${meta_type} is not viewable.',
+                    mapping={'meta_type': self.context.meta_type})
+            return '<p>%s</p>' % translate(msg, context=self.request)
         return view()
 
 
+class VersionMainPage(silvaviews.Page):
+    grok.name('index.html')
+    grok.context(IVersion)
+    grok.require('silva.ReadSilvaContent')
+
+    def render(self):
+        content = self.context.get_content()
+        view = queryMultiAdapter(
+            (content, self.request), name='content.html')
+        if view is None:
+            raise NotFound('content.html')
+        if IView.providedBy(view):
+            view.content = self.context
+            return view()
+        msg = _('Sorry, this ${meta_type} is not viewable.',
+                mapping={'meta_type': content.meta_type})
+        return '<p>%s</p>' % translate(msg, context=self.request)
+
+
+# Return a layout for a version. We lookup the layout of the related content
+def version_layout(request, version):
+    return getMultiAdapter((request, version.get_content()), ILayout)
+
+grok.global_adapter(version_layout, (ISilvaLayer, IVersion), ILayout)
