@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.3.2-bethel.5 (unreleased)
+---------------------------
+
+- added jquery.ui.timepicker to IJQueryUIResources
+
 2.3.2-bethel.4 (2012-02-16)
 ---------------------------
 
