@@ -6,6 +6,8 @@ Changelog
 
 - added jquery.ui.timepicker to IJQueryUIResources
 
+- added jquery.waypoint
+
 2.3.2-bethel.4 (2012-02-16)
 ---------------------------
 

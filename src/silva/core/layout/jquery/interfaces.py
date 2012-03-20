@@ -9,6 +9,14 @@ from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 class IJQueryResources(IDefaultBrowserLayer):
     silvaconf.resource('jquery-1.4.4.min.js')
 
+
+class IJQueryWaypoints(IJQueryResources):
+    """Waypoints are a means to perform an action when an element is
+       scrolled to.  Example is keeping an action bar fixed at the top of the
+       page once it is scrolled to."""
+    silvaconf.resource('waypoints/waypoints.min.js')
+
+
 class IJQueryUIResources(IJQueryResources):
     silvaconf.resource('jquery-ui-1.8.4.custom.min.js')
     silvaconf.resource('timepicker/jquery.ui.timepicker.js')
