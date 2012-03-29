@@ -27,6 +27,7 @@ from silva.core import conf as silvaconf
 from silva.core.interfaces import ISilvaObject
 from silva.core.layout.utils import findSite
 from silva.core.services.base import ZMIObject
+from zeam.component import getAllComponents
 
 from silva.core.layout.interfaces import (
     ICustomizableType, ICustomizableTag,
@@ -88,7 +89,6 @@ def manage_addCustomizationMarker(self, name, REQUEST=None):
 # Event arround markers
 
 class ObjectMarkEvent(ObjectEvent):
-
     grok.implements(IObjectMarkEvent)
 
     def __init__(self, item, marker):
@@ -97,12 +97,10 @@ class ObjectMarkEvent(ObjectEvent):
 
 
 class ObjectHaveBeenMarked(ObjectMarkEvent):
-
     grok.implements(IObjectHaveBeenMarked)
 
 
 class ObjectHaveBeenUnmarked(ObjectMarkEvent):
-
     grok.implements(IObjectHaveBeenUnmarked)
 
 
@@ -144,7 +142,6 @@ def objectUnmarked(item, event):
 # Adapters
 
 class MarkManager(grok.Adapter):
-
     grok.implements(IMarkManager)
     grok.context(ISilvaObject)
     grok.require('zope2.ManageProperties')
@@ -167,9 +164,13 @@ class MarkManager(grok.Adapter):
 
     @zope.cachedescriptors.property.CachedProperty
     def availableMarkers(self):
-        interfaces = getUtilitiesFor(ICustomizableType, context=self.context)
-        availables = [interface for name, interface in interfaces
-                      if interface.extends(ICustomizableTag)]
+        # ZODB Makers and FS based one
+        availables = []
+        for source in [getUtilitiesFor(ICustomizableType, context=self.context),
+                       getAllComponents(self.context, ICustomizableType)]:
+            for name, iface in source:
+                if iface.extends(ICustomizableTag):
+                    availables.append(iface)
         return sorted(list(set(availables).difference(set(self.usedMarkers))))
 
     def removeMarker(self, marker):
