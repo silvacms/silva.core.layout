@@ -9,8 +9,8 @@ from zope.publisher.interfaces.browser import IBrowserSkinType
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
 from silva.core.interfaces.service import ISilvaLocalService
-from silva.core.interfaces.content import ICustomizable
-
+from silva.core.views.interfaces import ICustomizableTag
+from silva.core.interfaces import ICustomizable
 
 # Interfaces types
 
@@ -27,11 +27,6 @@ class ILayerType(IInterface):
 
 
 # Interfaces
-
-class ICustomizableTag(ICustomizable):
-    """This is a tag that you can set on object to customize them.
-    """
-
 
 class ICustomizableMarker(ICustomizableTag):
     """All Customizable markers
