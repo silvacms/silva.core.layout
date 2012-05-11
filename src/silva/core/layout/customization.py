@@ -6,8 +6,11 @@
 from OFS.Folder import Folder
 
 from five import grok
+from grokcore.layout.interfaces import IPage as IGrokPage
+from grokcore.view.interfaces import IGrokView
 from grokcore.view.interfaces import ITemplate as IGrokTemplate
-from grokcore.layout.interfaces import IPage
+from grokcore.viewlet.interfaces import IViewletManager as IGrokProvider
+from zeam.component import getAllComponents, getComponent
 from zope.component import getGlobalSiteManager, queryAdapter
 from zope.component import getUtility, getUtilitiesFor
 from zope.configuration.name import resolve as pythonResolve
@@ -22,7 +25,7 @@ from silva.core.layout.interfaces import ICustomizableMarker, ILayerType
 from silva.core.layout.utils import findSite, findNextSite, queryAdapterOnClass
 from silva.core.services.base import SilvaService
 from silva.core.views import views as silvaviews
-from silva.core.views.interfaces import IContentProvider, IViewlet
+from silva.core.views.interfaces import IViewlet
 from silva.core.views.interfaces import ICustomizedTemplate
 from silva.core.views.interfaces import ITemplateNotCustomizable
 from silva.core.views.ttwtemplates import TTWViewTemplate
@@ -47,7 +50,6 @@ def resolve(name):
 
 
 class ViewManager(grok.Adapter):
-
     grok.implements(interfaces.IViewManager)
     grok.adapts(ISilvaObject)
 
@@ -86,14 +88,13 @@ class ViewManager(grok.Adapter):
 
         def viewsFor(site, sitename):
             for reg in site.registeredAdapters():
-                if (len(reg.required) >= 2 and
-                    interface.isOrExtends(reg.required[0]) and
-                    reg.required[0].isOrExtends(ICustomizable) and
-                    reg.required[1].isOrExtends(layer)):
-
-                    entry = self._entry(reg, sitename)
-                    if entry:
-                        yield entry
+                if len(reg.required) >= 2:
+                    if (interface.isOrExtends(reg.required[0]) and
+                        reg.required[0].isOrExtends(ICustomizable) and
+                        reg.required[1].isOrExtends(layer)):
+                        entry = self._entry(reg, sitename)
+                        if entry:
+                            yield entry
 
         views = []
         for site in self.sites():
@@ -142,7 +143,6 @@ class ViewManager(grok.Adapter):
 class DefaultViewInfo(grok.Adapter):
     """Default base class for view entries.
     """
-
     grok.implements(interfaces.IViewInfo)
     grok.baseclass()
 
@@ -231,10 +231,8 @@ class DefaultViewInfo(grok.Adapter):
 class GrokViewInfo(DefaultViewInfo):
     """A Grok View.
     """
-
-    grok.context(IPage)
-
-    type_ = u'Grok Page Template'
+    grok.context(IGrokView)
+    type_ = u'Grok View Template'
 
     @property
     def template(self):
@@ -245,30 +243,36 @@ class GrokViewInfo(DefaultViewInfo):
         return None
 
     def generateId(self):
-        return 'grok-template-%s' % super(GrokViewInfo, self).generateId()
+        return 'grok-view-%s' % super(GrokViewInfo, self).generateId()
+
+
+class GrokPageInfo(GrokViewInfo):
+    """A Grok Page.
+    """
+    grok.context(IGrokPage)
+    type_ = u'Grok Page Template'
+
+    def generateId(self):
+        return 'grok-page-%s' % super(GrokViewInfo, self).generateId()
 
 
 class GrokContentProviderEntry(GrokViewInfo):
     """A Grok Content Provider.
     """
-
-    grok.context(IContentProvider)
-
+    grok.context(IGrokProvider)
     type_ = u'Grok Content Provider'
 
     def permission(self):
         return None
 
     def generateId(self):
-        return 'grok-contentprovider-%s' % super(GrokViewInfo, self).generateId()
+        return 'grok-provider-%s' % super(GrokViewInfo, self).generateId()
 
 
 class GrokViewletEntry(GrokViewInfo):
     """A Grok Viewlet.
     """
-
     grok.context(IViewlet)
-
     type_ = u'Grok Viewlet'
 
     def _view(self):
@@ -281,9 +285,7 @@ class GrokViewletEntry(GrokViewInfo):
 class CustomizedViewInfo(DefaultViewInfo):
     """A Customized View.
     """
-
     grok.context(ICustomizedTemplate)
-
     type_ = u'Customized Page Template'
 
     @property
@@ -307,7 +309,6 @@ class CustomizedViewInfo(DefaultViewInfo):
 class FiveViewInfo(DefaultViewInfo):
     """A regular Five template.
     """
-
     grok.baseclass()
 
     @property
@@ -344,9 +345,14 @@ class CustomizationService(Folder, SilvaService):
         ) + Folder.manage_options
 
     def availablesInterfaces(self, base=ICustomizable):
-        interfaces = getUtilitiesFor(ICustomizableType, context=self)
-        return sorted([name for name, interface in interfaces
-                       if interface.isOrExtends(base)])
+        names = []
+        for source in [getUtilitiesFor(ICustomizableType, context=self),
+                       getAllComponents(self, ICustomizableType)]:
+            for name, iface in source:
+                if iface.isOrExtends(base):
+                    names.append(name)
+        names.sort()
+        return names
 
     def availablesLayers(self, base=IDefaultBrowserLayer):
         layers = getUtilitiesFor(ILayerType)
@@ -358,7 +364,8 @@ class CustomizationService(Folder, SilvaService):
 
 
 class CustomizationManagementView(silvaviews.ZMIView):
-
+    """Manage customization through the ZMI.
+    """
     grok.require('zope2.ViewManagementScreens')
     grok.baseclass()
 
@@ -374,12 +381,22 @@ class CustomizationManagementView(silvaviews.ZMIView):
 
         return self.context.availablesInterfaces(base)
 
+    def resolveInterface(self, name):
+        """Resolve an interface listed by availablesInterfaces.
+        """
+        interface = getComponent(
+            (self.context,),
+            provided=ICustomizableType, name=name, default=None)
+        if interface is None:
+            return getUtility(ICustomizableType, name=name)
+        return interface
+
     def availablesInterfacesAndMarkers(self):
         """Return available interfaces starting from base and markers.
         """
         interfaces = self.availablesInterfaces()
-        interfaces.extend(self.context.availablesInterfaces(
-                ICustomizableMarker))
+        interfaces.extend(
+            self.context.availablesInterfaces(ICustomizableMarker))
         return interfaces
 
     def availablesLayers(self):
@@ -391,9 +408,15 @@ class CustomizationManagementView(silvaviews.ZMIView):
 
         return self.context.availablesLayers(base)
 
+    def resolveLayer(self, name):
+        """Resolve a layer listed by availablesLayers.
+        """
+        return getUtility(ILayerType, name=name)
+
 
 class ManageCustomTemplates(CustomizationManagementView):
-
+    """View existing customizations.
+    """
     grok.name('manage_customization')
 
     def update(self):
@@ -402,10 +425,9 @@ class ManageCustomTemplates(CustomizationManagementView):
         self.selectedLayer = self.request.form.get(
             'layer', IDefaultBrowserLayer.__identifier__)
 
-        if self.selectedInterface:
-            interface = getUtility(
-                ICustomizableType, name=self.selectedInterface)
-            layer = getUtility(ILayerType, name=self.selectedLayer)
+        if self.selectedInterface is not None:
+            interface = self.resolveInterface(self.selectedInterface)
+            layer = self.resolveLayer(self.selectedLayer)
 
             self.availableTemplates = self.context.availablesTemplates(
                 interface, layer)
@@ -414,10 +436,8 @@ class ManageCustomTemplates(CustomizationManagementView):
 
 
 class ManageViewTemplate(CustomizationManagementView):
-
-    silvaconf.name('manage_template')
-    # Fix for grok template inherit issue
-    silvaconf.template('manageviewtemplate')
+    grok.name('manage_template')
+    grok.template('manageviewtemplate')
 
     def update(self):
         assert 'signature' in self.request.form
@@ -434,7 +454,6 @@ class ManageViewTemplate(CustomizationManagementView):
 
 
 class ManageCreateCustomTemplate(ManageViewTemplate):
-
     grok.name('manage_createCustom')
 
     def update(self):
@@ -442,8 +461,8 @@ class ManageCreateCustomTemplate(ManageViewTemplate):
 
         for_name = self.request.form['customize_for']
         layer_name = self.request.form['customize_layer']
-        customize_for = getUtility(ICustomizableType, name=for_name)
-        customize_layer = getUtility(ILayerType, name=layer_name)
+        customize_for = self.resolveInterface(for_name)
+        customize_layer = self.resolveLayer(layer_name)
 
         new_template = self.entry.customize(
             self, customize_for, customize_layer)

@@ -3,7 +3,8 @@
 # See also LICENSE.txt
 # $Id$
 
-from silva.core import conf as silvaconf
+from five import grok
+
 from silva.core.layout.interfaces import ISilvaSkin
 from silva.core.layout.porto import porto
 from silva.core.layout.porto.interfaces import IPorto
@@ -13,16 +14,14 @@ from silva.core.views import views as silvaviews
 class INewTheme(IPorto):
     """Layer for the theme.
     """
-    silvaconf.resource('style.css')
-
 
 class INewThemeSkin(INewTheme, ISilvaSkin):
     """Skin for the new theme.
     """
-    silvaconf.skin("New theme")
+    grok.skin("New theme")
 
 
-silvaconf.layer(INewTheme)
+grok.layer(INewTheme)
 
 
 class Layout(porto.Layout):
@@ -33,7 +32,7 @@ class Layout(porto.Layout):
 class AwesomeView(silvaviews.Page):
     """A view
     """
-    silvaconf.name('awesome.html')
+    grok.name('awesome.html')
 
     def render(self):
         return u"Hello awesome!"

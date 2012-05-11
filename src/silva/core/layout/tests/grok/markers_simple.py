@@ -17,31 +17,35 @@
 
   We can grok our marker:
 
-    >>> grok('silva.core.layout.tests.grok.markers')
+    >>> grok('silva.core.layout.tests.grok.markers_simple')
 
   So now we should have it:
 
     >>> from silva.core.layout.interfaces import IMarkManager
-    >>> from silva.core.layout.tests.grok.markers import IPhotoFolderTag
+    >>> from silva.core.layout.tests.grok.markers_simple import IPhotoFolderTag
 
     >>> manager = IMarkManager(folder)
     >>> sorted(manager.availableMarkers)
     [<InterfaceClass silva.core.layout.interfaces.ICustomizableMarker>,
-     <InterfaceClass silva.core.layout.tests.grok.markers.IPhotoFolderTag>]
+     <InterfaceClass silva.core.views.interfaces.IDisableBreadcrumbTag>,
+     <InterfaceClass silva.core.views.interfaces.IDisableNavigationTag>,
+     <InterfaceClass silva.core.layout.tests.grok.markers_simple.IPhotoFolderTag>]
     >>> manager.usedMarkers
     []
     >>> IPhotoFolderTag.providedBy(folder)
     False
     >>> manager.addMarker(
-    ...    u'silva.core.layout.tests.grok.markers.IPhotoFolderTag')
+    ...    u'silva.core.layout.tests.grok.markers_simple.IPhotoFolderTag')
 
   And it will be available on the object:
 
     >>> manager = IMarkManager(folder)
     >>> sorted(manager.availableMarkers)
-    [<InterfaceClass silva.core.layout.interfaces.ICustomizableMarker>]
+    [<InterfaceClass silva.core.layout.interfaces.ICustomizableMarker>,
+     <InterfaceClass silva.core.views.interfaces.IDisableBreadcrumbTag>,
+     <InterfaceClass silva.core.views.interfaces.IDisableNavigationTag>]
     >>> sorted(manager.usedMarkers)
-    [<InterfaceClass silva.core.layout.tests.grok.markers.IPhotoFolderTag>]
+    [<InterfaceClass silva.core.layout.tests.grok.markers_simple.IPhotoFolderTag>]
     >>> IPhotoFolderTag.providedBy(folder)
     True
     >>> browser.open('http://localhost/root/folder/photo')
@@ -54,14 +58,16 @@
   And we can remove it:
 
     >>> manager.removeMarker(
-    ...       u'silva.core.layout.tests.grok.markers.IPhotoFolderTag')
+    ...       u'silva.core.layout.tests.grok.markers_simple.IPhotoFolderTag')
 
   It won't exists anymore:
 
     >>> manager = IMarkManager(folder)
     >>> sorted(manager.availableMarkers)
     [<InterfaceClass silva.core.layout.interfaces.ICustomizableMarker>,
-     <InterfaceClass silva.core.layout.tests.grok.markers.IPhotoFolderTag>]
+     <InterfaceClass silva.core.views.interfaces.IDisableBreadcrumbTag>,
+     <InterfaceClass silva.core.views.interfaces.IDisableNavigationTag>,
+     <InterfaceClass silva.core.layout.tests.grok.markers_simple.IPhotoFolderTag>]
     >>> manager.usedMarkers
     []
     >>> IPhotoFolderTag.providedBy(folder)
@@ -73,19 +79,21 @@
   And we remove our marker from the ZCA so others tests don't fail.
   XXX We have to found something better than that:
 
-    >>> from zope.component import getGlobalSiteManager
+    >>> from zeam.component import getSite
+    >>> from zope.interface import Interface
     >>> from silva.core.layout.interfaces import ICustomizableType
-    >>> sm = getGlobalSiteManager()
-    >>> sm.unregisterUtility(
-    ...         IPhotoFolderTag, ICustomizableType,
-    ...         u'silva.core.layout.tests.grok.markers.IPhotoFolderTag')
-    True
+
+    >>> getSite().unregister(
+    ...    (Interface,),
+    ...    ICustomizableType,
+    ...    u'silva.core.layout.tests.grok.markers_simple.IPhotoFolderTag')
 
 """
 
 from silva.core.layout.interfaces import ICustomizableTag
 from silva.core.views import views as silvaviews
-from silva.core import conf as silvaconf
+from five import grok
+
 
 class IPhotoFolderTag(ICustomizableTag):
     """Customization tag to get a folder as a photo folder.
@@ -96,9 +104,8 @@ class IPhotoFolderTag(ICustomizableTag):
 # define a view, and set a name. In normal use-case you would use a
 # template with a layout.
 class Photo(silvaviews.View):
-
-    silvaconf.name('photo')
-    silvaconf.context(IPhotoFolderTag)
+    grok.name('photo')
+    grok.context(IPhotoFolderTag)
 
     def render(self):
         return u'<html><body>Photo !</body></html>'

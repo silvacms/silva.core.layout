@@ -6,6 +6,7 @@
 # Zope 3
 from five import grok
 from persistent.list import PersistentList
+from zeam.component import getAllComponents, getComponent
 from zope.app.interface import PersistentInterfaceClass
 from zope.component import getUtility, getUtilitiesFor
 from zope.component.interfaces import ObjectEvent
@@ -27,7 +28,6 @@ from silva.core import conf as silvaconf
 from silva.core.interfaces import ISilvaObject
 from silva.core.layout.utils import findSite
 from silva.core.services.base import ZMIObject
-from zeam.component import getAllComponents
 
 from silva.core.layout.interfaces import (
     ICustomizableType, ICustomizableTag,
@@ -152,7 +152,12 @@ class MarkManager(grok.Adapter):
                        if iface.extends(base)])
 
     def _fetchMarker(self, name):
-        return getUtility(ICustomizableType, name=name)
+        interface = getComponent(
+            (self.context,),
+            provided=ICustomizableType, name=name, default=None)
+        if interface is None:
+            return getUtility(ICustomizableType, name=name)
+        return interface
 
     @zope.cachedescriptors.property.CachedProperty
     def usedInterfaces(self):

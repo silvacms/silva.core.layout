@@ -30,7 +30,7 @@ class CustomizationMarkerTestCase(unittest.TestCase):
 
     def test_marker_on_root(self):
         manager = IMarkManager(self.root)
-        self.failUnless(verifyObject(IMarkManager, manager))
+        self.assertTrue(verifyObject(IMarkManager, manager))
 
         # By default, we got interfaces implemented by Root
         self.assertInterfaceEqual(
@@ -45,25 +45,26 @@ class CustomizationMarkerTestCase(unittest.TestCase):
         # The base interfaces for markers is availables however.
         self.assertInterfaceEqual(
             manager.availableMarkers,
-            ['silva.core.layout.interfaces.ICustomizableMarker'])
-
+            ['silva.core.layout.interfaces.ICustomizableMarker',
+             'silva.core.views.interfaces.IDisableBreadcrumbTag',
+             'silva.core.views.interfaces.IDisableNavigationTag'])
 
         # We can add a marker in ZODB
         factory = self.root.manage_addProduct['silva.core.layout']
         factory.manage_addCustomizationMarker('ITestMarker')
-        self.failUnless('ITestMarker' in self.root.objectIds())
+        self.assertTrue('ITestMarker' in self.root.objectIds())
         marker = getattr(self.root, 'ITestMarker')
 
         # A marker is an interface which extend ICustomizableMarker,
         # so it's customizable
-        self.failUnless(verifyObject(IInterface, marker))
-        self.failUnless(marker.extends(ICustomizableMarker))
-        self.failUnless(marker.extends(ICustomizable))
+        self.assertTrue(verifyObject(IInterface, marker))
+        self.assertTrue(marker.extends(ICustomizableMarker))
+        self.assertTrue(marker.extends(ICustomizable))
 
         # Marker have an markerId which gives it's identifier, we
         # should be the same than the interface __identifier__
-        self.failUnless(marker.markerId(), u'marker:root.ITestMarker')
-        self.failUnless(marker.__identifier__, u'marker:root.ITestMarker')
+        self.assertTrue(marker.markerId(), u'marker:root.ITestMarker')
+        self.assertTrue(marker.__identifier__, u'marker:root.ITestMarker')
 
         # Now, we should see our marker in availables ones
         # Since our manager cache it's result, we need to recreate a new one.
@@ -71,13 +72,15 @@ class CustomizationMarkerTestCase(unittest.TestCase):
         self.assertInterfaceEqual(
             manager.availableMarkers,
             ['marker:root.ITestMarker',
-             'silva.core.layout.interfaces.ICustomizableMarker'])
+             'silva.core.layout.interfaces.ICustomizableMarker',
+             'silva.core.views.interfaces.IDisableBreadcrumbTag',
+             'silva.core.views.interfaces.IDisableNavigationTag'])
 
         # We can assign a marker to the root
         manager.addMarker(u'marker:root.ITestMarker')
 
         # And we will have root object which provided this object
-        self.failUnless(marker.providedBy(self.root))
+        self.assertTrue(marker.providedBy(self.root))
 
         # And we will see changes in the manager
         manager = IMarkManager(self.root)
@@ -85,8 +88,9 @@ class CustomizationMarkerTestCase(unittest.TestCase):
             manager.usedMarkers, ['marker:root.ITestMarker'])
         self.assertInterfaceEqual(
             manager.availableMarkers,
-            ['silva.core.layout.interfaces.ICustomizableMarker'])
-
+            ['silva.core.layout.interfaces.ICustomizableMarker',
+             'silva.core.views.interfaces.IDisableBreadcrumbTag',
+             'silva.core.views.interfaces.IDisableNavigationTag'])
 
         # Like we assign the marker, we can remove it.
         manager.removeMarker(u'marker:root.ITestMarker')
@@ -98,7 +102,9 @@ class CustomizationMarkerTestCase(unittest.TestCase):
         self.assertInterfaceEqual(
             manager.availableMarkers,
             ['marker:root.ITestMarker',
-             'silva.core.layout.interfaces.ICustomizableMarker'])
+             'silva.core.layout.interfaces.ICustomizableMarker',
+             'silva.core.views.interfaces.IDisableBreadcrumbTag',
+             'silva.core.views.interfaces.IDisableNavigationTag'])
 
         # We can delete the marker
         self.root.manage_delObjects(['ITestMarker',])
@@ -108,7 +114,9 @@ class CustomizationMarkerTestCase(unittest.TestCase):
         self.assertInterfaceEqual(manager.usedMarkers, [])
         self.assertInterfaceEqual(
             manager.availableMarkers,
-            ['silva.core.layout.interfaces.ICustomizableMarker'])
+            ['silva.core.layout.interfaces.ICustomizableMarker',
+             'silva.core.views.interfaces.IDisableBreadcrumbTag',
+             'silva.core.views.interfaces.IDisableNavigationTag'])
 
     def test_marker_on_root_delete(self):
         # Here, we create a marker, and check that's it remerber which
@@ -117,7 +125,7 @@ class CustomizationMarkerTestCase(unittest.TestCase):
 
         factory = self.root.manage_addProduct['silva.core.layout']
         factory.manage_addCustomizationMarker('ITestMarker')
-        self.failUnless('ITestMarker' in self.root.objectIds())
+        self.assertTrue('ITestMarker' in self.root.objectIds())
         marker = getattr(self.root, 'ITestMarker')
 
         # Set the mark on the root
@@ -140,7 +148,9 @@ class CustomizationMarkerTestCase(unittest.TestCase):
         self.assertInterfaceEqual(manager.usedMarkers, [])
         self.assertInterfaceEqual(
             manager.availableMarkers,
-            ['silva.core.layout.interfaces.ICustomizableMarker'])
+            ['silva.core.layout.interfaces.ICustomizableMarker',
+             'silva.core.views.interfaces.IDisableBreadcrumbTag',
+             'silva.core.views.interfaces.IDisableNavigationTag'])
 
 
 def test_suite():

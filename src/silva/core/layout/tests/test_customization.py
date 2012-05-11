@@ -84,12 +84,13 @@ class CustomizationServiceTestCase(CustomizationTestCase):
             u'silva.core.interfaces.content.IViewableObject',
             u'silva.core.interfaces.content.IVersionedContent',
             u'silva.core.layout.interfaces.ICustomizableMarker',
-            u'silva.core.layout.interfaces.ICustomizableTag']
+            u'silva.core.views.interfaces.ICustomizableTag']
 
         foundInterfaces = utility.availablesInterfaces()
         for iface in someDefaultInterfaces:
-            self.assertTrue(iface in foundInterfaces,
-                            msg='Missing interface %s' % iface)
+            self.assertTrue(
+                iface in foundInterfaces,
+                msg='Missing interface %s' % iface)
 
         # We can restrain it to a sub set
         containerDefaultInterfaces = [
@@ -100,7 +101,9 @@ class CustomizationServiceTestCase(CustomizationTestCase):
 
         foundInterfaces = utility.availablesInterfaces(base=IContainer)
         for iface in containerDefaultInterfaces:
-            self.assertTrue(iface in foundInterfaces)
+            self.assertTrue(
+                iface in foundInterfaces,
+                msg='Missing container interface %s' % iface)
 
     def test_utility_available_layers(self):
         self.assertTrue(hasattr(self.root, 'service_customization'))
@@ -138,9 +141,30 @@ class ViewEntryTestCase(CustomizationTestCase):
     """Test ViewEntry lookup and objects.
     """
 
+    # XXX There are no testing material at the moment
+    # def test_five_template(self):
+    #     signature = "zope.interface.Interface:five_template:None:" \
+    #         "silva.core.interfaces.content.ISilvaObject:" \
+    #         "zope.publisher.interfaces.browser.IDefaultBrowserLayer"
+    #     manager = IViewManager(self.utility)
+    #     view = manager.from_signature(signature)
+    #     self.assertFalse(view is None)
+    #     self.assertTrue(verifyObject(IViewInfo, view))
+    #     self.assertEqual(view.type_, 'Five Page Template')
+    #     self.assertEqual(view.name, 'five_template')
+    #     self.assertEqual(
+    #         view.for_,
+    #         'silva.core.interfaces.content.ISilvaObject')
+    #     self.assertEqual(
+    #         view.layer,
+    #         'zope.publisher.interfaces.browser.IDefaultBrowserLayer')
+    #     self.assertEqual(basename(view.template), 'smi_template.pt')
+    #     self.assertEqual(view.origin, None)
+    #     self.assertEqual(manager.get_signature(view), signature)
+
     def test_grok_template(self):
         signature = "zope.interface.Interface:index.html:None:" \
-            "silva.core.interfaces.content.ISilvaObject:" \
+            "silva.core.interfaces.content.IViewableObject:" \
             "silva.core.layout.interfaces.ISilvaLayer"
         manager = IViewManager(self.utility)
         view = manager.from_signature(signature)
@@ -151,7 +175,7 @@ class ViewEntryTestCase(CustomizationTestCase):
         self.assertEqual(view.name, 'index.html')
         self.assertEqual(
             view.for_,
-            'silva.core.interfaces.content.ISilvaObject')
+            'silva.core.interfaces.content.IViewableObject')
         self.assertEqual(
             view.layer,
             'silva.core.layout.interfaces.ISilvaLayer')
@@ -159,29 +183,9 @@ class ViewEntryTestCase(CustomizationTestCase):
         self.assertEqual(view.origin, None)
         self.assertEqual(manager.get_signature(view), signature)
 
-    def test_five_template(self):
-        signature = "zope.interface.Interface:five_template:None:" \
-            "silva.core.interfaces.content.ISilvaObject:" \
-            "zope.publisher.interfaces.browser.IDefaultBrowserLayer"
-        manager = IViewManager(self.utility)
-        view = manager.from_signature(signature)
-        self.assertFalse(view is None)
-        self.assertTrue(verifyObject(IViewInfo, view))
-        self.assertEqual(view.type_, 'Five Page Template')
-        self.assertEqual(view.name, 'five_template')
-        self.assertEqual(
-            view.for_,
-            'silva.core.interfaces.content.ISilvaObject')
-        self.assertEqual(
-            view.layer,
-            'zope.publisher.interfaces.browser.IDefaultBrowserLayer')
-        self.assertEqual(basename(view.template), 'smi_template.pt')
-        self.assertEqual(view.origin, None)
-        self.assertEqual(manager.get_signature(view), signature)
-
     def test_grok_content_provider(self):
         signature = "zope.viewlet.interfaces.IViewletManager:footer:None:" \
-            "silva.core.interfaces.content.ISilvaObject:" \
+            "silva.core.interfaces.content.IViewableObject:" \
             "silva.core.layout.porto.interfaces.IPorto:" \
             "zope.browser.interfaces.IBrowserView"
         manager = IViewManager(self.utility)
@@ -192,11 +196,11 @@ class ViewEntryTestCase(CustomizationTestCase):
         self.assertEqual(view.name, 'footer')
         self.assertEqual(
             view.for_,
-            'silva.core.interfaces.content.ISilvaObject')
+            'silva.core.interfaces.content.IViewableObject')
         self.assertEqual(
             view.layer,
             'silva.core.layout.porto.interfaces.IPorto')
-        self.assertEqual(basename(view.template), 'footer.pt')
+        self.assertEqual(basename(view.template), 'footer.cpt')
         self.assertEqual(view.origin, None)
         self.assertEqual(manager.get_signature(view), signature)
 
