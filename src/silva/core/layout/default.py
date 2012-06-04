@@ -71,7 +71,7 @@ class VersionMainPage(silvaviews.Page):
     grok.require('silva.ReadSilvaContent')
 
     def render(self):
-        content = self.context.get_content()
+        content = self.context.get_silva_object()
         view = queryMultiAdapter(
             (content, self.request), name='content.html')
         if view is None:
@@ -86,6 +86,6 @@ class VersionMainPage(silvaviews.Page):
 
 # Return a layout for a version. We lookup the layout of the related content
 def version_layout(request, version):
-    return getMultiAdapter((request, version.get_content()), ILayout)
+    return getMultiAdapter((request, version.get_silva_object()), ILayout)
 
 grok.global_adapter(version_layout, (ISilvaLayer, IVersion), ILayout)
