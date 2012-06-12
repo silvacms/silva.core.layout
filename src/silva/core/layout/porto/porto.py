@@ -15,7 +15,7 @@ from silva.core.interfaces import IContainer, IPublishable
 from silva.core.services.interfaces import IContentFilteringService
 from silva.core.layout.porto.interfaces import IPorto
 from silva.core.views import views as silvaviews
-from silva.core.views.interfaces import IVirtualSite, IHTTPResponseHeaders
+from silva.core.views.interfaces import IVirtualSite
 
 grok.layer(IPorto)
 
@@ -37,8 +37,6 @@ class MainLayout(silvaviews.Layout):
     def update(self):
         self.body_id = self.context.getId().replace('.', '-')
         self.title = self.context.get_title_or_id()
-        component.getMultiAdapter(
-            (self.request, self.context), IHTTPResponseHeaders)()
 
     @CachedProperty
     def metadata(self):
@@ -51,7 +49,7 @@ class MainLayout(silvaviews.Layout):
 
     @CachedProperty
     def root_url(self):
-        return self.root.absolute_url()
+        return absoluteURL(self.root, self.request)
 
 
 class MainErrorLayout(MainLayout):
