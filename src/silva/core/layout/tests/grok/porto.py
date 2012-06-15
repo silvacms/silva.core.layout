@@ -7,7 +7,7 @@
 
     >>> from zope.interface import alsoProvides
     >>> from zope.component import getMultiAdapter
-    >>> from zope.publisher.browser import TestRequest
+    >>> from Products.Silva.testing import TestRequest
     >>> from silva.core.layout.tests.grok.porto_fixtures.skin import INewTheme
 
     Initialize a test request and get some content
