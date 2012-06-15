@@ -4,7 +4,7 @@
 # $Id$
 
 from five import grok
-from zope import component
+from zope.component import getUtility, getAdapter
 from zope.cachedescriptors.property import CachedProperty
 from zope.traversing.browser import absoluteURL
 
@@ -44,7 +44,7 @@ class MainLayout(silvaviews.Layout):
 
     @CachedProperty
     def root(self):
-        virtual_site = component.getAdapter(self.request, IVirtualSite)
+        virtual_site = getAdapter(self.request, IVirtualSite)
         return virtual_site.get_root()
 
     @CachedProperty
@@ -106,22 +106,8 @@ class Navigation(silvaviews.ContentProvider):
     only_container = None
 
     @CachedProperty
-    def filter_service(self):
-        return component.getUtility(IContentFilteringService)
-
-    def filter_entries(self, nodes):
-        checkPermission = getSecurityManager().checkPermission
-
-        def filter_entry(node):
-            # This should in the toc filter ?
-            if IPublishable.providedBy(node) and not node.is_published():
-                return False
-            # Should be in the toc filter
-            if not checkPermission('View', node):
-                return False
-            return not self.filter_service.filter(node)
-
-        return filter(lambda node: filter_entry(node), nodes)
+    def filter_entries(self):
+        return getUtility(IContentFilteringService).filter(self.request)
 
     @CachedProperty
     def navigation_current(self):
