@@ -104,7 +104,6 @@ class NavigationTestCase(unittest.TestCase):
         self.assertEqual(link.url, 'http://localhost/root/++preview++/specs')
 
 
-
 def test_suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(NavigationTestCase))
