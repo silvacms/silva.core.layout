@@ -57,6 +57,7 @@ class NavigationTestCase(unittest.TestCase):
         self.assertEqual(link.url, 'http://localhost/root/info')
         link = browser.inspect.link['product']
         self.assertEqual(link.url, 'http://localhost/root/product')
+        self.assertEqual(link.click(), 200)
 
     def test_preview(self):
         """In preview, we see not yet published content.
@@ -102,6 +103,7 @@ class NavigationTestCase(unittest.TestCase):
         self.assertEqual(link.url, 'http://localhost/root/++preview++/product')
         link = browser.inspect.link['specs']
         self.assertEqual(link.url, 'http://localhost/root/++preview++/specs')
+        self.assertEqual(link.click(), 200)
 
 
 def test_suite():

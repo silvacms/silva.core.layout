@@ -35,6 +35,7 @@ class FallbackLayout(silvaviews.Layout):
 
 class MainPage(silvaviews.Page):
     grok.name('index.html')
+    grok.require('zope2.View')
 
     def render(self):
         view = queryMultiAdapter(
@@ -52,6 +53,7 @@ class MainPage(silvaviews.Page):
 class VersionedContentMainPage(silvaviews.Page):
     grok.name('index.html')
     grok.context(IVersionedContent)
+    grok.require('zope2.View')
 
     def render(self):
         view = queryMultiAdapter(
