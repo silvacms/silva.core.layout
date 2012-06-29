@@ -34,7 +34,7 @@
     []
     >>> IPhotoFolderTag.providedBy(folder)
     False
-    >>> manager.addMarker(
+    >>> manager.add_marker(
     ...    u'silva.core.layout.tests.grok.markers_simple.IPhotoFolderTag')
 
   And it will be available on the object:
@@ -57,7 +57,7 @@
 
   And we can remove it:
 
-    >>> manager.removeMarker(
+    >>> manager.remove_marker(
     ...       u'silva.core.layout.tests.grok.markers_simple.IPhotoFolderTag')
 
   It won't exists anymore:

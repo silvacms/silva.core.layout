@@ -117,10 +117,10 @@ def registerMarker(marker, event):
 
 
 @grok.subscribe(CustomizationMarker, IObjectWillBeRemovedEvent)
-def unregisterMarker(marker, event):
+def unregister_marker(marker, event):
     site = findSite(event.oldParent)
     for item in marker.markedObjects():
-        IMarkManager(item).removeMarker(marker.__identifier__)
+        IMarkManager(item).remove_marker(marker.__identifier__)
     if site:
         sm = site.getSiteManager()
         for iface_type in REGISTERED_TYPES:
@@ -128,13 +128,13 @@ def unregisterMarker(marker, event):
 
 
 @grok.subscribe(ISilvaObject, IObjectHaveBeenMarked)
-def objectMarked(item, event):
+def object_marked(item, event):
     if event.marker.extends(ICustomizableMarker):
         event.marker.addMarkedObject(item)
 
 
 @grok.subscribe(ISilvaObject, IObjectHaveBeenUnmarked)
-def objectUnmarked(item, event):
+def object_unmarked(item, event):
     if event.marker.extends(ICustomizableMarker):
         event.marker.removeMarkedObject(item)
 
@@ -178,14 +178,14 @@ class MarkManager(grok.Adapter):
                     availables.append(iface)
         return sorted(list(set(availables).difference(set(self.usedMarkers))))
 
-    def removeMarker(self, marker):
+    def remove_marker(self, marker):
         if isinstance(marker, basestring):
             marker = self._fetchMarker(marker)
         directlyProvides(
             self.context, directlyProvidedBy(self.context) - marker)
         notify(ObjectHaveBeenUnmarked(self.context, marker))
 
-    def addMarker(self, marker):
+    def add_marker(self, marker):
         if isinstance(marker, basestring):
             marker = self._fetchMarker(marker)
         directlyProvides(

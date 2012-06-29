@@ -77,7 +77,7 @@ class CustomizationMarkerTestCase(unittest.TestCase):
              'silva.core.views.interfaces.IDisableNavigationTag'])
 
         # We can assign a marker to the root
-        manager.addMarker(u'marker:root.ITestMarker')
+        manager.add_marker(u'marker:root.ITestMarker')
 
         # And we will have root object which provided this object
         self.assertTrue(marker.providedBy(self.root))
@@ -93,7 +93,7 @@ class CustomizationMarkerTestCase(unittest.TestCase):
              'silva.core.views.interfaces.IDisableNavigationTag'])
 
         # Like we assign the marker, we can remove it.
-        manager.removeMarker(u'marker:root.ITestMarker')
+        manager.remove_marker(u'marker:root.ITestMarker')
 
         # And it will disppear
         self.failIf(marker.providedBy(self.root))
@@ -130,7 +130,7 @@ class CustomizationMarkerTestCase(unittest.TestCase):
 
         # Set the mark on the root
         manager = IMarkManager(self.root)
-        manager.addMarker(u'marker:root.ITestMarker')
+        manager.add_marker(u'marker:root.ITestMarker')
 
         # The marker remerbers which object it have marked.
         self.assertEqual(marker.markedObjects(), [self.root,])

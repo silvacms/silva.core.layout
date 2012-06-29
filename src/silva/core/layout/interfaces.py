@@ -69,11 +69,11 @@ class IMarkManager(Interface):
     availableMarkers = Attribute(
         u"Skinable markers that can be set  on the object")
 
-    def addMarker(marker):
+    def add_marker(marker):
         """Set marker name in the object.
         """
 
-    def removeMarker(marker):
+    def remove_marker(marker):
         """Remove marker name from the object.
         """
 
