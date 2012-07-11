@@ -5,7 +5,6 @@
 
 from zope.interface import Interface, Attribute
 from zope.interface.interfaces import IInterface
-from zope.publisher.interfaces.browser import IBrowserSkinType
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
 from silva.core.interfaces.service import ISilvaLocalService
@@ -45,7 +44,7 @@ class ISilvaLayer(ICustomizableLayer):
     """
 
 
-class ISilvaSkin(ISilvaLayer, IBrowserSkinType):
+class ISilvaSkin(ISilvaLayer):
     """A Silva skin for the default layer.
     """
 
