@@ -5,15 +5,13 @@
 
 from five import grok
 from zope.component import getUtility, getAdapter
-from zope.cachedescriptors.property import CachedProperty
+from zope.cachedescriptors.property import Lazy
 from zope.traversing.browser import absoluteURL
 
-from AccessControl import getSecurityManager
-
+from silva.core.interfaces import IContainer
 from silva.core.layout.interfaces import IMetadata
-from silva.core.interfaces import IContainer, IPublishable
-from silva.core.services.interfaces import IContentFilteringService
 from silva.core.layout.porto.interfaces import IPorto
+from silva.core.services.interfaces import IContentFilteringService
 from silva.core.views import views as silvaviews
 from silva.core.views.interfaces import IVirtualSite
 
@@ -38,16 +36,16 @@ class MainLayout(silvaviews.Layout):
         self.body_id = self.context.getId().replace('.', '-')
         self.title = self.context.get_title_or_id()
 
-    @CachedProperty
+    @Lazy
     def metadata(self):
         return IMetadata(self.context)
 
-    @CachedProperty
+    @Lazy
     def root(self):
         virtual_site = getAdapter(self.request, IVirtualSite)
         return virtual_site.get_root()
 
-    @CachedProperty
+    @Lazy
     def root_url(self):
         return absoluteURL(self.root, self.request)
 
@@ -75,7 +73,7 @@ class Favicon(silvaviews.Viewlet):
 
     @property
     def favicon_url(self):
-        return self.static['favicon.ico']
+        return self.static['favicon.ico']()
 
 
 class Layout(silvaviews.ContentProvider):
@@ -105,11 +103,11 @@ class Navigation(silvaviews.ContentProvider):
     max_depth = 2
     only_container = None
 
-    @CachedProperty
+    @Lazy
     def filter_entries(self):
         return getUtility(IContentFilteringService).filter(self.request)
 
-    @CachedProperty
+    @Lazy
     def navigation_current(self):
         return self.context.aq_base
 
@@ -143,7 +141,7 @@ class Navigation(silvaviews.ContentProvider):
                 info['nodes'] = list(children)
         return info
 
-    @CachedProperty
+    @Lazy
     def navigation_root(self):
         node = self.context.get_publication()
         return list(self.filter_entries(node.get_ordered_publishables()))
