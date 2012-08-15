@@ -3,12 +3,14 @@
 # $Id$
 
 from five import grok
+from zope.component import getUtility
 
 # Zope 2
 from AccessControl import getSecurityManager
 
 # Silva
 from Products.Silva.SilvaPermissions import ChangeSilvaContent
+from Products.SilvaMetadata import IMetadataService
 
 from silva.core.layout import interfaces
 from silva.core import interfaces as silva_interfaces
@@ -22,7 +24,7 @@ class Metadata(grok.Adapter):
 
     def __init__(self, context):
         super(Metadata, self).__init__(context)
-        self._metadataservice = self.context.service_metadata
+        self._service = getUtility(IMetadataService)
         self._content = None
         # XXX Should be a view
         # XXX Should be the previewable version ?
@@ -42,30 +44,8 @@ class Metadata(grok.Adapter):
     def _getValue(self, setname, elementname):
         if self._content is None:
             return None
-        return self._metadataservice.getMetadataValue(
+        return self._service.getMetadataValue(
             self._content, setname, elementname)
-
-
-class GhostMetadata(Metadata):
-    """Apparently getMetadataValue does not work with Ghosts.
-
-    This is because Ghosts get custom access handlers and generally are
-    very magic. We work around this by using the non-fast-path in the
-    metadata system which should work properly with Ghosts.
-    """
-    grok.context(silva_interfaces.IGhostAware)
-
-    def __init__(self, context):
-        super(GhostMetadata, self).__init__(context)
-        if self._content is None:
-            self._binding = None
-        else:
-            self._binding = self._metadataservice.getMetadata(self._content)
-
-    def _getValue(self, setname, elementname):
-        if self._binding is None:
-            return None
-        return self._binding.get(setname, elementname)
 
 
 class MetadataSet(object):
