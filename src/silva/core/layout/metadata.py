@@ -10,7 +10,7 @@ from AccessControl import getSecurityManager
 
 # Silva
 from Products.Silva.SilvaPermissions import ChangeSilvaContent
-from Products.SilvaMetadata import IMetadataService
+from Products.SilvaMetadata.interfaces import IMetadataService
 
 from silva.core.layout import interfaces
 from silva.core import interfaces as silva_interfaces
