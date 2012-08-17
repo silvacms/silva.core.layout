@@ -1,6 +1,6 @@
-# Copyright (c) 2009-2011 Infrae. All rights reserved.
+# -*- coding: utf-8 -*-
+# Copyright (c) 2009-2012 Infrae. All rights reserved.
 # See also LICENSE.txt
-# $Id$
 """
     Grok the skin:
     >>> grok('silva.core.layout.tests.grok.porto_fixtures')
