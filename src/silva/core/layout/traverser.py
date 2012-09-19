@@ -10,7 +10,9 @@ from zope.event import notify
 from zope.publisher.browser import SkinChangedEvent
 from zope.traversing import namespace
 
-from ZPublisher.interfaces import IPubAfterTraversal, IPubStart
+from ZPublisher.interfaces import IPubStart
+from infrae.wsgi.interfaces import IPublicationBeforeError
+from infrae.wsgi.interfaces import IPublicationAfterTraversal
 
 from silva.core.views.traverser import SilvaPublishTraverse
 from silva.core.layout.interfaces import ICustomizableLayer, ISkinLookup
@@ -36,7 +38,8 @@ SET_SKIN_ALLOWED_FLAG = 'SILVA_SET_SKIN_ALLOWED'
 def set_skin_flag_on(event):
     event.request[SET_SKIN_ALLOWED_FLAG] = True
 
-@grok.subscribe(IPubAfterTraversal)
+@grok.subscribe(IPublicationBeforeError)
+@grok.subscribe(IPublicationAfterTraversal)
 def set_skin_flag_off(event):
     event.request[SET_SKIN_ALLOWED_FLAG] = False
 
