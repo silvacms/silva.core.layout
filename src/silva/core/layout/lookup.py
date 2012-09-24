@@ -8,11 +8,10 @@ from five import grok
 from zope.component import getUtility, queryUtility, getUtilitiesFor
 from zope.publisher.interfaces.browser import IBrowserSkinType
 
-from Products.SilvaMetadata.interfaces import IMetadataService
-
 from silva.core.interfaces import IPublication
 from silva.core.layout.interfaces import ISilvaSkin
 from silva.core.layout.interfaces import ISkinLookup
+from silva.core.services.interfaces import IMetadataService
 
 
 class SilvaSkinLookup(grok.Adapter):

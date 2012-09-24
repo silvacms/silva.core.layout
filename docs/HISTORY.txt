@@ -1,10 +1,18 @@
 Changelog
 =========
 
-3.0 (unreleased)
-----------------
+3.0c1 (2012/09/24)
+------------------
 
-* ...
+* Version are now rendered with a layout if directly called. You need
+  to have the permission ``Read Silva content`` to access them.
+
+* Default Porto templates are now written with ``grokcore.chameleon``.
+
+* Various Silva 3.0c1 API updates.
+
+* Improve tests.
+
 
 3.0b1 (2011/11/08)
 ------------------
