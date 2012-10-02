@@ -55,6 +55,5 @@ class OtherErrorHeaders(ErrorHeaders):
     grok.adapts(ICustomizableLayer, Exception)
 
     def other_headers(self, headers):
-        import pdb; pdb.set_trace()
         super(OtherErrorHeaders, self).other_headers(headers)
         self.response.setStatus(500)
