@@ -15,6 +15,7 @@ from zope.component import getUtility, getUtilitiesFor
 from zope.configuration.name import resolve as pythonResolve
 from zope.interface.interfaces import IInterface
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
+from zope.traversing.browser import absoluteURL
 
 from silva.core import conf as silvaconf
 from silva.core.interfaces import ISilvaObject
@@ -466,6 +467,8 @@ class ManageCreateCustomTemplate(ManageViewTemplate):
         new_template = self.entry.customize(
             self, customize_for, customize_layer)
 
-        self.redirect(new_template.absolute_url() + '/manage_workspace')
+        self.redirect(
+            absoluteURL(new_template, self.request) +
+            '/manage_workspace')
 
 
