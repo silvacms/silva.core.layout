@@ -1,10 +1,12 @@
 Changelog
 =========
 
-3.0 (unreleased)
+3.0 (2012/12/11)
 ----------------
 
-* ...
+* Update Zope API calls.
+
+* Fix a bug on error pages.
 
 3.0c1 (2012/09/24)
 ------------------
