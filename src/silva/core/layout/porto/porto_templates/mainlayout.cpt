@@ -1,4 +1,4 @@
-<tal:xml><!DOCTYPE html>
+<tal:DOCTYPE tal:replace="structure layout.doctype" />
 <html xmlns="http://www.w3.org/1999/xhtml"
       tal:define="
         metadata path:layout/metadata/silva-extra;
@@ -30,4 +30,3 @@
     <tal:layout tal:replace="structure provider:layout" />
   </body>
 </html>
-</tal:xml>

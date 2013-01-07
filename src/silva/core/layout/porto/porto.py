@@ -30,6 +30,7 @@ class MainLayout(silvaviews.Layout):
     use silva.resourceinclude
     """
     grok.template('mainlayout')
+    doctype = '<!DOCTYPE html>'
 
     def update(self):
         self.body_id = self.context.getId().replace('.', '-')
