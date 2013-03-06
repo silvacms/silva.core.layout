@@ -12,7 +12,7 @@ layouts.
 You can have more information on how to use this package in the `Silva
 developer documentation`_.
 
-.. _Silva developer documentation: http://docs.infrae.com/silva/
+.. _Silva developer documentation: http://docs.silvacms.org/latest/
 
 Code repository
 ===============

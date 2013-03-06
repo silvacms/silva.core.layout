@@ -1,10 +1,12 @@
 Changelog
 =========
 
-3.0.1 (unreleased)
+3.0.1 (2013/03/06)
 ------------------
 
-* ...
+* Change doctype of the Porto layout to HTML 5. If you inherit from
+  this layout, and don't change the main layout, you can override with
+  the doctype attribute from the class.
 
 3.0 (2012/12/11)
 ----------------
