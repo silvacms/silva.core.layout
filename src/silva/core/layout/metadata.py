@@ -28,7 +28,8 @@ class Metadata(grok.Adapter):
         self._content = None
         # XXX Should be a view
         # XXX Should be the previewable version ?
-        if IPreviewLayer.providedBy(context.REQUEST):
+        if (hasattr(context, 'REQUEST') and
+            IPreviewLayer.providedBy(context.REQUEST)):
             sm = getSecurityManager()
             if sm.checkPermission(ChangeSilvaContent, context):
                 self._content = context.get_editable()
