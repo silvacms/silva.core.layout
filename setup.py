@@ -13,7 +13,7 @@ tests_require = [
 
 setup(name='silva.core.layout',
       version=version,
-      description="Layout system for Silva base on Zope Tool Kit and Grok",
+      description="Layout and theme engine for Silva CMS",
       long_description=open("README.txt").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
       classifiers=[
@@ -25,7 +25,7 @@ setup(name='silva.core.layout',
       keywords='layout silva core',
       author='Infrae',
       author_email='info@infrae.com',
-      url='http://infrae.com/products/silva',
+      url='https://github.com/silvacms/silva.core.layout',
       license='BSD',
       package_dir={'': 'src'},
       packages=find_packages('src'),
